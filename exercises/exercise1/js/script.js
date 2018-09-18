@@ -34,7 +34,11 @@ var elephantImage;
 var elephantImageX;
 var elephantImageY;
 
-
+// The image of a pigeon
+var pigeonImage;
+// The current position of the pigeon
+var pigeonImageX;
+var pigeonImageY;
 
 
 // preload()
@@ -45,6 +49,7 @@ function preload() {
   clownImage = loadImage("assets/images/clown.png");
   feltTextureImage = loadImage("assets/images/black-felt-texture.png");
   elephantImage = loadImage("assets/images/elephant.png");
+  pigeonImage = loadImage("assets/images/pigeon.png");
 }
 
 
@@ -68,7 +73,6 @@ function setup() {
   elephantImageX = elephantImage.width/2;
   elephantImageY = height - elephantImage.height/2;
 
-
   // Set yellow circle proportional to width of elephant image
   yellowCircleW = elephantImage.width;
   yellowCircleH = yellowCircleW;
@@ -89,7 +93,7 @@ function setup() {
 function draw() {
 
   // Move the felt image down by increasing its y position
-  feltTextureImageY += 1;
+  feltTextureImageY += 0.7;
 
   // Display the felt image
   image(feltTextureImage,feltTextureImageX,feltTextureImageY);
@@ -108,15 +112,23 @@ function draw() {
 
   // Move the yellow circle left to right by increasing its x position
   yellowCircleX += 1;
-
-  // Display yellow circle (set fill colour and no stroke)
+  // Set circle fill to yellow with no stroke
   noStroke();
   fill(253,231,85);
-  yellowCircle = ellipse(yellowCircleX, yellowCircleY, yellowCircleW, yellowCircleH);
+  
+  // Display the yellow circle
+  yellowCircle = ellipse(yellowCircleX,yellowCircleY,yellowCircleW,yellowCircleH);
 
   // Move the elephant image left to right by increasing its x position
   elephantImageX += 1;
 
   // Display the elephant image
   image(elephantImage,elephantImageX,elephantImageY);
+
+  // Display the pigeon at current mouse position and move with mouse
+  pigeonImageX = mouseX;
+  pigeonImageY = mouseY;
+  image(pigeonImage,pigeonImageX,pigeonImageY);
+
+
 }
