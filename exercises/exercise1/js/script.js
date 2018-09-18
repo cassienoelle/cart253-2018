@@ -1,7 +1,8 @@
 // Exercise 1 - Moving pictures
-// Pippin Barr
+// Cassie Smith
+// 18 September 2018 - CART 253b
 //
-// Starter code for exercise 1.
+// Starter code for exercise 1 by Pippin Barr.
 // It moves two pictures around on the canvas.
 // One moves linearly down the screen.
 // One moves toward the mouse cursor.
@@ -19,6 +20,22 @@ var feltTextureImage;
 var feltTextureImageX;
 var feltTextureImageY;
 
+// The yellow circle
+var yellowCircle;
+var yellowCircleW;
+var yellowCircleH;
+// The current position of the yellow circle;
+var yellowCircleX;
+var yellowCircleY;
+
+// The image of an elephant
+var elephantImage;
+// The current position of the elephant
+var elephantImageX;
+var elephantImageY;
+
+
+
 
 // preload()
 //
@@ -27,6 +44,7 @@ var feltTextureImageY;
 function preload() {
   clownImage = loadImage("assets/images/clown.png");
   feltTextureImage = loadImage("assets/images/black-felt-texture.png");
+  elephantImage = loadImage("assets/images/elephant.png");
 }
 
 
@@ -45,6 +63,18 @@ function setup() {
   // Start the felt image perfectly off screen above the canvas
   feltTextureImageX = width/2;
   feltTextureImageY = 0 - feltTextureImage.height/2;
+
+  // Start the elephant image at the bottom left of the canvas
+  elephantImageX = elephantImage.width/2;
+  elephantImageY = height - elephantImage.height/2;
+
+
+  // Set yellow circle proportional to width of elephant image
+  yellowCircleW = elephantImage.width;
+  yellowCircleH = yellowCircleW;
+  // Start yellow circle behind elephant at bottom left of canvas
+  yellowCircleX = elephantImageX;
+  yellowCircleY = height - elephantImageX;
 
   // We'll use imageMode CENTER for this script
   imageMode(CENTER);
@@ -75,4 +105,18 @@ function draw() {
 
   // Display the clown image
   image(clownImage,clownImageX,clownImageY);
+
+  // Move the yellow circle left to right by increasing its x position
+  yellowCircleX += 1;
+
+  // Display yellow circle (set fill colour and no stroke)
+  noStroke();
+  fill(253,231,85);
+  yellowCircle = ellipse(yellowCircleX, yellowCircleY, yellowCircleW, yellowCircleH);
+
+  // Move the elephant image left to right by increasing its x position
+  elephantImageX += 1;
+
+  // Display the elephant image
+  image(elephantImage,elephantImageX,elephantImageY);
 }
