@@ -33,6 +33,20 @@ var enemySpeedIncrease = 0.5;
 // How many dodges the player has made
 var dodges = 0;
 
+// Custom font, Khand SemiBold
+var khandFont;
+// Current positon of text
+var textX;
+var textY;
+
+// preload()
+//
+// Load the font we're using before the program starts
+function preload() {
+  // Load Khand-SemiBold font
+  khandFont = loadFont("assets/fonts/Khand-SemiBold.ttf");
+}
+
 // setup()
 //
 // Make the canvas, position the avatar and anemy
@@ -50,6 +64,13 @@ function setup() {
 
   // No stroke so it looks cleaner
   noStroke();
+
+  // Style text and display at bottom right of canvas
+  textFont(khandFont);
+  textSize(32);
+  textAlign(RIGHT, BOTTOM);
+  textX = width - 10;
+  textY = height;
 }
 
 // draw()
@@ -129,7 +150,7 @@ function draw() {
   if (enemyX > width) {
     // This means the player dodged so update its dodge statistic
     dodges = dodges + 1;
-    // Tell them how many dodges they have made
+    // Tell them how many dodges they have made in console
     console.log(dodges + " DODGES!");
     // Reset the enemy's position to the left at a random height
     enemyX = 0;
@@ -141,6 +162,15 @@ function draw() {
 
   // Display the current number of successful in the console
   console.log(dodges);
+  // Text to display successful dodges on canvas using correct grammar
+  if (dodges === 1) {
+    // Singular if 1 dodge
+    text(dodges + " DODGE!", textX, textY);
+  }
+  else {
+    // Plural if zero or multiple dodges
+    text(dodges + " DODGES!", textX, textY);
+  }
 
   // The player is black
   fill(0);
