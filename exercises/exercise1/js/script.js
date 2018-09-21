@@ -34,22 +34,29 @@ var elephantImage;
 var elephantImageX;
 var elephantImageY;
 
-// The image of a pigeon
+// The image of the pigeon
 var pigeonImage;
 // The current position of the pigeon
 var pigeonImageX;
 var pigeonImageY;
 
+// The image of the nudibranch
+var nudibranchImage;
+// The current position of the nudibranch
+var nudibranchImageX;
+var nudibranchImageY;
+
 
 // preload()
 //
-// Load the two images we're using before the program starts
+// Load the four images we're using before the program starts
 
 function preload() {
   clownImage = loadImage("assets/images/clown.png");
   feltTextureImage = loadImage("assets/images/black-felt-texture.png");
   elephantImage = loadImage("assets/images/elephant.png");
   pigeonImage = loadImage("assets/images/pigeon.png");
+  nudibranchImage = loadImage("assets/images/nudibranch.png");
 }
 
 
@@ -76,9 +83,13 @@ function setup() {
   // Set yellow circle proportional to width of elephant image
   yellowCircleW = elephantImage.width;
   yellowCircleH = yellowCircleW;
-  // Start yellow circle behind elephant at bottom left of canvas
+  // Start yellow circle behind elephant at bottom left of the canvas
   yellowCircleX = elephantImageX;
   yellowCircleY = height - elephantImageX;
+
+  // Start the nudibranch image at the bottom right of the canvas
+  nudibranchImageX = width - nudibranchImage.width/2;
+  nudibranchImageY = height - nudibranchImage.height/2;
 
   // We'll use imageMode CENTER for this script
   imageMode(CENTER);
@@ -101,11 +112,11 @@ function draw() {
   // Move the clown by moving it 1/10th of its current distance from the mouse
 
   // Calculate the distance in X and in Y
-  var xDistance = mouseX - clownImageX;
-  var yDistance = mouseY - clownImageY;
+  var xDistanceClown = mouseX - clownImageX;
+  var yDistanceClown = mouseY - clownImageY;
   // Add 1/10th of the x and y distance to the clown's current (x,y) location
-  clownImageX = clownImageX + xDistance/10;
-  clownImageY = clownImageY + yDistance/10;
+  clownImageX = clownImageX + xDistanceClown/10;
+  clownImageY = clownImageY + yDistanceClown/10;
 
   // Display the clown image
   image(clownImage,clownImageX,clownImageY);
@@ -115,7 +126,7 @@ function draw() {
   // Set circle fill to yellow with no stroke
   noStroke();
   fill(253,231,85);
-  
+
   // Display the yellow circle
   yellowCircle = ellipse(yellowCircleX,yellowCircleY,yellowCircleW,yellowCircleH);
 
@@ -129,6 +140,18 @@ function draw() {
   pigeonImageX = mouseX;
   pigeonImageY = mouseY;
   image(pigeonImage,pigeonImageX,pigeonImageY);
+
+  // Move the nudibranch by moving it 1/80th of its current distance from the mouse
+
+  // Calculate the distance in X and Y
+  var xDistanceNudibranch = mouseX - nudibranchImageX;
+  var yDistanceNudibranch = mouseY - nudibranchImageY;
+  // Add 1/80th of the x and y distance to the clown's current (x,y) location
+  nudibranchImageX = nudibranchImageX + xDistanceNudibranch/80;
+  nudibranchImageY = nudibranchImageY + yDistanceNudibranch/80;
+
+  // Display the nudibranch image
+  image(nudibranchImage,nudibranchImageX,nudibranchImageY);
 
 
 }
