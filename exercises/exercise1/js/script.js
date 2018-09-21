@@ -1,6 +1,6 @@
 // Exercise 1 - Moving pictures
 // Cassie Smith
-// 18 September 2018 - CART 253b
+// 18 September 2018 - CART 253a
 //
 // Starter code for exercise 1 by Pippin Barr.
 // It moves six pictures around on the canvas.
