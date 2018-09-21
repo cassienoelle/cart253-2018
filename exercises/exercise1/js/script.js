@@ -3,9 +3,10 @@
 // 18 September 2018 - CART 253b
 //
 // Starter code for exercise 1 by Pippin Barr.
-// It moves two pictures around on the canvas.
+// It moves six pictures around on the canvas.
 // One moves linearly down the screen.
-// One moves toward the mouse cursor.
+// Two move in tandem across the screen from left to right.
+// Two move toward the mouse cursor, at different rates.
 
 
 // The image of a clown face
@@ -49,7 +50,7 @@ var nudibranchImageY;
 
 // preload()
 //
-// Load the four images we're using before the program starts
+// Load the five images we're using before the program starts
 
 function preload() {
   clownImage = loadImage("assets/images/clown.png");
@@ -62,7 +63,7 @@ function preload() {
 
 // setup()
 //
-// Set up the canvas, position the images, set the image mode.
+// Set up the canvas, the yellow circle shape, position the images, set the image mode.
 
 function setup() {
   // Create our canvas
