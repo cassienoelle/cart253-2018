@@ -7,27 +7,40 @@ Starter code for exercise 2.
 
 *********************************************************/
 
-// The position and size of our avatar circle
+// The avatar
+var avatar;
+
+// The position of our avatar
 var avatarX;
 var avatarY;
-var avatarSize = 50;
+
+// The size of our avatar, aspect ratio maintained
+var avatarWidth = 50
+var avatarHeight = avatarWidth * (600/400);
+// How much bigger the avatar gets with each successful dodge
+var avatarWidthIncrease;
 
 // The speed and velocity of our avatar circle
 var avatarSpeed = 10;
 var avatarVX = 0;
 var avatarVY = 0;
 
-// The position and size of the enemy circle
+// The enemy image
+var enemy;
+
+// The position of the enemy
 var enemyX;
 var enemyY;
-var enemySize = 50;
-// How much bigger the enemy circle gets with each successful dodge
-var enemySizeIncrease = 5;
+// The size of the enemy, aspect ratio maintained
+var enemyWidth = 75;
+var enemyHeight = enemyWidth * (275/400);
+// How much bigger the enemy gets with each successful dodge
+var enemyWidthIncrease = 5;
 
-// The speed and velocity of our enemy circle
+// The speed and velocity of our enemy
 var enemySpeed = 5;
 var enemyVX = 5;
-// How much bigger the enemy circle gets with each successful dodge
+// How much bigger the enemy gets with each successful dodge
 var enemySpeedIncrease = 0.5;
 
 // How many dodges the player has made
@@ -45,6 +58,10 @@ var textY;
 function preload() {
   // Load Khand-SemiBold font
   khandFont = loadFont("assets/fonts/Khand-SemiBold.ttf");
+  // Load the enemy, an image of a human brain
+  enemy = loadImage("assets/images/brain.png");
+  // Load our avatar, an image of a human heart
+  avatar = loadImage("assets/images/heart.png");
 }
 
 // setup()
@@ -62,10 +79,8 @@ function setup() {
   enemyX = 0;
   enemyY = random(0,height);
 
-  // No stroke so it looks cleaner
-  noStroke();
-
   // Style text and display at bottom right of canvas
+  fill(255);
   textFont(khandFont);
   textSize(32);
   textAlign(RIGHT, BOTTOM);
@@ -78,8 +93,12 @@ function setup() {
 // Handle moving the avatar and enemy and checking for dodges and
 // game over situations.
 function draw() {
-  // A pink background
-  background(255,220,220);
+  // A black background that pulses white every 1.8 seconds
+  if (frameCount % (60 * 1.8) === 1) {
+    background(255);
+  } else {
+    background(0);
+  }
 
   // Default the avatar's velocity to 0 in case no key is pressed this frame
   avatarVX = 0;
@@ -117,14 +136,15 @@ function draw() {
   // Check if the enemy and avatar overlap - if they do the player loses
   // We do this by checking if the distance between the centre of the enemy
   // and the centre of the avatar is less that their combined radii
-  if (dist(enemyX,enemyY,avatarX,avatarY) < enemySize/2 + avatarSize/2) {
+  if (dist(enemyX,enemyY,avatarX,avatarY) < enemyWidth/2 + avatarWidth/2) {
     // Tell the player they lost
     console.log("YOU LOSE!");
     // Reset the enemy's position
     enemyX = 0;
     enemyY = random(0,height);
     // Reset the enemy's size and speed
-    enemySize = 50;
+    enemyWidth = 75;
+    enemyHeight = enemyWidth * (275/400);
     enemySpeed = 5;
     // Reset the avatar's position
     avatarX = width/2;
@@ -139,7 +159,8 @@ function draw() {
     console.log("YOU LOSE!");
     enemyX = 0;
     enemyY = random(0,height);
-    enemySize = 50;
+    enemyWidth = 75;
+    enemyHeight = enemyWidth * (275/400);
     enemySpeed = 5;
     avatarX = width/2;
     avatarY = height/2;
@@ -157,7 +178,8 @@ function draw() {
     enemyY = random(0,height);
     // Increase the enemy's speed and size to make the game harder
     enemySpeed = enemySpeed + enemySpeedIncrease;
-    enemySize = enemySize + enemySizeIncrease;
+    enemyWidth = enemyWidth + enemyWidthIncrease;
+    enemyHeight = enemyWidth * (275/400);
   }
 
   // Display the current number of successful in the console
@@ -172,14 +194,10 @@ function draw() {
     text(dodges + " DODGES!", textX, textY);
   }
 
-  // The player is black
-  fill(0);
-  // Draw the player as a circle
-  ellipse(avatarX,avatarY,avatarSize,avatarSize);
+  // Display our avatar
+  image(avatar, avatarX, avatarY, avatarWidth, avatarHeight);
 
-  // The enemy is red
-  fill(255,0,0);
-  // Draw the enemy as a circle
-  ellipse(enemyX,enemyY,enemySize,enemySize);
+  // Display the enemy
+  image(enemy, enemyX, enemyY, enemyWidth, enemyHeight);
 
 }
