@@ -15,7 +15,7 @@ Game over if you fail to dodge the enemy or if you move outside the canvas
 
 *********************************************************/
 
-// The avatar
+// The avatar image
 var avatar;
 
 // The position of our avatar
@@ -23,15 +23,17 @@ var avatarX;
 var avatarY;
 
 // The size of our avatar, aspect ratio maintained
-var avatarWidth = 50
+var avatarWidth = 50;
 var avatarHeight = avatarWidth * (600/400);
-// How much bigger the avatar gets with each successful dodge
-var avatarWidthIncrease;
+// How much bigger or smaller the avatar gets with each successful dodge
+var avatarWidthChange;
 
-// The speed and velocity of our avatar circle
+// The speed and velocity of our avatar
 var avatarSpeed = 10;
 var avatarVX = 0;
 var avatarVY = 0;
+// How much faster or slower the avatar gets with each successful dodge
+var avatarSpeedChange;
 
 // The enemy image
 var enemy;
@@ -48,7 +50,7 @@ var enemyWidthIncrease = 5;
 // The speed and velocity of our enemy
 var enemySpeed = 5;
 var enemyVX = 5;
-// How much bigger the enemy gets with each successful dodge
+// How much faster the enemy gets with each successful dodge
 var enemySpeedIncrease = 0.5;
 
 // How many dodges the player has made
@@ -107,8 +109,11 @@ function setup() {
 // game over situations.
 function draw() {
   // A black background that pulses white every 1.8 seconds
+  // If emergency shrink used, background turns purple
   if (frameCount % (60 * 1.8) === 1) {
     background(255);
+  } else if (shrinkUsed === true) {
+    background(75,0,130);
   } else {
     background(0);
   }
@@ -119,7 +124,6 @@ function draw() {
 
   // Check which keys are down
   // Set the avatar's velocity based on its speed appropriately
-  // Shrink the enemy when space bar pressed
 
   // Left and right
   if (keyIsDown(LEFT_ARROW)) {
@@ -138,7 +142,8 @@ function draw() {
     avatarVY = avatarSpeed;
   }
 
-  // Check for additional keyboard commands from player (emergency shrink)
+  // Check for additional keyboard commands from player
+  // Shrink enemy when space bar typed
     keyTyped();
 
   // Move the avatar according to its calculated velocity
@@ -166,6 +171,10 @@ function draw() {
     // Reset the avatar's position
     avatarX = width/2;
     avatarY = height/2;
+    // Reset the avatar's size and speed
+    avatarWidth = 50;
+    avatarHeight = avatarWidth * (600/400);
+    avatarSpeed = 10;
     // Reset the dodge counter
     dodges = 0;
     // Reset the emergency shrink button
@@ -183,6 +192,9 @@ function draw() {
     enemySpeed = 5;
     avatarX = width/2;
     avatarY = height/2;
+    avatarWidth = 50;
+    avatarHeight = avatarWidth * (600/400);
+    avatarSpeed = 10;
     dodges = 0;
     shrinkUsed = false;
   }
@@ -197,10 +209,24 @@ function draw() {
     enemyX = 0;
     enemyY = random(0,height);
     // Increase the enemy's speed and size to make the game harder
-    //enemySpeed = enemySpeed + enemySpeedIncrease;
+    enemySpeed = enemySpeed + enemySpeedIncrease;
     enemyWidth = enemyWidth + enemyWidthIncrease;
     enemyHeight = enemyWidth * (275/400);
-    console.log ("WIDTH = " + enemyWidth);
+    // Change the avatar's speed by a random amount
+    // Speed must remain above 0
+    avatarSpeedChange =  random(-0.5, 0.5);
+    if (avatarSpeed + avatarSpeedChange > 0) {
+      avatarSpeed += avatarSpeedChange;
+      console.log("speed = " + avatarSpeed);
+    }
+    // Change the avatar's size by a random amount
+    // Size must remain above 0
+    avatarWidthChange = random(-5, 5);
+    if (avatarWidth + avatarWidthChange > 0) {
+      avatarWidth += avatarWidthChange;
+      avatarHeight = avatarWidth * (600/400);
+      console.log("width = " + avatarWidth);
+    }
   }
 
   // Text to display successful dodges on canvas using correct grammar
