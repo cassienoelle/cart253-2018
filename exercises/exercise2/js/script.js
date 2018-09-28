@@ -1,9 +1,17 @@
 /*********************************************************
 
 Exercise 2 - The Artful Dodger
-Pippin Barr
 
-Starter code for exercise 2.
+Cassie Smith
+27 September 2018 - CART 253a
+
+Starter code for exercise 2 by Pippin Barr
+
+A game of evasion
+Move the avatar image around the canvas using arrow keys
+Dodge the enemy image that moves left to right across the screen
+The enemy increases in size and speed with each successful dodge
+Game over if you fail to dodge the enemy or if you move outside the canvas
 
 *********************************************************/
 
@@ -46,6 +54,11 @@ var enemySpeedIncrease = 0.5;
 // How many dodges the player has made
 var dodges = 0;
 
+// In case of emergency: shrink enemy
+var shrink;
+// Limit to one use per game play
+var shrinkUsed;
+
 // Custom font, Khand SemiBold
 var khandFont;
 // Current positon of text
@@ -66,7 +79,7 @@ function preload() {
 
 // setup()
 //
-// Make the canvas, position the avatar and anemy
+// Make the canvas, position the avatar and enemy, add text to track dodges
 function setup() {
   // Create our playing area
   createCanvas(500,500);
@@ -104,8 +117,9 @@ function draw() {
   avatarVX = 0;
   avatarVY = 0;
 
-  // Check which keys are down and set the avatar's velocity based on its
-  // speed appropriately
+  // Check which keys are down
+  // Set the avatar's velocity based on its speed appropriately
+  // Shrink the enemy when space bar pressed
 
   // Left and right
   if (keyIsDown(LEFT_ARROW)) {
@@ -123,6 +137,9 @@ function draw() {
   else if (keyIsDown(DOWN_ARROW)) {
     avatarVY = avatarSpeed;
   }
+
+  // Check for additional keyboard commands from player (emergency shrink)
+    keyTyped();
 
   // Move the avatar according to its calculated velocity
   avatarX = avatarX + avatarVX;
@@ -151,6 +168,8 @@ function draw() {
     avatarY = height/2;
     // Reset the dodge counter
     dodges = 0;
+    // Reset the emergency shrink button
+    shrinkUsed = false;
   }
 
   // Check if the avatar has gone off the screen (cheating!)
@@ -165,6 +184,7 @@ function draw() {
     avatarX = width/2;
     avatarY = height/2;
     dodges = 0;
+    shrinkUsed = false;
   }
 
   // Check if the enemy has moved all the way across the screen
@@ -172,18 +192,17 @@ function draw() {
     // This means the player dodged so update its dodge statistic
     dodges = dodges + 1;
     // Tell them how many dodges they have made in console
-    console.log(dodges + " DODGES!");
+    //console.log(dodges + " DODGES!");
     // Reset the enemy's position to the left at a random height
     enemyX = 0;
     enemyY = random(0,height);
     // Increase the enemy's speed and size to make the game harder
-    enemySpeed = enemySpeed + enemySpeedIncrease;
+    //enemySpeed = enemySpeed + enemySpeedIncrease;
     enemyWidth = enemyWidth + enemyWidthIncrease;
     enemyHeight = enemyWidth * (275/400);
+    console.log ("WIDTH = " + enemyWidth);
   }
 
-  // Display the current number of successful in the console
-  console.log(dodges);
   // Text to display successful dodges on canvas using correct grammar
   if (dodges === 1) {
     // Singular if 1 dodge
@@ -199,5 +218,21 @@ function draw() {
 
   // Display the enemy
   image(enemy, enemyX, enemyY, enemyWidth, enemyHeight);
+
+}
+
+// keyTyped()
+//
+// Handles additional keyboard commands from player
+// Emergency shrink command
+function keyTyped() {
+  // If space bar pressed and emergency shrink not used, shrink avatar
+  // Works once per game play
+  if (keyCode === 32 && shrinkUsed === false) {
+    enemyWidth = 50;
+    enemyHeight = enemyWidth * (275/400);
+    shrinkUsed = true;
+    console.log("SHRUNK!");
+  }
 
 }
