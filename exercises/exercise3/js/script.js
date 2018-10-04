@@ -15,6 +15,16 @@ var targetX;
 var targetY;
 var targetImage;
 
+// Position of a copy of the target image for user interface
+var targetCopyX;
+var targetCopyY;
+// Coloured rectangle background for copy of target image
+var rectPadding = 30;
+var rectX;
+var rectY;
+var rectWidth;
+var rectHeight;
+
 // The ten decoy images
 var decoyImage1;
 var decoyImage2;
@@ -60,7 +70,45 @@ function setup() {
   createCanvas(windowWidth,windowHeight);
   background("#ffff00");
   imageMode(CENTER);
+  rectMode(CENTER);
 
+  // Draw decoys
+  decoys();
+  // Display copy of target image against a coloured rectangle
+  // so user knows what to search for
+  interface();
+
+
+  // Position target image
+  targetX = random(0,width);
+  targetY = random(0,height);
+  // Display target amongst decoys - always positioned on top
+  image(targetImage,targetX,targetY);
+
+}
+
+function draw() {
+  if (gameOver) {
+    // Prepare our typography
+    textFont("Helvetica");
+    textSize(128);
+    textAlign(CENTER,CENTER);
+    noStroke();
+    fill(random(255));
+    // Tell them they won!
+    text("YOU WINNED!",width/2,height/2);
+
+    noFill();
+    stroke(random(255));
+    strokeWeight(10);
+    ellipse(targetX,targetY,targetImage.width,targetImage.height);
+  }
+}
+
+// decoys()
+//
+// draw decoy images
+function decoys() {
   // Use a for loop to draw as many decoys as we need
   for (var i = 0; i < numDecoys; i++) {
     // Choose a random location for this decoy
@@ -102,30 +150,23 @@ function setup() {
       image(decoyImage10,x,y);
     }
   }
-
-  // Once we've displayed all decoys, we choose a location for the target
-  targetX = random(0,width);
-  targetY = random(0,height);
-  // And draw it (this means it will always be on top)
-  image(targetImage,targetX,targetY);
 }
 
-function draw() {
-  if (gameOver) {
-    // Prepare our typography
-    textFont("Helvetica");
-    textSize(128);
-    textAlign(CENTER,CENTER);
-    noStroke();
-    fill(random(255));
-    // Tell them they won!
-    text("YOU WINNED!",width/2,height/2);
-
-    noFill();
-    stroke(random(255));
-    strokeWeight(10);
-    ellipse(targetX,targetY,targetImage.width,targetImage.height);
-  }
+// interface()
+//
+// Displays a copy of the target image in the top right corner
+function interface() {
+  // Position the image
+  targetCopyX = width - targetImage.width/2 - rectPadding;
+  targetCopyY = targetImage.height/2 + rectPadding;
+  // Display it against a white rectangle;
+  rectWidth = targetImage.width + rectPadding;
+  rectHeight = targetImage.height + rectPadding;
+  rectX = targetCopyX;
+  rectY = targetCopyY;
+  fill(255);
+  rect(rectX,rectY,rectWidth,rectHeight);
+  image(targetImage,targetCopyX,targetCopyY);
 }
 
 // mousePressed()
