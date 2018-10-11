@@ -28,6 +28,10 @@ var playerMaxHealth = 255;
 
 //////////// NEW //////////
 
+// Image to display and track player health
+var healthImage;
+var healthImageX;
+var healthImageY;
 // Rate at which player loses health
 var loseHealth = 0.5;
 
@@ -57,6 +61,15 @@ var eatHealth = 10;
 // Number of prey eaten during the game
 var preyEaten = 0;
 
+
+// preload()
+//
+// Preloads images and fonts
+function preload() {
+  // load image of spoon to show player health
+  healthImage = loadImage("assets/images/spoon.png");
+}
+
 // setup()
 //
 // Sets up the basic elements of the game
@@ -65,9 +78,19 @@ function setup() {
 
   noStroke();
 
+  setupInterface();
   setupPrey();
   setupPlayer();
 }
+
+// setupInterface()
+//
+// Sets up interface elements
+function setupInterface() {
+  healthImageX = width - healthImage.width;
+  healthImageY = height - healthImage.height;
+}
+
 
 // setupPrey()
 //
@@ -105,6 +128,8 @@ function draw() {
   background(100,100,200);
 
   if (!gameOver) {
+    drawInterface();
+
     handleInput();
 
     movePlayer();
@@ -121,12 +146,20 @@ function draw() {
   }
 }
 
+// drawInterface()
+//
+// Displays and updates interface elements
+function drawInterface() {
+  image(healthImage, healthImageX, healthImageY);
+}
+
 // handleInput()
 //
 // Checks arrow keys and adjusts player velocity accordingly
 function handleInput() {
 
   //////////// NEW ////////////
+  // Check if player is sprinting (shift key down)
   sprint();
   ////////// END NEW //////////
 
@@ -169,8 +202,6 @@ function handleInput() {
     }
   }
 
-  console.log(playerMaxSpeed);
-
   ////////// END NEW //////////
 
 }
@@ -210,7 +241,7 @@ function updateHealth() {
 
   // Reduce player health, constrain to reasonable range
   playerHealth = constrain(playerHealth - loseHealth,0,playerMaxHealth);
-  console.log(loseHealth);
+
   ////////// END NEW //////////
 
   // Check if the player is dead
