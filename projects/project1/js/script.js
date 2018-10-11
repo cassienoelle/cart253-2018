@@ -25,6 +25,14 @@ var playerMaxSpeed = 2;
 // Player health
 var playerHealth;
 var playerMaxHealth = 255;
+
+//////////// NEW //////////
+
+// Rate at which player loses health
+var loseHealth = 0.5;
+
+////////// END NEW //////////
+
 // Player fill color
 var playerFill = 50;
 
@@ -118,7 +126,9 @@ function draw() {
 // Checks arrow keys and adjusts player velocity accordingly
 function handleInput() {
 
+  //////////// NEW ////////////
   sprint();
+  ////////// END NEW //////////
 
   // Check for horizontal movement
   if (keyIsDown(LEFT_ARROW)) {
@@ -142,6 +152,8 @@ function handleInput() {
     playerVY = 0;
   }
 
+  //////////// NEW ////////////
+
   // sprint()
   //
   // When shift key is down increases player velocity and
@@ -149,13 +161,18 @@ function handleInput() {
   function sprint() {
     if (keyIsDown(SHIFT)) {
       playerMaxSpeed = 6;
+      loseHealth = 1;
     }
     else {
       playerMaxSpeed = 2;
+      loseHealth = 0.5;
     }
   }
 
   console.log(playerMaxSpeed);
+
+  ////////// END NEW //////////
+
 }
 
 // movePlayer()
@@ -188,8 +205,14 @@ function movePlayer() {
 // Reduce the player's health (every frame)
 // Check if the player is dead
 function updateHealth() {
+
+  //////////// NEW ////////////
+
   // Reduce player health, constrain to reasonable range
-  playerHealth = constrain(playerHealth - 0.5,0,playerMaxHealth);
+  playerHealth = constrain(playerHealth - loseHealth,0,playerMaxHealth);
+  console.log(loseHealth);
+  ////////// END NEW //////////
+
   // Check if the player is dead
   if (playerHealth === 0) {
     // If so, the game is over
