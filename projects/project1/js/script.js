@@ -117,6 +117,9 @@ function draw() {
 //
 // Checks arrow keys and adjusts player velocity accordingly
 function handleInput() {
+
+  sprint();
+
   // Check for horizontal movement
   if (keyIsDown(LEFT_ARROW)) {
     playerVX = -playerMaxSpeed;
@@ -138,6 +141,21 @@ function handleInput() {
   else {
     playerVY = 0;
   }
+
+  // sprint()
+  //
+  // When shift key is down increases player velocity and
+  // rate at which player loses health
+  function sprint() {
+    if (keyIsDown(SHIFT)) {
+      playerMaxSpeed = 6;
+    }
+    else {
+      playerMaxSpeed = 2;
+    }
+  }
+
+  console.log(playerMaxSpeed);
 }
 
 // movePlayer()
