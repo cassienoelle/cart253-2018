@@ -1,7 +1,9 @@
 /******************************************************
+Cassie Smith
+CART 253a - Fall 2018
 
 Game - Chaser
-Pippin Barr
+Starter code by Pippin Barr
 
 A simple game of cat and mouse.
 
@@ -33,6 +35,9 @@ var preyRadius = 25;
 var preyVX;
 var preyVY;
 var preyMaxSpeed = 4;
+// Perlin noise time parameters for prey movement
+var preyTX;
+var preyTY;
 // Prey health
 var preyHealth;
 var preyMaxHealth = 100;
@@ -58,13 +63,18 @@ function setup() {
 
 // setupPrey()
 //
-// Initialises prey's position, velocity, and health
+// Initialises prey's position, velocity, health,
+// and Perlin values for movement
 function setupPrey() {
   preyX = width/5;
   preyY = height/2;
   preyVX = -preyMaxSpeed;
   preyVY = preyMaxSpeed;
   preyHealth = preyMaxHealth;
+//////////// NEW ////////////
+  preyTX = random(0,1000);
+  preyTY = random(0,1000);
+////////// END NEW //////////
 }
 
 // setupPlayer()
@@ -197,19 +207,19 @@ function checkEating() {
 
 // movePrey()
 //
-// Moves the prey based on random velocity changes
+// Moves the prey based on semi-random velocity changes
 function movePrey() {
-  // Change the prey's velocity at random intervals
-  // random() will be < 0.05 5% of the time, so the prey
-  // will change direction on 5% of frames
-  if (random() < 0.05) {
-    // Set velocity based on random values to get a new direction
-    // and speed of movement
-    // Use map() to convert from the 0-1 range of the random() function
-    // to the appropriate range of velocities for the prey
-    preyVX = map(random(),0,1,-preyMaxSpeed,preyMaxSpeed);
-    preyVY = map(random(),0,1,-preyMaxSpeed,preyMaxSpeed);
-  }
+
+  //////////// NEW ////////////
+
+  // Set velocity based on Perlin noise values to get a new direction
+  // and speed of movement
+  // Use map() to convert from values of noise() function
+  // to the appropriate range of velocities for the prey
+  preyVX = map(noise(preyTX),0,1,-preyMaxSpeed,preyMaxSpeed);
+  preyVY = map(noise(preyTY),0,1,-preyMaxSpeed,preyMaxSpeed);
+
+  ////////// END NEW //////////
 
   // Update prey position based on velocity
   preyX += preyVX;
@@ -229,6 +239,15 @@ function movePrey() {
   else if (preyY > height) {
     preyY -= height;
   }
+
+  //////////// NEW ////////////
+
+  // Update Perlin noise() values
+  preyTX += 0.01;
+  preyTY += 0.01;
+
+  ////////// END NEW //////////
+
 }
 
 // drawPrey()
