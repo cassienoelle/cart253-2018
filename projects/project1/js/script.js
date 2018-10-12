@@ -28,17 +28,10 @@ var playerMaxHealth = 255;
 
 //////////// NEW //////////
 
-// Image to display and track player health
-var healthImage;
-var healthImageX;
-var healthImageY;
 // Rate at which player loses health
 var loseHealth = 0.5;
 
 ////////// END NEW //////////
-
-// Player fill color
-var playerFill = 50;
 
 // Prey position, size, velocity
 var preyX;
@@ -46,15 +39,17 @@ var preyY;
 var preyRadius = 25;
 var preyVX;
 var preyVY;
-var preyMaxSpeed = 4;
+var preyMaxSpeed = 6;
 // Perlin noise time parameters for prey movement
 var preyTX;
 var preyTY;
 // Prey health
 var preyHealth;
 var preyMaxHealth = 100;
-// Prey fill color
-var preyFill = 200;
+// Prey image
+var preyImage;
+var preyWidth = 50;
+var preyHeight = preyWidth;
 
 // Amount of health obtained per frame of "eating" the prey
 var eatHealth = 10;
@@ -64,10 +59,10 @@ var preyEaten = 0;
 
 // preload()
 //
-// Preloads images and fonts
+// Preload images
 function preload() {
-  // load image of spoon to show player health
-  healthImage = loadImage("assets/images/spoon.png");
+  // load prey image of a like
+  preyImage = loadImage("assets/images/like.png");
 }
 
 // setup()
@@ -87,8 +82,7 @@ function setup() {
 //
 // Sets up interface elements
 function setupInterface() {
-  healthImageX = width - healthImage.width;
-  healthImageY = height - healthImage.height;
+
 }
 
 
@@ -125,7 +119,7 @@ function setupPlayer() {
 // displays the two agents.
 // When the game is over, shows the game over screen.
 function draw() {
-  background(100,100,200);
+  background(255);
 
   if (!gameOver) {
     drawInterface();
@@ -150,7 +144,7 @@ function draw() {
 //
 // Displays and updates interface elements
 function drawInterface() {
-  image(healthImage, healthImageX, healthImageY);
+
 }
 
 // handleInput()
@@ -193,11 +187,11 @@ function handleInput() {
   // rate at which player loses health
   function sprint() {
     if (keyIsDown(SHIFT)) {
-      playerMaxSpeed = 6;
+      playerMaxSpeed = 10;
       loseHealth = 1;
     }
     else {
-      playerMaxSpeed = 2;
+      playerMaxSpeed = 6;
       loseHealth = 0.5;
     }
   }
@@ -277,6 +271,7 @@ function checkEating() {
   }
 }
 
+
 // movePrey()
 //
 // Moves the prey based on semi-random velocity changes
@@ -319,22 +314,20 @@ function movePrey() {
   preyTY += 0.01;
 
   ////////// END NEW //////////
-
 }
 
 // drawPrey()
 //
 // Draw the prey as an ellipse with alpha based on health
 function drawPrey() {
-  fill(preyFill,preyHealth);
-  ellipse(preyX,preyY,preyRadius*2);
+  image(preyImage,preyX,preyY,preyWidth,preyHeight);
 }
 
 // drawPlayer()
 //
 // Draw the player as an ellipse with alpha based on health
 function drawPlayer() {
-  fill(playerFill,playerHealth);
+  fill(253,255,0 ,playerHealth);
   ellipse(playerX,playerY,playerRadius*2);
 }
 
@@ -342,11 +335,12 @@ function drawPlayer() {
 //
 // Display text about the game being over!
 function showGameOver() {
+  background(233,235,238);
   textSize(32);
   textAlign(CENTER,CENTER);
   fill(0);
   var gameOverText = "GAME OVER\n";
-  gameOverText += "You ate " + preyEaten + " prey\n";
-  gameOverText += "before you died."
+  gameOverText += "you are\n";
+  gameOverText += "irrelevant"
   text(gameOverText,width/2,height/2);
 }
