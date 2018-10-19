@@ -46,10 +46,11 @@ var leftPaddle = {
   speed: 5,
   upKeyCode: 87, // The key code for W
   downKeyCode: 83, // The key code for S
+
+  /////////// NEW //////////////
   red: 255,
   green: 255,
   blue: 255,
-  /////////// NEW //////////////
   score: 0 // Track points
   ///////// END NEW ///////////
 
@@ -69,10 +70,11 @@ var rightPaddle = {
   speed: 5,
   upKeyCode: 38, // The key code for the UP ARROW
   downKeyCode: 40, // The key code for the DOWN ARROW
+
+  /////////// NEW //////////////
   red: 255,
   green: 255,
   blue: 255,
-  /////////// NEW //////////////
   score: 0 // Track points
   ///////// END NEW ///////////
 }
@@ -263,7 +265,7 @@ function handleBallPaddleCollision(paddle) {
       ball.vx = -ball.vx;
       // Play our bouncing sound effect by rewinding and then playing
       beepSFX.currentTime = 0;
-      beepSFX.play();
+      //beepSFX.play();
     }
   }
 }
@@ -289,13 +291,26 @@ function handleBallOffScreen() {
     // This is where we would count points etc!
 
     ///////////// NEW //////////////
+    // If ball goes off side of screen, increase score of appropriate paddle
+    // Relaunch ball towards the paddle that just scored
+
+    // If ball goes off left side of screen
     if (ballRight < 0) {
+      // Increase score of right paddle
       rightPaddle.score ++;
       console.log("Right paddle score: " + rightPaddle.score);
+      // Launch ball towards right paddle with random y velocity
+      ball.vx = ball.speed;
+      ball.vy = random(-5,5);
     }
+    // If ball goes off right side of screen
     else if (ballLeft > width) {
+      // Increase score of left paddle
       leftPaddle.score ++;
       console.log("Left paddle score: " + leftPaddle.score);
+      // Launch ball towards left paddle with random y velocity
+      ball.vx = -ball.speed;
+      ball.vy = random(-5,5);
     }
     /////////// END NEW ////////////
   }
