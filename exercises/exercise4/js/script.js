@@ -9,7 +9,6 @@
 
 // Game colors
 var bgColor = 0;
-var fgColor = 255;
 
 
 // BALL
@@ -22,7 +21,10 @@ var ball = {
   size: 20,
   vx: 0,
   vy: 0,
-  speed: 5
+  speed: 5,
+  /////////// NEW /////////
+  color: 255
+  //////// END NEW ////////
 }
 
 // PADDLES
@@ -44,6 +46,9 @@ var leftPaddle = {
   speed: 5,
   upKeyCode: 87, // The key code for W
   downKeyCode: 83, // The key code for S
+  red: 255,
+  green: 255,
+  blue: 255,
   /////////// NEW //////////////
   score: 0 // Track points
   ///////// END NEW ///////////
@@ -64,6 +69,9 @@ var rightPaddle = {
   speed: 5,
   upKeyCode: 38, // The key code for the UP ARROW
   downKeyCode: 40, // The key code for the DOWN ARROW
+  red: 255,
+  green: 255,
+  blue: 255,
   /////////// NEW //////////////
   score: 0 // Track points
   ///////// END NEW ///////////
@@ -89,7 +97,6 @@ function setup() {
   createCanvas(640,480);
   rectMode(CENTER);
   noStroke();
-  fill(fgColor);
 
   setupPaddles();
   setupBall();
@@ -145,6 +152,14 @@ function draw() {
 
   // Handle the ball going off screen
   handleBallOffScreen();
+
+  /////////////// NEW /////////////////
+
+  // Update paddle display as score changes
+  displayScore(leftPaddle);
+  displayScore(rightPaddle);
+
+  //////////// END NEW ////////////////
 
   // Display the paddles and ball
   displayPaddle(leftPaddle);
@@ -290,10 +305,13 @@ function handleBallOffScreen() {
 
 // displayScore()
 //
-// Changes size of each paddle as respective score increases
-function displayScore() {
-
-
+// Changes color of appropriate paddle as score increases
+ function displayScore(paddle) {
+   // Gradually change from white to red
+   if (paddle.green >= 0 && paddle.blue >= 0){
+     paddle.green = 255 - paddle.score*10;
+     paddle.blue = 255 - paddle.score*10;
+   }
 }
 
 /////////// END NEW ///////////
@@ -302,12 +320,24 @@ function displayScore() {
 //
 // Draws ball on screen based on its properties
 function displayBall() {
+
+  ///////////// NEW /////////////////
+  push(); // Set fill for ball only
+  fill(ball.color);
   rect(ball.x,ball.y,ball.size,ball.size);
+  pop();
+  //////////// END NEW //////////////
 }
 
 // displayPaddle(paddle)
 //
 // Draws the specified paddle on screen based on its properties
 function displayPaddle(paddle) {
+
+  ///////////// NEW /////////////////
+  push(); // Set fill for paddles only
+  fill(paddle.red, paddle.green, paddle.blue);
   rect(paddle.x,paddle.y,paddle.w,paddle.h);
+  pop();
+  //////////// END NEW //////////////
 }
