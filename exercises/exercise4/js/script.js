@@ -1,5 +1,8 @@
 // Pong
-// by Pippin Barr
+// Cassie Smith
+// CART 253a - October 2018
+//
+// Starter code by Pippin Barr
 //
 // A primitive implementation of Pong with no scoring system
 // just the ability to play the game with the keyboard.
@@ -44,7 +47,7 @@ var leftPaddle = {
 
 // RIGHT PADDLE
 
-// Basic definition of a left paddle object with its key properties of
+// Basic definition of a right paddle object with its key properties of
 // position, size, velocity, and speed
 var rightPaddle = {
   x: 0,
@@ -57,6 +60,13 @@ var rightPaddle = {
   upKeyCode: 38, // The key code for the UP ARROW
   downKeyCode: 40 // The key code for the DOWN ARROW
 }
+/////////// NEW //////////////
+
+// Track score of left and right paddle
+var leftPaddleScore = 0;
+var rightPaddleScore = 0;
+
+///////// END NEW ///////////
 
 // A variable to hold the beep sound we will play on bouncing
 var beepSFX;
@@ -261,6 +271,17 @@ function handleBallOffScreen() {
     // carries on moving with the same velocity after its
     // position is reset.
     // This is where we would count points etc!
+
+    ///////////// NEW //////////////
+    if (ballRight < 0) {
+      rightPaddleScore ++;
+      console.log("Right paddle score: " + rightPaddleScore);
+    }
+    else if (ballLeft > width) {
+      leftPaddleScore ++;
+      console.log("Left paddle score: " + leftPaddleScore);
+    }
+    /////////// END NEW ////////////
   }
 }
 
