@@ -22,9 +22,9 @@ var ball = {
   vx: 0,
   vy: 0,
   speed: 5,
-  /////////// NEW /////////
+  ////////////////// NEW ///////////////////
   color: 255
-  //////// END NEW ////////
+  //////////////// END NEW /////////////////
 }
 
 // PADDLES
@@ -47,12 +47,12 @@ var leftPaddle = {
   upKeyCode: 87, // The key code for W
   downKeyCode: 83, // The key code for S
 
-  /////////// NEW //////////////
+  /////////////////// NEW /////////////////////
   red: 255,
   green: 255,
   blue: 255,
   score: 0 // Track points
-  ///////// END NEW ///////////
+  ///////////////// END NEW ///////////////////
 
 }
 
@@ -71,12 +71,12 @@ var rightPaddle = {
   upKeyCode: 38, // The key code for the UP ARROW
   downKeyCode: 40, // The key code for the DOWN ARROW
 
-  /////////// NEW //////////////
+  //////////////////// NEW ///////////////////
   red: 255,
   green: 255,
   blue: 255,
   score: 0 // Track points
-  ///////// END NEW ///////////
+  ///////////////// END NEW //////////////////
 }
 
 // A variable to hold the beep sound we will play on bouncing
@@ -155,13 +155,13 @@ function draw() {
   // Handle the ball going off screen
   handleBallOffScreen();
 
-  /////////////// NEW /////////////////
+  //////////////////// NEW ////////////////////////
 
   // Update paddle display as score changes
   displayScore(leftPaddle);
   displayScore(rightPaddle);
 
-  //////////// END NEW ////////////////
+  ////////////////// END NEW //////////////////////
 
   // Display the paddles and ball
   displayPaddle(leftPaddle);
@@ -282,41 +282,57 @@ function handleBallOffScreen() {
 
   // Check for ball going off the sides
   if (ballRight < 0 || ballLeft > width) {
-    // If it went off either side, reset it to the centre
-    ball.x = width/2;
-    ball.y = height/2;
-    // NOTE that we don't change its velocity here so it just
-    // carries on moving with the same velocity after its
-    // position is reset.
-    // This is where we would count points etc!
 
-    ///////////// NEW //////////////
+    /////////////////// NEW //////////////////////
+
     // If ball goes off side of screen, increase score of appropriate paddle
-    // Relaunch ball towards the paddle that just scored
+    // Reset ball
 
     // If ball goes off left side of screen
     if (ballRight < 0) {
       // Increase score of right paddle
       rightPaddle.score ++;
+      rightPaddle.justScored = true;
+      leftPaddle.justScored = false;
       console.log("Right paddle score: " + rightPaddle.score);
-      // Launch ball towards right paddle with random y velocity
-      ball.vx = ball.speed;
-      ball.vy = random(-5,5);
     }
     // If ball goes off right side of screen
     else if (ballLeft > width) {
       // Increase score of left paddle
       leftPaddle.score ++;
+      leftPaddle.justScored = true;
+      rightPaddle.justScored = false;
       console.log("Left paddle score: " + leftPaddle.score);
-      // Launch ball towards left paddle with random y velocity
-      ball.vx = -ball.speed;
-      ball.vy = random(-5,5);
     }
-    /////////// END NEW ////////////
+    ballReset();
+
+    //////////////// END NEW //////////////////
   }
 }
 
-///////////// NEW /////////////
+///////////////// NEW ///////////////////
+
+// ballReset()
+//
+// Reset ball to center when a point is scored
+// Send ball towards paddle that just scored at a random y velocity
+function ballReset() {
+  // Reset ball to center of canvas
+  ball.x = width/2;
+  ball.y = height/2;
+  // If right paddle scores
+  if (rightPaddle.justScored) {
+    // Launch ball towards right paddle with random y velocity
+    ball.vx = ball.speed;
+    ball.vy = random(-5,5);
+  }
+  // If left paddle scores
+  else if (leftPaddle.justScored) {
+    // Launch ball towards left paddle with random y velocity
+    ball.vx = -ball.speed;
+    ball.vy = random(-5,5);
+  }
+}
 
 // displayScore()
 //
@@ -329,19 +345,19 @@ function handleBallOffScreen() {
    }
 }
 
-/////////// END NEW ///////////
+///////////////// END NEW ///////////////////
 
 // displayBall()
 //
 // Draws ball on screen based on its properties
 function displayBall() {
 
-  ///////////// NEW /////////////////
+  ////////////////// NEW /////////////////////
   push(); // Set fill for ball only
   fill(ball.color);
   rect(ball.x,ball.y,ball.size,ball.size);
   pop();
-  //////////// END NEW //////////////
+  //////////////// END NEW //////////////////
 }
 
 // displayPaddle(paddle)
@@ -349,10 +365,10 @@ function displayBall() {
 // Draws the specified paddle on screen based on its properties
 function displayPaddle(paddle) {
 
-  ///////////// NEW /////////////////
+  ////////////////// NEW ////////////////////
   push(); // Set fill for paddles only
   fill(paddle.red, paddle.green, paddle.blue);
   rect(paddle.x,paddle.y,paddle.w,paddle.h);
   pop();
-  //////////// END NEW //////////////
+  //////////////// END NEW //////////////////
 }
