@@ -11,6 +11,7 @@
 var bgColor = 0;
 var fgColor = 255;
 
+
 // BALL
 
 // Basic definition of a ball object with its key properties of
@@ -42,7 +43,11 @@ var leftPaddle = {
   vy: 0,
   speed: 5,
   upKeyCode: 87, // The key code for W
-  downKeyCode: 83 // The key code for S
+  downKeyCode: 83, // The key code for S
+  /////////// NEW //////////////
+  score: 0 // Track points
+  ///////// END NEW ///////////
+
 }
 
 // RIGHT PADDLE
@@ -58,15 +63,11 @@ var rightPaddle = {
   vy: 0,
   speed: 5,
   upKeyCode: 38, // The key code for the UP ARROW
-  downKeyCode: 40 // The key code for the DOWN ARROW
+  downKeyCode: 40, // The key code for the DOWN ARROW
+  /////////// NEW //////////////
+  score: 0 // Track points
+  ///////// END NEW ///////////
 }
-/////////// NEW //////////////
-
-// Track score of left and right paddle
-var leftPaddleScore = 0;
-var rightPaddleScore = 0;
-
-///////// END NEW ///////////
 
 // A variable to hold the beep sound we will play on bouncing
 var beepSFX;
@@ -217,7 +218,7 @@ function handleBallWallCollision() {
     ball.vy = -ball.vy;
     // Play our bouncing sound effect by rewinding and then playing
     beepSFX.currentTime = 0;
-    beepSFX.play();
+    //beepSFX.play();
   }
 }
 
@@ -274,16 +275,28 @@ function handleBallOffScreen() {
 
     ///////////// NEW //////////////
     if (ballRight < 0) {
-      rightPaddleScore ++;
-      console.log("Right paddle score: " + rightPaddleScore);
+      rightPaddle.score ++;
+      console.log("Right paddle score: " + rightPaddle.score);
     }
     else if (ballLeft > width) {
-      leftPaddleScore ++;
-      console.log("Left paddle score: " + leftPaddleScore);
+      leftPaddle.score ++;
+      console.log("Left paddle score: " + leftPaddle.score);
     }
     /////////// END NEW ////////////
   }
 }
+
+///////////// NEW /////////////
+
+// displayScore()
+//
+// Changes size of each paddle as respective score increases
+function displayScore() {
+
+
+}
+
+/////////// END NEW ///////////
 
 // displayBall()
 //
