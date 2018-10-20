@@ -13,7 +13,7 @@
 var bgBlue = 127;
 var bgGreen = 0;
 var bgRed = 0;
-
+var over = true;
 /////////////// END NEW /////////////////
 
 // BALL
@@ -90,9 +90,9 @@ var beepSFX;
 // And images for ball and paddles (sun, moon, earth)
 function preload() {
   beepSFX = new Audio("assets/sounds/beep.wav");
-  ball.image = loadImage("assets/images/earth.png");
-  leftPaddle.image = loadImage("assets/images/sun.png");
-  rightPaddle.image = loadImage("assets/images/moon.png");
+  ball.image = loadImage("assets/images/earth.png"); // the earth
+  leftPaddle.image = loadImage("assets/images/sun.png"); // the sun
+  rightPaddle.image = loadImage("assets/images/moon.png"); // the moon
 }
 
 // setup()
@@ -141,7 +141,7 @@ function draw() {
   //////////////// NEW /////////////////
   background(bgRed,bgGreen,bgBlue);
   ///////////// END NEW /////////////////
-
+  if (over === false){
   // Handle input
   // Notice how we're using the SAME FUNCTION to handle the input
   // for the two paddles!
@@ -162,7 +162,10 @@ function draw() {
 
   // Handle the ball going off screen
   handleBallOffScreen();
-
+}
+else {
+  gameOver();
+}
   // Display the paddles and ball
   displayPaddle(leftPaddle);
   displayPaddle(rightPaddle);
@@ -343,9 +346,11 @@ function ballReset() {
 //
 // Changes color of background as score increases
  function displayScore(paddle) {
+   // if the moon scores, darken background towards night
    if (rightPaddle.justScored){
      bgBlue = constrain(bgBlue-=10,0,255);
    }
+   // if the sun scores, brighten background towards day
    else if (leftPaddle.justScored) {
      bgBlue = constrain(bgBlue+=10,0,255);
    }
@@ -375,4 +380,50 @@ function displayPaddle(paddle) {
   imageMode(CENTER);
   image(paddle.image,paddle.x,paddle.y,paddle.w,paddle.h);
   //////////////// END NEW //////////////////
+}
+
+// gameOver()
+//
+// Display if player wins the game by attaining enough points
+// to turn background into night or day
+function gameOver() {
+  if (bgBlue === 0) {
+    leftPaddle.speed = 0;
+    leftPaddle.y = height + 100;
+    rightPaddle.speed = 0;
+    rightPaddle.y = height/2;
+    ball.speed = 0;
+    ball.x = width/2;
+    ball.y = width/2;
+    stars();
+  }
+  else if (bgBlue === 255) {
+    leftPaddle.speed = 0;
+    leftPaddle.y = height/2;
+    rightPaddle.speed = 0;
+    rightPaddle.y = height + 100;
+    ball.speed = 0;
+    ball.x = width/2;
+    ball.y = width/2;
+    stars();
+  }
+}
+
+function stars() {
+  background(0);
+  fill(255);
+  frameRate(10);
+  var i;
+  for (i = 0; i < 70; i++) {
+    var x = random(0,width);
+    var y = random(0,height);
+    var w = 2;
+    var h = 2;
+    ellipse(x,y,w,h);
+    console.log("yes");
+  }
+}
+
+function bird() {
+
 }
