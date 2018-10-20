@@ -7,9 +7,14 @@
 // A primitive implementation of Pong with no scoring system
 // just the ability to play the game with the keyboard.
 
-// Game colors
-var bgColor = 0;
+////////////////// NEW /////////////////
 
+// Background colors
+var bgBlue = 127;
+var bgGreen = 0;
+var bgRed = 0;
+
+/////////////// END NEW /////////////////
 
 // BALL
 
@@ -18,12 +23,13 @@ var bgColor = 0;
 var ball = {
   x: 0,
   y: 0,
-  size: 20,
+  size: 40,
   vx: 0,
   vy: 0,
   speed: 5,
   ////////////////// NEW ///////////////////
-  color: 255
+  color: 255,
+  image: ""
   //////////////// END NEW /////////////////
 }
 
@@ -39,8 +45,8 @@ var paddleInset = 50;
 var leftPaddle = {
   x: 0,
   y: 0,
-  w: 20,
-  h: 70,
+  w: 50,
+  h: 50,
   vx: 0,
   vy: 0,
   speed: 5,
@@ -48,10 +54,8 @@ var leftPaddle = {
   downKeyCode: 83, // The key code for S
 
   /////////////////// NEW /////////////////////
-  red: 255,
-  green: 255,
-  blue: 255,
-  score: 0 // Track points
+  score: 0, // Track points
+  image: ""
   ///////////////// END NEW ///////////////////
 
 }
@@ -63,8 +67,8 @@ var leftPaddle = {
 var rightPaddle = {
   x: 0,
   y: 0,
-  w: 20,
-  h: 70,
+  w: 50,
+  h: 50,
   vx: 0,
   vy: 0,
   speed: 5,
@@ -72,10 +76,8 @@ var rightPaddle = {
   downKeyCode: 40, // The key code for the DOWN ARROW
 
   //////////////////// NEW ///////////////////
-  red: 255,
-  green: 255,
-  blue: 255,
-  score: 0 // Track points
+  score: 0, // Track points
+  image: ""
   ///////////////// END NEW //////////////////
 }
 
@@ -85,8 +87,12 @@ var beepSFX;
 // preload()
 //
 // Loads the beep audio for the sound of bouncing
+// And images for ball and paddles (sun, moon, earth)
 function preload() {
   beepSFX = new Audio("assets/sounds/beep.wav");
+  ball.image = loadImage("assets/images/earth.png");
+  leftPaddle.image = loadImage("assets/images/sun.png");
+  rightPaddle.image = loadImage("assets/images/moon.png");
 }
 
 // setup()
@@ -132,7 +138,9 @@ function setupBall() {
 // Calls the appropriate functions to run the game
 function draw() {
   // Fill the background
-  background(bgColor);
+  //////////////// NEW /////////////////
+  background(bgRed,bgGreen,bgBlue);
+  ///////////// END NEW /////////////////
 
   // Handle input
   // Notice how we're using the SAME FUNCTION to handle the input
@@ -154,14 +162,6 @@ function draw() {
 
   // Handle the ball going off screen
   handleBallOffScreen();
-
-  //////////////////// NEW ////////////////////////
-
-  // Update paddle display as score changes
-  displayScore(leftPaddle);
-  displayScore(rightPaddle);
-
-  ////////////////// END NEW //////////////////////
 
   // Display the paddles and ball
   displayPaddle(leftPaddle);
@@ -304,6 +304,11 @@ function handleBallOffScreen() {
       rightPaddle.justScored = false;
       console.log("Left paddle score: " + leftPaddle.score);
     }
+
+    // Update paddle display as score changes
+    displayScore(leftPaddle);
+    displayScore(rightPaddle);
+    // Reset ball position and velocity
     ballReset();
 
     //////////////// END NEW //////////////////
@@ -336,14 +341,19 @@ function ballReset() {
 
 // displayScore()
 //
-// Changes color of appropriate paddle as score increases
+// Changes color of background as score increases
  function displayScore(paddle) {
-   // Gradually change from white to red
-   if (paddle.green >= 0 && paddle.blue >= 0){
-     paddle.green = 255 - paddle.score*10;
-     paddle.blue = 255 - paddle.score*10;
+   if (rightPaddle.justScored){
+     bgBlue = constrain(bgBlue-=10,0,255);
    }
+   else if (leftPaddle.justScored) {
+     bgBlue = constrain(bgBlue+=10,0,255);
+   }
+   console.log ("Moon score: " + rightPaddle.score);
+   console.log("Sun score: " + leftPaddle.score);
+   console.log("Blue: " + bgBlue);
 }
+
 
 ///////////////// END NEW ///////////////////
 
@@ -353,10 +363,7 @@ function ballReset() {
 function displayBall() {
 
   ////////////////// NEW /////////////////////
-  push(); // Set fill for ball only
-  fill(ball.color);
-  rect(ball.x,ball.y,ball.size,ball.size);
-  pop();
+  image(ball.image,ball.x,ball.y,ball.size,ball.size);
   //////////////// END NEW //////////////////
 }
 
@@ -364,11 +371,8 @@ function displayBall() {
 //
 // Draws the specified paddle on screen based on its properties
 function displayPaddle(paddle) {
-
   ////////////////// NEW ////////////////////
-  push(); // Set fill for paddles only
-  fill(paddle.red, paddle.green, paddle.blue);
-  rect(paddle.x,paddle.y,paddle.w,paddle.h);
-  pop();
+  imageMode(CENTER);
+  image(paddle.image,paddle.x,paddle.y,paddle.w,paddle.h);
   //////////////// END NEW //////////////////
 }
