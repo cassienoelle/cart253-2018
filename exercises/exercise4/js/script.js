@@ -4,8 +4,10 @@
 //
 // Starter code by Pippin Barr
 //
-// A primitive implementation of Pong with no scoring system
-// just the ability to play the game with the keyboard.
+// A simple version of Pong as a battle between day and night
+// Paddles are the sun and moon, ball is the earth
+// As each player scores the background brightens or darkens
+// until day or night is achieved
 
 ////////////////// NEW /////////////////
 
@@ -13,7 +15,7 @@
 var bgBlue = 127;
 var bgGreen = 0;
 var bgRed = 0;
-var over = true;
+var over = false;
 /////////////// END NEW /////////////////
 
 // BALL
@@ -81,18 +83,34 @@ var rightPaddle = {
   ///////////////// END NEW //////////////////
 }
 
+//////////////////// NEW ////////////////////
+// CLOUD
+
+// Basic definition of a cloud object
+// Displayed with cloud() function if left paddle wins game
+var cloud = {
+  x: 0,
+  y: 0,
+  w: 50,
+  h: 30,
+  image: ""
+}
+
+////////////////// END NEW ////////////////
+
 // A variable to hold the beep sound we will play on bouncing
 var beepSFX;
 
 // preload()
 //
 // Loads the beep audio for the sound of bouncing
-// And images for ball and paddles (sun, moon, earth)
+// Loads images for ball and paddles (sun, moon, earth)
 function preload() {
   beepSFX = new Audio("assets/sounds/beep.wav");
   ball.image = loadImage("assets/images/earth.png"); // the earth
   leftPaddle.image = loadImage("assets/images/sun.png"); // the sun
   rightPaddle.image = loadImage("assets/images/moon.png"); // the moon
+  cloud.image = loadImage("assets/images/cloud.png"); // a cloud
 }
 
 // setup()
@@ -140,32 +158,38 @@ function draw() {
   // Fill the background
   //////////////// NEW /////////////////
   background(bgRed,bgGreen,bgBlue);
-  ///////////// END NEW /////////////////
+
+  // If game not over, play game
   if (over === false){
-  // Handle input
-  // Notice how we're using the SAME FUNCTION to handle the input
-  // for the two paddles!
-  handleInput(leftPaddle);
-  handleInput(rightPaddle);
 
-  // Update positions of all objects
-  // Notice how we're using the SAME FUNCTION to handle the input
-  // for all three objects!
-  updatePosition(leftPaddle);
-  updatePosition(rightPaddle);
-  updatePosition(ball);
+    // Handle input
+    // Notice how we're using the SAME FUNCTION to handle the input
+    // for the two paddles!
+    handleInput(leftPaddle);
+    handleInput(rightPaddle);
 
-  // Handle collisions
-  handleBallWallCollision();
-  handleBallPaddleCollision(leftPaddle);
-  handleBallPaddleCollision(rightPaddle);
+    // Update positions of all objects
+    // Notice how we're using the SAME FUNCTION to handle the input
+    // for all three objects!
+    updatePosition(leftPaddle);
+    updatePosition(rightPaddle);
+    updatePosition(ball);
 
-  // Handle the ball going off screen
-  handleBallOffScreen();
-}
-else {
-  gameOver();
-}
+    // Handle collisions
+    handleBallWallCollision();
+    handleBallPaddleCollision(leftPaddle);
+    handleBallPaddleCollision(rightPaddle);
+
+    // Handle the ball going off screen
+    handleBallOffScreen();
+  }
+  // If player wins, game over
+  else {
+      gameOver();
+  }
+
+  ///////////// END NEW /////////////////
+
   // Display the paddles and ball
   displayPaddle(leftPaddle);
   displayPaddle(rightPaddle);
@@ -238,7 +262,7 @@ function handleBallWallCollision() {
     ball.vy = -ball.vy;
     // Play our bouncing sound effect by rewinding and then playing
     beepSFX.currentTime = 0;
-    //beepSFX.play();
+    beepSFX.play();
   }
 }
 
@@ -268,7 +292,7 @@ function handleBallPaddleCollision(paddle) {
       ball.vx = -ball.vx;
       // Play our bouncing sound effect by rewinding and then playing
       beepSFX.currentTime = 0;
-      //beepSFX.play();
+      beepSFX.play();
     }
   }
 }
@@ -349,14 +373,17 @@ function ballReset() {
    // if the moon scores, darken background towards night
    if (rightPaddle.justScored){
      bgBlue = constrain(bgBlue-=10,0,255);
+     if (bgBlue === 0) {
+       over = true;
+     }
    }
    // if the sun scores, brighten background towards day
    else if (leftPaddle.justScored) {
      bgBlue = constrain(bgBlue+=10,0,255);
+     if (bgBlue === 255) {
+       over = true;
+     }
    }
-   console.log ("Moon score: " + rightPaddle.score);
-   console.log("Sun score: " + leftPaddle.score);
-   console.log("Blue: " + bgBlue);
 }
 
 
@@ -382,11 +409,15 @@ function displayPaddle(paddle) {
   //////////////// END NEW //////////////////
 }
 
+///////////////// NEW ////////////////////
+
 // gameOver()
 //
 // Display if player wins the game by attaining enough points
-// to turn background into night or day
+// Reset paddle and ball positions
+// Turn background into night or day
 function gameOver() {
+  // If right paddle (moon) wins,hide sun and fill background with twinking stars
   if (bgBlue === 0) {
     leftPaddle.speed = 0;
     leftPaddle.y = height + 100;
@@ -397,6 +428,7 @@ function gameOver() {
     ball.y = width/2;
     stars();
   }
+  // If left paddle (sun) wins, hide moon and display clouds moving across the screen
   else if (bgBlue === 255) {
     leftPaddle.speed = 0;
     leftPaddle.y = height/2;
@@ -405,10 +437,14 @@ function gameOver() {
     ball.speed = 0;
     ball.x = width/2;
     ball.y = width/2;
-    stars();
+    clouds();
   }
 }
 
+
+// stars()
+//
+// Fill the background with twinkling stars
 function stars() {
   background(0);
   fill(255);
@@ -420,10 +456,24 @@ function stars() {
     var w = 2;
     var h = 2;
     ellipse(x,y,w,h);
-    console.log("yes");
   }
 }
 
-function bird() {
-
+// clouds()
+//
+// Set background to pale blue and move clouds horizontally across screen
+function clouds() {
+  background(158,190,255);
+  cloud.x += random(0.5,2);
+  cloud.y = constrain(cloud.y,50,height-50);
+  if (cloud.x < 0) {
+    cloud.x += width;
+  }
+  else if (cloud.x > width) {
+    cloud.x -= width;
+    cloud.y += random(-200, 200);
+  }
+  image(cloud.image,cloud.x,cloud.y,cloud.w,cloud.h);
 }
+
+/////////////////// END NEW //////////////////////////
