@@ -14,18 +14,33 @@ var ball;
 var leftPaddle;
 var rightPaddle;
 
+// Variables to hold images of ball and paddles
+var ballImage;
+var leftPaddleImage;
+var rightPaddleImage;
+
+// preload()
+//
+// Loads images for ball and paddles
+function preload() {
+  ballImage = loadImage("assets/images/earth.png"); // the earth
+  leftPaddleImage = loadImage("assets/images/sun.png"); // the sun
+  rightPaddleImage = loadImage("assets/images/moon.png"); // the moon
+}
+
 // setup()
 //
 // Creates the ball and paddles
 function setup() {
   createCanvas(640,480);
+  imageMode(CENTER);
   // Create a ball
-  ball = new Ball(width/2,height/2,5,5,10,5);
+  ball = new Ball(ballImage,width/2,height/2,5,5,35,5);
   // Create the right paddle with UP and DOWN as controls
-  rightPaddle = new Paddle(width-10,height/2,10,60,10,DOWN_ARROW,UP_ARROW);
+  rightPaddle = new Paddle(rightPaddleImage,width-50,height/2,50,50,10,DOWN_ARROW,UP_ARROW);
   // Create the left paddle with W and S as controls
   // Keycodes 83 and 87 are W and S respectively
-  leftPaddle = new Paddle(0,height/2,10,60,10,83,87);
+  leftPaddle = new Paddle(leftPaddleImage,50,height/2,50,50,10,83,87);
 }
 
 // draw()
