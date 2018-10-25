@@ -17,6 +17,7 @@ function Paddle(img,x,y,w,h,speed,downKey,upKey) {
   this.speed = speed;
   this.downKey = downKey;
   this.upKey = upKey;
+  this.points = 0;
 }
 
 // handleInput()

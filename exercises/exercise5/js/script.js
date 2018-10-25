@@ -57,9 +57,17 @@ function draw() {
   leftPaddle.update();
   rightPaddle.update();
 
-  if (ball.isOffScreen()) {
+  if (ball.isOffScreen() === 1) {
     ball.reset();
+    leftPaddle.points ++;
+    console.log("left: " + leftPaddle.points);
   }
+  else if (ball.isOffScreen() === 2) {
+    ball.reset();
+    rightPaddle.points ++;
+    console.log("right: " + rightPaddle.points);
+  }
+
 
   ball.handleCollision(leftPaddle);
   ball.handleCollision(rightPaddle);
