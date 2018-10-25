@@ -9,6 +9,31 @@
 //
 // Written with JavaScript OOP.
 
+// Array to manage background color
+// Pale to dark blue ranging from day to night
+// Points tracking runs through array in either direction depending on
+// which paddle scores
+var backgroundColor = [
+  "#abdefc",
+  "#97cdff",
+  "#6fbaff",
+  "#51abff",
+  "#3da1ff",
+  "#2395ff",
+  "#0587ff",
+  "#057ae8",
+  "#046ac9", // default
+  "#035db0",
+  "#03539d",
+  "#034a8c",
+  "#024079",
+  "#02325f",
+  "#012649",
+  "#011a32",
+  "#01101e"
+];
+
+
 // Variable to contain the objects representing our ball and paddles
 var ball;
 var leftPaddle;
