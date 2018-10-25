@@ -32,6 +32,7 @@ var backgroundColor = [
   "#011a32",
   "#01101e"
 ];
+var activeColor = 8; // default
 
 
 // Variable to contain the objects representing our ball and paddles
@@ -73,7 +74,7 @@ function setup() {
 // Handles input, updates all the elements, checks for collisions
 // and displays everything.
 function draw() {
-  background(0);
+  background(backgroundColor[activeColor]);
 
   leftPaddle.handleInput();
   rightPaddle.handleInput();
@@ -84,12 +85,18 @@ function draw() {
 
   switch (ball.isOffScreen()) {
     case 1:
+      if (activeColor < backgroundColor.length) {
+        activeColor ++;
+      }
       leftPaddle.points ++;
       ball.vx = -ball.vx;
       ball.reset();
       break;
 
     case 2:
+      if (activeColor > 0) {
+        activeColor --;
+      }
       rightPaddle.points ++;
       ball.vx = -ball.vx;
       ball.reset();
