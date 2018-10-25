@@ -48,9 +48,6 @@ Ball.prototype.isOffScreen = function () {
   else if (this.x > width) {
     return 2;
   }
-  else {
-    return 0;
-  }
 }
 
 // display()
