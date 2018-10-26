@@ -51,3 +51,12 @@ Paddle.prototype.update = function() {
 Paddle.prototype.display = function() {
   image(this.img,this.x,this.y,this.w,this.h);
 }
+
+Paddle.prototype.win = function() {
+  this.vx = 0;
+  this.vy = 0;
+  this.x = width/2;
+  this.y = this.h + 20;
+  this.w = 150;
+  this.h = 150;
+}

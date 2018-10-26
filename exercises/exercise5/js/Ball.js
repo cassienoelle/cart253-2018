@@ -22,7 +22,7 @@ function Ball(img,x,y,vx,vy,size,speed) {
 // Moves according to velocity, constrains y to be on screen,
 // checks for bouncing on upper or lower edgs, checks for going
 // off left or right side.
-Ball.prototype.update = function () {
+Ball.prototype.update = function() {
   // Update position with velocity
   this.x += this.vx;
   this.y += this.vy;
@@ -40,7 +40,7 @@ Ball.prototype.update = function () {
 //
 // Checks if the ball has moved off the screen and, if so, returns true.
 // Otherwise it returns false.
-Ball.prototype.isOffScreen = function () {
+Ball.prototype.isOffScreen = function() {
   // Check for going off screen and reset if so
   if (this.x + this.size < 0){
     return 1;
@@ -56,7 +56,7 @@ Ball.prototype.isOffScreen = function () {
 // display()
 //
 // Draw the ball as an image on the screen
-Ball.prototype.display = function () {
+Ball.prototype.display = function() {
   image(this.img,this.x,this.y,this.size,this.size);
 }
 
@@ -81,9 +81,22 @@ Ball.prototype.handleCollision = function(paddle) {
 // reset()
 //
 // Set position back to the middle of the screen
-Ball.prototype.reset = function () {
+// Set random velocity towards the paddle that just scored
+Ball.prototype.reset = function() {
   this.vx = -this.vx;
   this.vy = random(-5,5);
   this.x = width/2;
   this.y = height/2;
+}
+
+// freeze()
+//
+// Set position back to the middle of the screen
+// and freeze movement (velocity set to 0)
+Ball.prototype.freeze = function() {
+  this.vx = 0;
+  this.vy = 0;
+  this.x = width/2;
+  this.y = height/2;
+  this.size = 150;
 }

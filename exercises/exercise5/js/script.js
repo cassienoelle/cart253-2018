@@ -45,6 +45,9 @@ var ballImage;
 var leftPaddleImage;
 var rightPaddleImage;
 
+// Variable to track whether game is over
+var gameIsOver = false;
+
 // preload()
 //
 // Loads images for ball and paddles
@@ -76,24 +79,29 @@ function setup() {
 function draw() {
   background(backgroundColor[activeColor]);
 
-  leftPaddle.handleInput();
-  rightPaddle.handleInput();
+  if (!gameIsOver) {
+    leftPaddle.handleInput();
+    rightPaddle.handleInput();
 
-  ball.update();
-  leftPaddle.update();
-  rightPaddle.update();
+    ball.update();
+    leftPaddle.update();
+    rightPaddle.update();
 
-  if (ball.isOffScreen()) {
-    points();
-    ball.reset();
+    if (ball.isOffScreen()) {
+      points();
+      ball.reset();
+    }
+
+    ball.handleCollision(leftPaddle);
+    ball.handleCollision(rightPaddle);
+
+    ball.display();
+    leftPaddle.display();
+    rightPaddle.display();
   }
-
-  ball.handleCollision(leftPaddle);
-  ball.handleCollision(rightPaddle);
-
-  ball.display();
-  leftPaddle.display();
-  rightPaddle.display();
+  else {
+    gameOver();
+  }
 }
 
 // points()
@@ -102,23 +110,40 @@ function draw() {
 // Updates interface accordingly
 function points() {
   if (ball.isOffScreen() === 1) {
-    // Ball goes off left of screen, method returns a 1
+    // Ball goes off left of screen
     // Darken background towards night by increasing array index
-    // Increase left paddle points
-    activeColor ++;
-    leftPaddle.points ++;
-      }
-    else if (ball.isOffScreen() === 2) {
-    // Ball goes off right of screen, method returns a 2
-    // Lighten background towards day by decreasing array index
     // Increase right paddle points
-      activeColor --;
-      rightPaddle.points ++;
+    activeColor ++;
+    rightPaddle.points ++;
+      }
+  else if (ball.isOffScreen() === 2) {
+    // Ball goes off right of screen
+    // Lighten background towards day by decreasing array index
+    // Increase left paddle points
+    activeColor --;
+    leftPaddle.points ++;
     }
 
   // Game over if either paddle gains maximum points
   // by moving through backgroundColor array (achieving day or night)
   if (activeColor === 0 || activeColor === backgroundColor.length - 1) {
-    gameOver();
+    gameIsOver = true;
   }
+}
+
+function gameOver() {
+  ball.freeze();
+  console.log('left: ' + leftPaddle.points);
+  console.log('right: ' + rightPaddle.points);
+
+  if (rightPaddle.points > leftPaddle.points) {
+    rightPaddle.win();
+    rightPaddle.display();
+  }
+  else if (leftPaddle.points > rightPaddle.points) {
+    leftPaddle.win();
+    leftPaddle.display();
+  }
+
+  ball.display();
 }
