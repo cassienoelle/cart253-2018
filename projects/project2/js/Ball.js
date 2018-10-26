@@ -52,7 +52,7 @@ Ball.prototype.isOffScreen = function () {
 
 // display()
 //
-// Draw the ball as a rectangle on the screen
+// Draw the ball as an image on the screen
 Ball.prototype.display = function () {
   image(this.img,this.x,this.y,this.size,this.size);
 }

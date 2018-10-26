@@ -13,6 +13,7 @@
 var ball;
 var leftPaddle;
 var rightPaddle;
+var note;
 
 // Variable to contain ball image
 var ballImg;
@@ -30,12 +31,14 @@ function preload() {
 function setup() {
   createCanvas(640,480);
   // Create a ball
-  ball = new Ball(ballImg,width/2,height/2,5,5,10,5);
+  ball = new Ball(ballImg,width/2,height/2,5,5,50,5);
   // Create the right paddle with UP and DOWN as controls
   rightPaddle = new Paddle(width-10,height/2,10,60,10,DOWN_ARROW,UP_ARROW);
   // Create the left paddle with W and S as controls
   // Keycodes 83 and 87 are W and S respectively
   leftPaddle = new Paddle(0,height/2,10,60,10,83,87);
+
+  note = new Note(width/2,height/2,20,5,5);
 }
 
 // draw()
@@ -43,7 +46,7 @@ function setup() {
 // Handles input, updates all the elements, checks for collisions
 // and displays everything.
 function draw() {
-  background(0);
+  background(255);
 
   leftPaddle.handleInput();
   rightPaddle.handleInput();
@@ -51,6 +54,7 @@ function draw() {
   ball.update();
   leftPaddle.update();
   rightPaddle.update();
+  //note.update();
 
   if (ball.isOffScreen()) {
     ball.reset();
@@ -59,7 +63,8 @@ function draw() {
   ball.handleCollision(leftPaddle);
   ball.handleCollision(rightPaddle);
 
-  ball.display();
+  //ball.display();
   leftPaddle.display();
   rightPaddle.display();
+  note.display();
 }
