@@ -7,7 +7,9 @@
 //
 // Sets the properties with the provided arguments or defaults
 function Paddle(img,x,y,w,h,speed,downKey,upKey) {
+  ////////// NEW /////////
   this.img = img;
+  /////// END NEW //////////
   this.x = x;
   this.y = y;
   this.vx = 0;
@@ -17,7 +19,9 @@ function Paddle(img,x,y,w,h,speed,downKey,upKey) {
   this.speed = speed;
   this.downKey = downKey;
   this.upKey = upKey;
+  /////////// NEW /////////
   this.points = 0;
+  /////// END NEW //////////
 }
 
 // handleInput()
@@ -52,6 +56,11 @@ Paddle.prototype.display = function() {
   image(this.img,this.x,this.y,this.w,this.h);
 }
 
+////////////////// NEW ///////////////////
+
+// win()
+//
+// Set display for winning paddle when game over
 Paddle.prototype.win = function() {
   this.vx = 0;
   this.vy = 0;
@@ -60,3 +69,5 @@ Paddle.prototype.win = function() {
   this.w = 150;
   this.h = 150;
 }
+
+////////////////// END NEW ///////////////
