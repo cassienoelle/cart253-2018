@@ -48,6 +48,9 @@ Ball.prototype.isOffScreen = function () {
   else if (this.x > width) {
     return 2;
   }
+  else {
+    return 0;
+  }
 }
 
 // display()
@@ -79,6 +82,8 @@ Ball.prototype.handleCollision = function(paddle) {
 //
 // Set position back to the middle of the screen
 Ball.prototype.reset = function () {
+  this.vx = -this.vx;
+  this.vy = random(-5,5);
   this.x = width/2;
   this.y = height/2;
 }

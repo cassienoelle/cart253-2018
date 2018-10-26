@@ -11,10 +11,10 @@
 
 // Array to manage background color
 // Pale to dark blue ranging from day to night
-// Points tracking runs through array in either direction depending on
-// which paddle scores
+// Points tracking runs through array in either direction
+// depending on which paddle scores
 var backgroundColor = [
-  "#abdefc",
+  "#abdefc", // day
   "#97cdff",
   "#6fbaff",
   "#51abff",
@@ -30,7 +30,7 @@ var backgroundColor = [
   "#02325f",
   "#012649",
   "#011a32",
-  "#01101e"
+  "#01101e" // night
 ];
 var activeColor = 8; // default
 
@@ -83,27 +83,9 @@ function draw() {
   leftPaddle.update();
   rightPaddle.update();
 
-  switch (ball.isOffScreen()) {
-    case 1:
-      if (activeColor < backgroundColor.length) {
-        activeColor ++;
-      }
-      leftPaddle.points ++;
-      ball.vx = -ball.vx;
-      ball.reset();
-      break;
-
-    case 2:
-      if (activeColor > 0) {
-        activeColor --;
-      }
-      rightPaddle.points ++;
-      ball.vx = -ball.vx;
-      ball.reset();
-      break;
-
-    default:
-      break;
+  if (ball.isOffScreen()) {
+    points();
+    ball.reset();
   }
 
   ball.handleCollision(leftPaddle);
@@ -112,4 +94,31 @@ function draw() {
   ball.display();
   leftPaddle.display();
   rightPaddle.display();
+}
+
+// points()
+//
+// Tracks points when ball goes off screen
+// Updates interface accordingly
+function points() {
+  if (ball.isOffScreen() === 1) {
+    // Ball goes off left of screen, method returns a 1
+    // Darken background towards night by increasing array index
+    // Increase left paddle points
+    activeColor ++;
+    leftPaddle.points ++;
+      }
+    else if (ball.isOffScreen() === 2) {
+    // Ball goes off right of screen, method returns a 2
+    // Lighten background towards day by decreasing array index
+    // Increase right paddle points
+      activeColor --;
+      rightPaddle.points ++;
+    }
+
+  // Game over if either paddle gains maximum points
+  // by moving through backgroundColor array (achieving day or night)
+  if (activeColor === 0 || activeColor === backgroundColor.length - 1) {
+    gameOver();
+  }
 }

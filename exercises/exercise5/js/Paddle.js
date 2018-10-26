@@ -44,6 +44,7 @@ Paddle.prototype.update = function() {
   this.y = constrain(this.y,0,height-this.h);
 }
 
+
 // display()
 //
 // Draw the paddle as a rectangle on the screen
