@@ -3,15 +3,24 @@
 // A class that defines how a music note behaves
 
 // Note constructor
+// Ratios:
+// Note 1: 360/600
+// Note 2: 565/600
+// Note 3: 220/600
+// Note 4: 180/600
+// Note 5: 225/600
+// Note 6: 560/600
 //
 // Sets the properties with the provided arguments or defaults
-function Note(x,y,size,vx,vy) {
+function Note(img,x,y,w,h,vx,vy) {
+  this.img = img;
   this.x = x;
   this.y = y;
   this.vx = vx;
   this.vy = vy;
-  this.size = size;
-  this.a = alpha(255);
+  this.w = w;
+  this.h = h;
+  this.a = 255;
 }
 
 // update()
@@ -24,33 +33,30 @@ Note.prototype.update = function() {
   this.y += this.vy;
   // increase transparency according to velocity
   this.a -= this.vx;
-
 }
 
 // display()
 //
-// Draws music note as related shapes on screen
+// Draws music note on screen
 Note.prototype.display = function() {
-  var r = {
-    w: this.size/16,
-    h: this.size,
-    x: this.x,
-    y: this.y
-  }
+  // handle transparency
+  tint(255,this.a);
+  // display note image
+  image(this.img,this.x,this.y,this.w,this.h);
+}
 
-  var e = {
-    d: r.w * 6,
-    x: this.x - (r.w * 6)/3,
-    y: this.y + this.size
-  }
+// freeze()
+//
+// Freezes movement of note
+Note.prototype.freeze = function () {
+  this.vx = 0;
+  this.vy = 0;
+}
 
-  noStroke();
-  fill(255,0,0,50);
-  imageMode(CENTER);
-  rect(r.x,r.y,r.w,r.h);
-  ellipse(e.x,e.y,e.d,e.d);
-  rect(r.x + r.h,r.y,r.w,r.h);
-  ellipse(e.x + r.h,e.y,e.d,e.d);
-  rect(r.x + r.w,r.y,r.h-r.w,r.w * 3);
-
+// slow()
+//
+// Slows down movement of note
+Note.prototype.slow = function () {
+  this.vx = 1;
+  this.vy = 1;
 }

@@ -15,30 +15,45 @@ var leftPaddle;
 var rightPaddle;
 var note;
 
-// Variable to contain ball image
-var ballImg;
+// Variables to contain images
+var ballImage;
+var noteImages = [];
+var note1;
+var note2;
+var note3;
+var note4;
+var note5;
+var note6;
 
 // preload()
 //
 // Loads images
 function preload() {
-  ballImg = loadImage('assets/images/record.png'); // the ball is a record
+  ballImage = loadImage('assets/images/record.png'); // the ball is a record
+  note1 = loadImage('assets/images/note1.png'); // eighth note
+  note2 = loadImage('assets/images/note2.png'); // quarter notes
+  note3 = loadImage('assets/images/note3.png'); // half note
+  note4 = loadImage('assets/images/note4.png'); // quarter rest
+  note5 = loadImage('assets/images/note5.png'); // treble clef
+  note6 = loadImage('assets/images/note6.png'); // bass clef
 }
 
 // setup()
 //
 // Creates the ball and paddles
 function setup() {
-  createCanvas(640,480);
+  createCanvas(800,650);
+  noStroke();
+
   // Create a ball
-  ball = new Ball(ballImg,width/2,height/2,5,5,50,5);
+  ball = new Ball(ballImage,width/2,height/2,5,5,50,5);
   // Create the right paddle with UP and DOWN as controls
   rightPaddle = new Paddle(width-10,height/2,10,60,10,DOWN_ARROW,UP_ARROW);
   // Create the left paddle with W and S as controls
   // Keycodes 83 and 87 are W and S respectively
   leftPaddle = new Paddle(0,height/2,10,60,10,83,87);
 
-  note = new Note(width/2,height/2,20,5,5);
+  note = new Note(note1,0,0,18,30,3,3);
 }
 
 // draw()
@@ -48,13 +63,16 @@ function setup() {
 function draw() {
   background(255);
 
+  //freeze();
+  slow();
+
   leftPaddle.handleInput();
   rightPaddle.handleInput();
 
   ball.update();
   leftPaddle.update();
   rightPaddle.update();
-  //note.update();
+  note.update();
 
   if (ball.isOffScreen()) {
     ball.reset();
@@ -64,7 +82,29 @@ function draw() {
   ball.handleCollision(rightPaddle);
 
   //ball.display();
+
   leftPaddle.display();
   rightPaddle.display();
+  ball.display();
   note.display();
+}
+
+// freeze()
+//
+// freezes movement of objects on screen
+function freeze() {
+  ball.freeze();
+  leftPaddle.freeze();
+  rightPaddle.freeze();
+  note.freeze();
+}
+
+// slow()
+//
+// freezes movement of objects on screen
+function slow() {
+  ball.slow();
+  leftPaddle.slow();
+  rightPaddle.slow();
+  note.slow();
 }

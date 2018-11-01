@@ -82,3 +82,19 @@ Ball.prototype.reset = function () {
   this.x = width/2;
   this.y = height/2;
 }
+
+// freeze()
+//
+// Freezes movement of ball
+Ball.prototype.freeze = function () {
+  this.vx = 0;
+  this.vy = 0;
+}
+
+// slow()
+//
+// Slows down movement of ball
+Ball.prototype.slow = function () {
+  this.vx = 1;
+  this.vy = 1;
+}
