@@ -46,22 +46,6 @@ Paddle.prototype.update = function() {
 //
 // Draw the paddle as a rectangle on the screen
 Paddle.prototype.display = function() {
-  fill(0);
+  fill(255);
   rect(this.x,this.y,this.w,this.h);
-}
-
-// freeze()
-//
-// Freezes movement of paddles
-Paddle.prototype.freeze = function () {
-  this.vx = 0;
-  this.vy = 0;
-}
-
-// slow()
-//
-// Slows down movement of paddle
-Paddle.prototype.slow = function () {
-  this.vx = 1;
-  this.vy = 1;
 }
