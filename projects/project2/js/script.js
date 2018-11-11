@@ -9,6 +9,9 @@
 //
 // Written with JavaScript OOP.
 
+// Variable to contain the canvas
+var canvas;
+
 // Variable to contain the objects representing our ball and paddles
 var ball;
 var leftPaddle;
@@ -18,7 +21,9 @@ var rightPaddle;
 //
 // Creates the ball and paddles
 function setup() {
-  createCanvas(640,480);
+  canvas = createCanvas(640, 480);
+  centerCanvas();
+  noStroke();
   // Create a ball
   ball = new Ball(width/2,height/2,5,5,10,5);
   // Create the right paddle with UP and DOWN as controls
@@ -52,4 +57,21 @@ function draw() {
   ball.display();
   leftPaddle.display();
   rightPaddle.display();
+}
+
+
+// centerCanvas()
+//
+// Centers the canvas on the screen
+function centerCanvas() {
+  var x = (windowWidth - width) / 2;
+  var y = (windowHeight - height) / 2;
+  canvas.position(x, y);
+}
+
+// windowResized()
+//
+// Resize the canvas when the window is resized
+function windowResized() {
+  centerCanvas();
 }
