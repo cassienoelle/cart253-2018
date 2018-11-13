@@ -12,6 +12,10 @@ function Title(img,x,y,size) {
   this.y = y;
   this.size = size;
   this.shrunk = false;
+  this.angle = 0;
+  this.sizeChange = 1;
+  this.initX = x;
+  this.initY = y;
 }
 
 // shrink()
@@ -19,10 +23,19 @@ function Title(img,x,y,size) {
 // Shrink title image until it disappears
 
 Title.prototype.shrink = function() {
-  if (this.size > 2) {
-    this.size -= 2;
+  if (!this.shrunk) {
+    translate(width/2,height/2);
+    this.x = 0;
+    this.y = 0;
+    rotate(this.angle);
+    scale(this.sizeChange);
+    this.angle += 0.03;
+    this.sizeChange -= 0.005;
+    this.sizeChange = constrain(this.sizeChange,0,1);
+    console.log(this.sizeChange);
   }
-  else {
+
+  if (this.sizeChange === 0) {
     this.shrunk = true;
   }
 }

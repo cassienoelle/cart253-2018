@@ -102,6 +102,7 @@ function draw() {
 
   switch(state) {
     case "INTRO":
+      //gameTitles();
       gameTitles();
       break;
     case "ACTIVE":
@@ -126,42 +127,62 @@ function gameTitles() {
   text(titleText,width/2, 100);
   text(titleTextBottom,width/2,height-75);
   pop();
-  console.log(spacePressed);
 
-  if (!bottle.shrunk && !cake.shrunk) {
+  if (spacePressed === 0) {
     bottle.display();
     titleText = "WELCOME TO PONG IN WONDERLAND";
     titleTextBottom = "HIT SPACE TO CONTINUE";
   }
-  else if (bottle.shrunk && !cake.shrunk) {
-    cake.display();
-    titleText = "MORE INSTRUCTIONS";
-    titleTextBottom = "HIT SPACE TO CONTINUE";
+  else if (spacePressed === 1) {
+    bottle.shrink();
+
+    if (!bottle.shrunk) {
+      bottle.display();
+      titleText = "WELCOME TO PONG IN WONDERLAND";
+      titleTextBottom = "HIT SPACE TO CONTINUE";
+    }
+    else {
+      cake.display();
+      titleText = "MORE INSTRUCTIONS";
+      titleTextBottom = "HIT SPACE TO CONTINUE";
+    }
+
   }
-  else {
-    door.display();
-    titleText = "PLAY NOW";
-    titleTextBottom = "HIT SPACE TO GO DOWN THE RABBIT HOLE";
+  else if (spacePressed === 2) {
+    cake.shrink();
+
+    if (!cake.shrunk) {
+      cake.display();
+      titleText = "MORE INSTRUCTIONS";
+      titleTextBottom = "HIT SPACE TO CONTINUE";
+    }
+    else {
+      door.display();
+      titleText = "PLAY NOW";
+      titleTextBottom = "HIT SPACE TO GO DOWN THE RABBIT HOLE";
+    }
+
+  }
+  else if (spacePressed === 3) {
+    door.shrink();
+
+    if (!door.shrunk) {
+      door.display();
+      titleText = "PLAY NOW";
+      titleTextBottom = "HIT SPACE TO GO DOWN THE RABBIT HOLE";
+    }
+    else {
+      state = "ACTIVE";
+    }
+
   }
 
-  switch(spacePressed) {
-    case 1:
-      bottle.shrink();
-      break;
-    case 2:
-      cake.shrink();
-      break;
-    case 3:
-      door.grow();
-      break;
-    default:
-      break;
-  }
 }
 
 function keyTyped() {
   if (key === " ") {
     spacePressed ++;
+    console.log(spacePressed);
   }
 }
 // gameActive()
@@ -209,4 +230,8 @@ function centerCanvas() {
 // Resize the canvas when the window is resized
 function windowResized() {
   centerCanvas();
+}
+
+function gameTest() {
+
 }
