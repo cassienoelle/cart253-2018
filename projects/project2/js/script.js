@@ -21,6 +21,11 @@ var cake;
 var cakeImage;
 var door;
 var doorImage;
+var whiteRabbit;
+var whiteRabbitImage;
+var mushrooms = [];
+var numMushrooms = 10;
+var mushroomImage;
 
 var musicalsFont;
 
@@ -30,7 +35,7 @@ var titleTextBottom;
 
 // Variable to track the state of the game
 // Used to manage switch statement in draw()
-var state = "INTRO";
+var state = "ACTIVE";
 var spacePressed;
 
 // Variable to contain the objects representing our ball and paddles
@@ -46,6 +51,8 @@ function preload() {
   bottleImage = loadImage("assets/images/bottle.png"); // image of a bottle
   cakeImage = loadImage("assets/images/cake.png"); // image of a fruitcake
   doorImage = loadImage("assets/images/door.png"); // image of a door with keyhole
+  whiteRabbitImage = loadImage("assets/images/whiterabbit.png"); // image of the White Rabbit
+  mushroomImage = loadImage("assets/images/mushroom.png"); // image of a mushroom
 
   musicalsFont = loadFont("assets/fonts/musicals.ttf");
 }
@@ -92,6 +99,10 @@ function setupGame() {
   // Create the left paddle with W and S as controls
   // Keycodes 83 and 87 are W and S respectively
   leftPaddle = new Paddle(0,height/2,10,60,10,83,87);
+
+  for (var i = 0; i <= numMushrooms; i++) {
+    mushrooms.push(new Mushroom(mushroomImage,ball.x,ball.y,random(-5,5),random(-5,5),30));
+  }
 }
 
 // draw()
@@ -207,6 +218,27 @@ function gameActive() {
   ball.display();
   leftPaddle.display();
   rightPaddle.display();
+
+  // mushroomAttack();
+
+}
+
+// mushroomAttack()
+//
+// Release mushrooms at random velocities from the location of the ball
+// If a mushroom collides with a paddle, the paddle shrinks
+function mushroomAttack() {
+  for (var i = 0; i < numMushrooms; i++) {
+    mushrooms[i].update();
+    mushrooms[i].display();
+
+    if (mushrooms[i].handleCollision(rightPaddle)) {
+      rightPaddle.h -= 5;
+    }
+    else if (mushrooms[i].handleCollision(leftPaddle)) {
+      leftPaddle.h -= 5;
+    }
+  }
 }
 
 // gameOver()

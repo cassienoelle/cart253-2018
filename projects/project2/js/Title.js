@@ -1,7 +1,7 @@
 // Title
 //
 // A class to define how a title object behaves
-// including shrinking when clicked
+// including shrinking, growing and rotating
 
 // Title constructor
 //
@@ -14,8 +14,6 @@ function Title(img,x,y,size) {
   this.shrunk = false;
   this.angle = 0;
   this.sizeChange = 1;
-  this.initX = x;
-  this.initY = y;
 }
 
 // shrink()
@@ -51,7 +49,7 @@ Title.prototype.grow = function() {
 
 // display()
 //
-// Display bottle as image on screen
+// Display title image
 Title.prototype.display = function() {
   imageMode(CENTER);
   image(this.img,this.x,this.y,this.size,this.size);
