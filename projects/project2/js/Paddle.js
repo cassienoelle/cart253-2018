@@ -1,56 +1,51 @@
-// Title
+// Paddle
 //
-// A class to define how a title object behaves
-// including shrinking, growing and rotating
+// A class that defines how a paddle behaves, including the ability
+// to specify the input keys to move it up and down
 
-// Title constructor
+// Paddle constructor
 //
-// Sets the properties with the provided arguments
-function Title(img,x,y,size) {
-  this.img = img;
+// Sets the properties with the provided arguments or defaults
+function Paddle(x,y,w,h,speed,downKey,upKey) {
   this.x = x;
   this.y = y;
-  this.size = size;
-  this.shrunk = false;
-  this.angle = 0;
-  this.sizeChange = 1;
+  this.vx = 0;
+  this.vy = 0;
+  this.w = w;
+  this.h = h;
+  this.speed = speed;
+  this.downKey = downKey;
+  this.upKey = upKey;
 }
 
-// shrink()
+// handleInput()
 //
-// Shrink title image until it disappears
-
-Title.prototype.shrink = function() {
-  if (!this.shrunk) {
-    translate(width/2,height/2);
-    this.x = 0;
-    this.y = 0;
-    rotate(this.angle);
-    scale(this.sizeChange);
-    this.angle += 0.03;
-    this.sizeChange -= 0.005;
-    this.sizeChange = constrain(this.sizeChange,0,1);
-    console.log(this.sizeChange);
+// Check if the up or down keys are pressed and update velocity
+// appropriately
+Paddle.prototype.handleInput = function() {
+  if (keyIsDown(this.upKey)) {
+    this.vy = -this.speed;
   }
-
-  if (this.sizeChange === 0) {
-    this.shrunk = true;
+  else if (keyIsDown(this.downKey)) {
+    this.vy = this.speed;
+  }
+  else {
+    this.vy = 0;
   }
 }
 
-// grow()
-//
-// Grow title image until it engulfs canvas
-Title.prototype.grow = function() {
-  if (this.size < windowWidth*45) {
-    this.size += this.size/35;
-  }
+// update()
+// Update y position based on velocity
+// Constrain the resulting position to be within the canvas
+Paddle.prototype.update = function() {
+  this.y += this.vy;
+  this.y = constrain(this.y,0,height-this.h);
 }
 
 // display()
 //
-// Display title image
-Title.prototype.display = function() {
-  imageMode(CENTER);
-  image(this.img,this.x,this.y,this.size,this.size);
+// Draw the paddle as a rectangle on the screen
+Paddle.prototype.display = function() {
+  fill(255);
+  rect(this.x,this.y,this.w,this.h);
 }

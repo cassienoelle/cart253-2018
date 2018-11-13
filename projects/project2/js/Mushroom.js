@@ -18,8 +18,7 @@ function Mushroom(img,x,y,vx,vy,size) {
 // update()
 //
 // Moves according to velocity, constrains y to be on screen,
-// checks for bouncing on upper or lower edgs, checks for going
-// off left or right side.
+// checks for bouncing on upper or lower edgse
 Mushroom.prototype.update = function () {
   // Update position with velocity
   this.x += this.vx;
@@ -29,8 +28,10 @@ Mushroom.prototype.update = function () {
   this.y = constrain(this.y,0,height-this.size);
 
   // Check for touching upper or lower edge and reverse velocity if so
-  if (this.y === 0 || this.y + this.size === height) {
-    this.vy = -this.vy;
+  var leftMargin = this.size * 2 + leftPaddle.w * 3;
+  var rightMargin = this.size * 2 + rightPaddle.w * 3;
+  if (this.x === 0 + leftMargin || this.x === this.width - rightMargin) {
+    this.vx = -this.vx;
   }
 }
 

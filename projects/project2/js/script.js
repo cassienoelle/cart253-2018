@@ -103,6 +103,8 @@ function setupGame() {
   for (var i = 0; i <= numMushrooms; i++) {
     mushrooms.push(new Mushroom(mushroomImage,ball.x,ball.y,random(-5,5),random(-5,5),30));
   }
+
+  whiteRabbit = new Chaser(whiteRabbitImage,width/4,height/4,80,100,random(0,1000),random(0,1000),10);
 }
 
 // draw()
@@ -207,6 +209,7 @@ function gameActive() {
   ball.update();
   leftPaddle.update();
   rightPaddle.update();
+  whiteRabbit.update();
 
   if (ball.isOffScreen()) {
     ball.reset();
@@ -214,10 +217,12 @@ function gameActive() {
 
   ball.handleCollision(leftPaddle);
   ball.handleCollision(rightPaddle);
+  speedChange();
 
   ball.display();
   leftPaddle.display();
   rightPaddle.display();
+  whiteRabbit.display();
 
   // mushroomAttack();
 
@@ -237,6 +242,22 @@ function mushroomAttack() {
     }
     else if (mushrooms[i].handleCollision(leftPaddle)) {
       leftPaddle.h -= 5;
+    }
+  }
+}
+
+function speedChange() {
+  if (whiteRabbit.handleCollision(ball)) {
+    console.log("true");
+    if (!ball.speedChanged) {
+      ball.vx = -ball.vx * 1.5;
+      ball.vy = -ball.vy * 1.5;
+      ball.speedChanged = true;
+    }
+    else {
+      ball.vx = -ball.vx/1.5;
+      ball.vy = -ball.vy/1.5;
+      ball.speedChanged = false;
     }
   }
 }
