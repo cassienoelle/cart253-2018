@@ -47,14 +47,20 @@ var state = "ACTIVE";
 var spacePressed;
 var gameTitle = "DEFAULT";
 var displayTitle;
+var activeCondition = "DEFAULT";
 
 // Variable to contain the objects representing our ball and paddles
+// and their parameters
 var ball;
 var ballImage;
+
 var enemyBall;
 var enemyBallImage;
+
 var leftPaddle;
 var rightPaddle;
+var paddleWidth = 10;
+var paddleHeight = 90;
 
 // preload()
 //
@@ -116,12 +122,12 @@ function setupGame() {
   enemyBallImage = heartImage;
   // Create a ball
   ball = new Ball(width/2,height/2,5,5,30,5,false);
-  enemyBall = new Ball(width/4,height/4,5,5,30,5,true,enemyBallImage);
+  enemyBall = new Ball(width/4,height/4,5,5,35,5,true,enemyBallImage);
   // Create the right paddle with UP and DOWN as controls
-  rightPaddle = new Paddle(width-20,height/2,20,90,10,DOWN_ARROW,UP_ARROW);
+  rightPaddle = new Paddle(width-20,height/2,paddleWidth,paddleHeight,10,DOWN_ARROW,UP_ARROW);
   // Create the left paddle with W and S as controls
   // Keycodes 83 and 87 are W and S respectively
-  leftPaddle = new Paddle(0,height/2,20,90,10,83,87);
+  leftPaddle = new Paddle(0,height/2,paddleWidth,paddleHeight,10,83,87);
 
   for (var i = 0; i <= numMushrooms; i++) {
     mushrooms.push(new Mushroom(mushroomImage,ball.x,ball.y,random(-5,5),random(-5,5),30));
@@ -240,18 +246,28 @@ function gameActive() {
   }
 
   if (enemyBall.isOffScreen()) {
-    enemyBall.reset();
+    if (activeCondition === "DEFAULT" || activeCondition === "SIZE") {
+      enemyBall.reset();
+    }
   }
 
   ball.handleCollision(leftPaddle);
   ball.handleCollision(rightPaddle);
-  enemyBall.handleCollision(leftPaddle);
-  enemyBall.handleCollision(rightPaddle);
 
-  // if white rabbit collides with ball
-  if (whiteRabbit.collision(ball)) {
-    // change game behaviour temporarily
-    rush();
+
+  if (activeCondition === "DEFAULT") {
+    if (enemyBall.handleCollision(leftPaddle)) {
+      behead(leftPaddle);
+    }
+    if (enemyBall.handleCollision(rightPaddle)) {
+      behead(rightPaddle);
+    }
+
+    // if white rabbit collides with ball
+    if (whiteRabbit.collision(ball)){
+      // change game conditions temporarily
+      rush();
+    }
   }
 
   narration();
@@ -268,21 +284,41 @@ function gameActive() {
 
 // rush()
 //
-// Change behaviour of game for 10 seconds
+// Change behaviour of white rabbit and ball for 10 seconds
 function rush() {
+  activeCondition = "SPEED";
   // increase speed of ball
   ball.faster();
   // display descriptive text
   gameTitle = "WHITE RABBIT";
   displayTitle = true;
-  // move white rabbit quickly across screen
+  // stop Perlin noise and move white rabbit quickly across screen
   whiteRabbit.fast = true;
-  whiteRabbit.sprint();
+  if (whiteRabbit.isOffScreen()) {
+    whiteRabbit.reset();
+  }
   // revert to original behaviour after 10 seconds
   setTimeout(textTimer,10000);
   setTimeout(speedTimer,10000);
 }
 
+// behead()
+//
+// Cut height of paddle in half for 20 seconds
+function behead(paddle) {
+  activeCondition = "SIZE";
+  if (!paddle.shrunk) {
+    paddle.shrink();
+
+    gameTitle = "RED QUEEN";
+    displayTitle = true;
+    whiteRabbit.fast = true;
+
+    setTimeout(textTimer,20000);
+    setTimeout(speedTimer,22000);
+    setTimeout(sizeTimer,20000);
+  }
+}
 
 // mushroomAttack()
 //
@@ -294,10 +330,10 @@ function mushroomAttack() {
     mushrooms[i].display();
 
     if (mushrooms[i].handleCollision(rightPaddle)) {
-      rightPaddle.h += 10;
+      rightPaddle.grow();
     }
     else if (mushrooms[i].handleCollision(leftPaddle)) {
-      leftPaddle.h += 10;
+      leftPaddle.grow();
     }
   }
 }
@@ -337,9 +373,24 @@ function textTimer() {
 // returns ball to original speed when timer runs out
 function speedTimer() {
   ball.slower();
+  whiteRabbit.x = width/2;
+  whiteRabbit.y = height/2;
   whiteRabbit.fast = false;
+  activeCondition = "DEFAULT";
 }
 
+// sizeTimer()
+//
+// Returns paddle to original size
+function sizeTimer() {
+  if (rightPaddle.shrunk) {
+    rightPaddle.reset();
+  }
+  else if (leftPaddle.shrunk) {
+    leftPaddle.reset();
+  }
+  activeCondition = "DEFAULT";
+}
 
 // gameOver()
 //

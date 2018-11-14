@@ -16,6 +16,10 @@ function Paddle(x,y,w,h,speed,downKey,upKey) {
   this.speed = speed;
   this.downKey = downKey;
   this.upKey = upKey;
+
+  this.initW = w;
+  this.initH = h;
+  this.shrunk = false;
 }
 
 // handleInput()
@@ -40,6 +44,32 @@ Paddle.prototype.handleInput = function() {
 Paddle.prototype.update = function() {
   this.y += this.vy;
   this.y = constrain(this.y,0,height-this.h);
+}
+
+// shrink()
+//
+// Reduce height of paddle by half
+Paddle.prototype.shrink = function() {
+  this.h = this.h/2;
+  this.y = this.y + this.h/2;
+  this.shrunk = true;
+}
+
+// grow()
+//
+// Double height of paddle
+Paddle.prototype.grow = function() {
+  this.h = this.h * 2;
+}
+
+// reset()
+//
+// Reset initial size of paddle
+Paddle.prototype.reset = function() {
+  this.h = this.initH;
+  this.w = this.initW;
+  this.shrunk = false;
+
 }
 
 // display()

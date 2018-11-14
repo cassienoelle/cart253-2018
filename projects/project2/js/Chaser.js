@@ -25,7 +25,7 @@ function Chaser(img,x,y,w,h,tx,ty,speed) {
 // Moves according to velocity, constrains y to be on screen,
 // checks for bouncing on upper or lower edges, checks for going
 // off left or right side.
-Chaser.prototype.update = function () {
+Chaser.prototype.update = function() {
 
     if (!this.fast) {
     // Update velocity with Perlin noise
@@ -45,22 +45,35 @@ Chaser.prototype.update = function () {
     this.tx += 0.01;
     this.ty += 0.01;
   }
-
-}
-
-// sprint(repeat)
-//
-// Move chaser quickly horizontally across the screen
-Chaser.prototype.sprint = function(repeat) {
-  this.vx = 10;
-  this.vy = 0;
-  this.x += this.vx;
-  if (repeat === true) {
-    if (this.x + this.w/2 > width && frameCount % (60 * 3) === 1) {
-      this.x = 0;
-    }
+  else {
+    this.vx = 10;
+    this.vy = 0;
+    this.x += this.vx;
   }
 }
+
+// isOffScreen()
+//
+// Checks if the ball has moved off the screen and, if so, returns true.
+// Otherwise it returns false.
+Chaser.prototype.isOffScreen = function() {
+  // Check for going off screen and reset if so
+  if (this.x + this.w/2 < 0 || this.x - this.w/2 > width) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+// reset()
+//
+// Reset x position
+Chaser.prototype.reset = function() {
+  this.x = 0;
+}
+
+
 
 // collision(ball)
 //

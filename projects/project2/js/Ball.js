@@ -79,15 +79,8 @@ Ball.prototype.handleCollision = function(paddle) {
       this.y -= this.vy;
       // Reverse x velocity to bounce
       this.vx = -this.vx;
-      // If it's an enemy ball reduce the height of the paddle
-      /*
-      if (this.enemy) {
-        paddle.h -= 20;
-        paddle.y +=20;
-        gameTitle = "RED QUEEN";
-        displayTitle = true;
-      }
-      */
+      // Return true
+      return true;
     }
   }
 
