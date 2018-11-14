@@ -312,7 +312,7 @@ function behead(paddle) {
 
     gameTitle = "RED QUEEN";
     displayTitle = true;
-    whiteRabbit.fast = true;
+    whiteRabbit.fast = true;     
 
     setTimeout(textTimer,20000);
     setTimeout(speedTimer,22000);
