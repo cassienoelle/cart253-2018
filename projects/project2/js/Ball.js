@@ -7,7 +7,7 @@
 // Ball constructor
 //
 // Sets the properties with the provided arguments
-function Ball(x,y,vx,vy,size,speed) {
+function Ball(x,y,vx,vy,size,speed,enemy,img) {
   this.x = x;
   this.y = y;
   this.vx = vx;
@@ -15,6 +15,8 @@ function Ball(x,y,vx,vy,size,speed) {
   this.size = size;
   this.speed = speed;
   this.speedChanged = false;
+  this.enemy = enemy;
+  this.img = img;
 }
 
 // update()
@@ -50,13 +52,18 @@ Ball.prototype.isOffScreen = function () {
   }
 }
 
-// display()
+// display(form)
 //
-// Draw the ball as a rectangle on the screen
-Ball.prototype.display = function () {
-  fill(255);
-  rect(this.x,this.y,this.size,this.size);
+// Draw the ball on the screen
+Ball.prototype.display = function(form) {
+  if (form === "IMAGE") {
+    image(this.img,this.x,this.y,this.size,this.size);
+  }
+  else if (form === "SHAPE") {
+    rect(this.x,this.y,this.size,this.size);
+  }
 }
+
 
 // handleCollision(paddle)
 //
@@ -72,9 +79,45 @@ Ball.prototype.handleCollision = function(paddle) {
       this.y -= this.vy;
       // Reverse x velocity to bounce
       this.vx = -this.vx;
+      // If it's an enemy ball reduce the height of the paddle
+      /*
+      if (this.enemy) {
+        paddle.h -= 20;
+        paddle.y +=20;
+        gameTitle = "RED QUEEN";
+        displayTitle = true;
+      }
+      */
     }
   }
+
 }
+
+// faster()
+//
+// Increase the speed of the ball
+Ball.prototype.faster = function() {
+  if (!this.speedChanged) {
+    this.vx = -this.vx;
+    this.vy = -this.vy;
+    this.vx = this.vx * 1.5;
+    this.vy = this.vy * 1.5;
+
+    this.speedChanged = true;
+  }
+}
+
+// slower()
+//
+// Decrease the speed of the ball
+Ball.prototype.slower = function () {
+  if (this.speedChanged) {
+    this.vx = this.speed;
+    this.vy = this.speed;
+    this.speedChanged = false;
+  }
+}
+
 
 // reset()
 //
@@ -82,4 +125,5 @@ Ball.prototype.handleCollision = function(paddle) {
 Ball.prototype.reset = function () {
   this.x = width/2;
   this.y = height/2;
+  this.vx = -this.vx;
 }

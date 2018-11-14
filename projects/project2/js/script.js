@@ -26,20 +26,33 @@ var whiteRabbitImage;
 var mushrooms = [];
 var numMushrooms = 10;
 var mushroomImage;
+var roseImage;
+var redRoseImage;
+var heartImage;
 
 var musicalsFont;
 
 // Array to contain title text for intro
 var titleText;
+var titleTextX;
+var titleTextY;
 var titleTextBottom;
+var titleTextBottomX;
+var titleTextBottomY;
+
 
 // Variable to track the state of the game
 // Used to manage switch statement in draw()
 var state = "ACTIVE";
 var spacePressed;
+var gameTitle = "DEFAULT";
+var displayTitle;
 
 // Variable to contain the objects representing our ball and paddles
 var ball;
+var ballImage;
+var enemyBall;
+var enemyBallImage;
 var leftPaddle;
 var rightPaddle;
 
@@ -48,6 +61,9 @@ var rightPaddle;
 // Preloads images
 function preload() {
   spiralImage = loadImage("assets/images/spiral.png"); // spiral gif
+  roseImage = loadImage("assets/images/rose.png"); // image of a white rose
+  redRoseImage = loadImage("assets/images/redrose.png"); // image of a red rose
+  heartImage = loadImage("assets/images/heart.png"); // image of a red heart
   bottleImage = loadImage("assets/images/bottle.png"); // image of a bottle
   cakeImage = loadImage("assets/images/cake.png"); // image of a fruitcake
   doorImage = loadImage("assets/images/door.png"); // image of a door with keyhole
@@ -83,6 +99,10 @@ function setupIntro() {
   textAlign(CENTER);
   textSize(40);
   textFont(musicalsFont);
+  titleTextX = width/2;
+  titleTextY = 100;
+  titleTextBottomX = width/2;
+  titleTextBottomY = height-75;
 
   spacePressed = 0;
 }
@@ -92,13 +112,16 @@ function setupIntro() {
 // Sets up main game interface
 // Creates ball and paddles
 function setupGame() {
+  ballImage = roseImage;
+  enemyBallImage = heartImage;
   // Create a ball
-  ball = new Ball(width/2,height/2,5,5,10,5);
+  ball = new Ball(width/2,height/2,5,5,30,5,false);
+  enemyBall = new Ball(width/4,height/4,5,5,30,5,true,enemyBallImage);
   // Create the right paddle with UP and DOWN as controls
-  rightPaddle = new Paddle(width-10,height/2,10,60,10,DOWN_ARROW,UP_ARROW);
+  rightPaddle = new Paddle(width-20,height/2,20,90,10,DOWN_ARROW,UP_ARROW);
   // Create the left paddle with W and S as controls
   // Keycodes 83 and 87 are W and S respectively
-  leftPaddle = new Paddle(0,height/2,10,60,10,83,87);
+  leftPaddle = new Paddle(0,height/2,20,90,10,83,87);
 
   for (var i = 0; i <= numMushrooms; i++) {
     mushrooms.push(new Mushroom(mushroomImage,ball.x,ball.y,random(-5,5),random(-5,5),30));
@@ -137,8 +160,8 @@ function gameTitles() {
   push();
   stroke(255);
   strokeWeight(5);
-  text(titleText,width/2, 100);
-  text(titleTextBottom,width/2,height-75);
+  text(titleText,titleTextX,titleTextY);
+  text(titleTextBottom,titleTextBottomX,titleTextBottomY);
   pop();
 
   if (spacePressed === 0) {
@@ -207,6 +230,7 @@ function gameActive() {
   rightPaddle.handleInput();
 
   ball.update();
+  enemyBall.update();
   leftPaddle.update();
   rightPaddle.update();
   whiteRabbit.update();
@@ -215,11 +239,25 @@ function gameActive() {
     ball.reset();
   }
 
+  if (enemyBall.isOffScreen()) {
+    enemyBall.reset();
+  }
+
   ball.handleCollision(leftPaddle);
   ball.handleCollision(rightPaddle);
-  speedChange();
+  enemyBall.handleCollision(leftPaddle);
+  enemyBall.handleCollision(rightPaddle);
 
-  ball.display();
+  // if white rabbit collides with ball
+  if (whiteRabbit.collision(ball)) {
+    // change game behaviour temporarily
+    rush();
+  }
+
+  narration();
+
+  ball.display("SHAPE"); // display ball as shape
+  enemyBall.display("IMAGE"); // display enemy ball as image
   leftPaddle.display();
   rightPaddle.display();
   whiteRabbit.display();
@@ -227,6 +265,24 @@ function gameActive() {
   // mushroomAttack();
 
 }
+
+// rush()
+//
+// Change behaviour of game for 10 seconds
+function rush() {
+  // increase speed of ball
+  ball.faster();
+  // display descriptive text
+  gameTitle = "WHITE RABBIT";
+  displayTitle = true;
+  // move white rabbit quickly across screen
+  whiteRabbit.fast = true;
+  whiteRabbit.sprint();
+  // revert to original behaviour after 10 seconds
+  setTimeout(textTimer,10000);
+  setTimeout(speedTimer,10000);
+}
+
 
 // mushroomAttack()
 //
@@ -238,29 +294,52 @@ function mushroomAttack() {
     mushrooms[i].display();
 
     if (mushrooms[i].handleCollision(rightPaddle)) {
-      rightPaddle.h -= 5;
+      rightPaddle.h += 10;
     }
     else if (mushrooms[i].handleCollision(leftPaddle)) {
-      leftPaddle.h -= 5;
+      leftPaddle.h += 10;
     }
   }
 }
 
-function speedChange() {
-  if (whiteRabbit.handleCollision(ball)) {
-    console.log("true");
-    if (!ball.speedChanged) {
-      ball.vx = -ball.vx * 1.5;
-      ball.vy = -ball.vy * 1.5;
-      ball.speedChanged = true;
-    }
-    else {
-      ball.vx = -ball.vx/1.5;
-      ball.vy = -ball.vy/1.5;
-      ball.speedChanged = false;
-    }
+// narration()
+//
+// Handles title text display during active game play
+function narration() {
+  if (displayTitle) {
+    switch (gameTitle) {
+      case "RED QUEEN":
+        titleText = "Off with your head!";
+        break;
+        case "WHITE RABBIT":
+        titleText = "I'm late! I'm late!";
+        break;
+      }
+
+      push();
+      fill(255);
+      textSize(30);
+      text(titleText,titleTextX,titleTextY);
+      pop();
   }
 }
+
+// textTimer()
+//
+// Erases text when timer runs out
+function textTimer() {
+  displayTitle = false;
+  gameTitle = "DEFAULT";
+}
+
+// speedTimer()
+//
+// returns ball to original speed when timer runs out
+function speedTimer() {
+  ball.slower();
+  whiteRabbit.fast = false;
+}
+
 
 // gameOver()
 //

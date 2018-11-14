@@ -17,6 +17,7 @@ function Chaser(img,x,y,w,h,tx,ty,speed) {
   this.tx = tx;
   this.ty = ty;
   this.speed = speed;
+  this.fast = false;
 }
 
 // update()
@@ -25,41 +26,56 @@ function Chaser(img,x,y,w,h,tx,ty,speed) {
 // checks for bouncing on upper or lower edges, checks for going
 // off left or right side.
 Chaser.prototype.update = function () {
-  // Update velocity with Perlin noise
-  this.vx = map(noise(this.tx),0,1,-this.speed,this.speed);
-  this.vy = map(noise(this.ty),0,1,-this.speed,this.speed);
 
-  // Update position with velocity
-  this.x += this.vx;
-  this.y += this.vy;
-  // Constrain to area in center of canvas
-  // Use margins to keep away from paddles
-  var leftMargin = this.w/2 + leftPaddle.w;
-  var rightMargin = this.w/2 + rightPaddle.w;
-  this.x = constrain(this.x,0 + leftMargin,width - rightMargin);
-  this.y = constrain(this.y,0 + this.h/2,height - this.h/2);
+    if (!this.fast) {
+    // Update velocity with Perlin noise
+    this.vx = map(noise(this.tx),0,1,-this.speed,this.speed);
+    this.vy = map(noise(this.ty),0,1,-this.speed,this.speed);
 
-  this.tx += 0.01;
-  this.ty += 0.01;
+    // Update position with velocity
+    this.x += this.vx;
+    this.y += this.vy;
+    // Constrain to area in center of canvas
+    // Use margins to keep away from paddles
+    var leftMargin = this.w/2 + leftPaddle.w;
+    var rightMargin = this.w/2 + rightPaddle.w;
+    this.x = constrain(this.x,0 + leftMargin,width - rightMargin);
+    this.y = constrain(this.y,0 + this.h/2,height - this.h/2);
+
+    this.tx += 0.01;
+    this.ty += 0.01;
+  }
 
 }
 
-
-// handleCollision(paddle)
+// sprint(repeat)
 //
-// Check if the mushroom overlaps the paddle passed as an argument
-// and if so return true
-Chaser.prototype.handleCollision = function(ball) {
-
-  if (dist(this.x,this.y,ball.x,ball.y) < this.w/2 + ball.size/2){
-      return true;
+// Move chaser quickly horizontally across the screen
+Chaser.prototype.sprint = function(repeat) {
+  this.vx = 10;
+  this.vy = 0;
+  this.x += this.vx;
+  if (repeat === true) {
+    if (this.x + this.w/2 > width && frameCount % (60 * 3) === 1) {
+      this.x = 0;
     }
+  }
+}
+
+// collision(ball)
+//
+// Check if the chaser overlaps with the ball
+// and return true if so
+Chaser.prototype.collision = function(ball) {
+  if (dist(this.x,this.y,ball.x,ball.y) < this.w/2 + ball.size/2){
+    return true;
+  }
 }
 
 
 // display()
 //
-// Display mushroom image
+// Display chaser image
 Chaser.prototype.display = function() {
   imageMode(CENTER);
   image(this.img,this.x,this.y,this.w,this.h);
