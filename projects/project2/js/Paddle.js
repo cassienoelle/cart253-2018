@@ -20,6 +20,8 @@ function Paddle(x,y,w,h,speed,downKey,upKey) {
   this.initW = w;
   this.initH = h;
   this.shrunk = false;
+
+  this.points = 0;
 }
 
 // handleInput()
@@ -60,6 +62,14 @@ Paddle.prototype.shrink = function() {
 // Double height of paddle
 Paddle.prototype.grow = function() {
   this.h = this.h * 2;
+}
+
+// scored()
+//
+// Increase points when paddle scores
+Paddle.prototype.scored = function () {
+  this.points ++;
+
 }
 
 // reset()

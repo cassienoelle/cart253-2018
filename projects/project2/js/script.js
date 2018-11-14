@@ -23,6 +23,9 @@ var gameTitle = "DEFAULT"; // Text to display depending on game conditions
 var displayTitle; // Boolean to display or remove text
 var spacePressed; // Track user input to move through intro sequence
 
+var leftScore; // score of left paddle
+var rightScore; // score of right paddle;
+
 // Variables to contain title objects and their associated images
 //
 var bottle;
@@ -48,6 +51,8 @@ var titleTextY;
 var titleTextBottom;
 var titleTextBottomX;
 var titleTextBottomY;
+// Variable to contain game font
+var musicalsFont;
 
 // Variables to contain the objects representing our balls, paddles
 // and other objects, plus their images or main parameters
@@ -149,6 +154,10 @@ function setupGame() {
   // Create a chaser to move randomly around screen and interact with the ball
   // in this case a white rabbit
   whiteRabbit = new Chaser(whiteRabbitImage,width/4,height/4,80,100,random(0,1000),random(0,1000),10);
+
+  // Create the score boards to track and display points of each paddle
+  leftScore = new ScoreBoard(25, height - 20,musicalsFont,40,255,161,13);
+  rightScore = new ScoreBoard(width - 25, height - 20,musicalsFont,40,255,161,13);
 }
 
 // centerCanvas()
@@ -339,6 +348,8 @@ function gameActive() {
   leftPaddle.display(); // display left paddle
   rightPaddle.display(); // display right paddle
   whiteRabbit.display(); // display white rabbit chaser
+  leftScore.display(leftPaddle); // display score of left paddle
+  rightScore.display(rightPaddle); // display score of right paddle
 
   // mushroomAttack();
 
