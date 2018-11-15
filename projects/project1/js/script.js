@@ -13,7 +13,7 @@ sprinting, random movement, screen wrap.
 ******************************************************/
 
 // Track whether the game is over
-var gameOver = false;
+var state = "ACTIVE";
 
 // Player position, size, velocity
 var playerX;
@@ -113,31 +113,43 @@ function setupPlayer() {
 
 // draw()
 //
-// While the game is active, checks input
-// updates positions of prey and player,
-// checks health (dying), checks eating (overlaps)
-// displays the two agents.
 // When the game is over, shows the game over screen.
 function draw() {
   background(255);
 
-  if (!gameOver) {
-    drawInterface();
-
-    handleInput();
-
-    movePlayer();
-    movePrey();
-
-    updateHealth();
-    checkEating();
-
-    drawPrey();
-    drawPlayer();
+  switch (state) {
+    case "INTRO":
+      break;
+    case "ACTIVE":
+      playGame();
+      break;
+    case "OVER":
+      break;
+    default:
+      break;
   }
-  else {
-    showGameOver();
-  }
+
+}
+
+// playGame()
+//
+// When the game state is active,
+// checks input updates positions of prey and player,
+// checks health (dying), checks eating (overlaps)
+// displays the two agents.
+function playGame() {
+  drawInterface();
+
+  handleInput();
+
+  movePlayer();
+  movePrey();
+
+  updateHealth();
+  checkEating();
+
+  drawPrey();
+  drawPlayer();
 }
 
 // drawInterface()
@@ -149,11 +161,11 @@ function drawInterface() {
 
 // handleInput()
 //
-// Checks arrow keys and adjusts player velocity accordingly
+// Checks arrow and shift keys and adjusts player velocity accordingly
 function handleInput() {
 
   //////////// NEW ////////////
-  // Check if player is sprinting (shift key down)
+  // Check if player is sprinting
   sprint();
   ////////// END NEW //////////
 
