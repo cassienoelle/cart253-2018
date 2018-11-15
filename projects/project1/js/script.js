@@ -179,24 +179,22 @@ function handleInput() {
     playerVY = 0;
   }
 
-  //////////// NEW ////////////
-
-  // sprint()
-  //
-  // When shift key is down increases player velocity and
-  // rate at which player loses health
+  /////////////// NEW ////////////
   function sprint() {
+    // When shift key is down, player sprints
+    // Increase player speed and health decay rate
     if (keyIsDown(SHIFT)) {
-      playerMaxSpeed = 10;
+      playerMaxSpeed = 6;
       loseHealth = 1;
     }
+    // Otherwise reset to original speed and decay rate
     else {
-      playerMaxSpeed = 6;
+      playerMaxSpeed = 2;
       loseHealth = 0.5;
     }
   }
+  ///////////// END NEW ////////////
 
-  ////////// END NEW //////////
 
 }
 
