@@ -17,9 +17,11 @@ function Paddle(x,y,w,h,speed,downKey,upKey) {
   this.downKey = downKey;
   this.upKey = upKey;
 
+  this.shrunk = false;
+  this.grown = false;
+
   this.initW = w;
   this.initH = h;
-  this.shrunk = false;
 
   this.points = 0;
 }
@@ -61,7 +63,7 @@ Paddle.prototype.shrink = function() {
 //
 // Double height of paddle
 Paddle.prototype.grow = function() {
-  this.h = this.h * 2;
+  this.h  = this.h * 2;
 }
 
 // scored()
@@ -86,6 +88,6 @@ Paddle.prototype.reset = function() {
 //
 // Draw the paddle as a rectangle on the screen
 Paddle.prototype.display = function() {
-  fill(255);
+  fill(56,255,253);
   rect(this.x,this.y,this.w,this.h);
 }

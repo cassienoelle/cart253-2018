@@ -17,6 +17,9 @@ function Ball(x,y,vx,vy,size,speed,enemy,img) {
   this.speedChanged = false;
   this.enemy = enemy;
   this.img = img;
+
+  this.grown = false;
+  this.initSize = size;
 }
 
 // update()
@@ -112,6 +115,13 @@ Ball.prototype.slower = function () {
   }
 }
 
+// grow()
+//
+// Increase the size of the ball
+Ball.prototype.grow = function() {
+  this.size = this.size * 2;
+}
+
 
 // reset()
 //
@@ -120,4 +130,12 @@ Ball.prototype.reset = function () {
   this.x = width/2;
   this.y = height/2;
   this.vx = -this.vx;
+}
+
+// resetSize()
+//
+// Reset width and height to initial values
+Ball.prototype.resetSize = function() {
+  this.size = this.initSize;
+  this.grown = false;
 }

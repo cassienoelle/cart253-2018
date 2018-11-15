@@ -30,23 +30,36 @@ Mushroom.prototype.update = function () {
   // Check for touching upper or lower edge and reverse velocity if so
   var leftMargin = this.size * 2 + leftPaddle.w * 3;
   var rightMargin = this.size * 2 + rightPaddle.w * 3;
-  if (this.x === 0 + leftMargin || this.x === this.width - rightMargin) {
+  if (this.x === 0 + leftMargin || this.x === this.size - rightMargin) {
     this.vx = -this.vx;
   }
 }
 
-
-// handleCollision(paddle)
+// handleCollision(object)
 //
-// Check if the mushroom overlaps the paddle passed as an argument
+// Check if the mushroom overlaps the object passed as an argument
 // and if so return true
-Mushroom.prototype.handleCollision = function(paddle) {
-  // Check if the ball overlaps the paddle on x axis
-  if (this.x + this.size > paddle.x && this.x < paddle.x + paddle.w) {
-    // Check if the ball overlaps the paddle on y axis
-    if (this.y + this.size > paddle.y && this.y < paddle.y + paddle.h) {
-      // If so
-      return true;
+Mushroom.prototype.handleCollision = function(object) {
+  // Check if the object passed is a paddle
+  if (object instanceof Paddle) {
+    // Check if the mushroom overlaps the paddle on x axis
+    if (this.x + this.size > object.x && this.x < object.x + object.h) {
+      // Check if the mushroom overlaps the paddle on y axis
+      if (this.y + this.size > object.y && this.y < object.y + object.h) {
+        // If so
+        if (!object.grown) {
+          object.grow();
+          object.grown = true;
+        }
+      }
+    }
+  }
+  else if (object instanceof Paddle === false) {
+    if (dist(this.x,this.y,object.x,object.y) < this.size/2 + (object.w/2 || object.size/2)){
+      if (!object.grown) {
+        object.grow();
+        object.grown = true;
+      }
     }
   }
 }

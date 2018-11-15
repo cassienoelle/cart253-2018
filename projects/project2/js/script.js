@@ -16,7 +16,7 @@ var canvasY;
 
 // Variables to track and handle game state and conditions
 //
-var state = "ACTIVE"; // Main game state: INTRO, ACTIVE or OVER
+var state = "INTRO"; // Main game state: INTRO, ACTIVE or OVER
 var activeCondition = "DEFAULT"; // Track conditions during active game play
 var gameTitle = "DEFAULT"; // Text to display depending on game conditions
 
@@ -51,6 +51,8 @@ var titleTextY;
 var titleTextBottom;
 var titleTextBottomX;
 var titleTextBottomY;
+// Title text in the corner
+var subTitleText;
 // Variable to contain game font
 var musicalsFont;
 
@@ -98,7 +100,7 @@ function preload() {
 //
 // Sets up inital game environment
 function setup() {
-  canvas = createCanvas(800, 600);
+  canvas = createCanvas(1024,768);
   centerCanvas();
   noStroke();
   imageMode(CENTER);
@@ -122,7 +124,7 @@ function setupIntro() {
   textSize(40);
   textFont(musicalsFont);
   titleTextX = width/2;
-  titleTextY = 100;
+  titleTextY = 85;
   titleTextBottomX = width/2;
   titleTextBottomY = height-75;
 
@@ -141,10 +143,10 @@ function setupGame() {
   enemyBall = new Ball(width/4,height/4,5,5,35,5,true,enemyBallImage);
 
   // Create the right paddle with UP and DOWN as controls
-  rightPaddle = new Paddle(width-paddleWidth,height/2,paddleWidth,paddleHeight,10,DOWN_ARROW,UP_ARROW);
+  rightPaddle = new Paddle(width - (paddleWidth + 10),height/2,paddleWidth,paddleHeight,10,DOWN_ARROW,UP_ARROW);
   // Create the left paddle with W and S as controls
   // Keycodes 83 and 87 are W and S respectively
-  leftPaddle = new Paddle(0,height/2,paddleWidth,paddleHeight,10,83,87);
+  leftPaddle = new Paddle(10,height/2,paddleWidth,paddleHeight,10,83,87);
 
   // Populate the array with mushrooms, initialize at position of ball, set random velocities
   for (var i = 0; i <= numMushrooms; i++) {
@@ -156,8 +158,8 @@ function setupGame() {
   whiteRabbit = new Chaser(whiteRabbitImage,width/4,height/4,80,100,random(0,1000),random(0,1000),10);
 
   // Create the score boards to track and display points of each paddle
-  leftScore = new ScoreBoard(25, height - 20,musicalsFont,40,255,161,13);
-  rightScore = new ScoreBoard(width - 25, height - 20,musicalsFont,40,255,161,13);
+  leftScore = new ScoreBoard(30, height - 15,musicalsFont,40,255,161,13);
+  rightScore = new ScoreBoard(width - 30, height - 15,musicalsFont,40,255,161,13);
 }
 
 // centerCanvas()
@@ -207,34 +209,37 @@ function draw() {
 function gameTitles() {
   // Black background with a spiral image displayed
   background(0);
-  image(spiralImage,width/2,height/2,800,600);
+  image(spiralImage,width/2,height/2,width,height);
 
-  // Set text styling and position
-  push();
-  stroke(255);
-  strokeWeight(5);
+  // Display text
   text(titleText,titleTextX,titleTextY);
   text(titleTextBottom,titleTextBottomX,titleTextBottomY);
+  push()
+  textSize(40);
+  text(subTitleText,titleTextX,titleTextY + 80);
   pop();
 
   // Display step one of intro sequence
   if (spacePressed === 0) {
     bottle.display(); // Image of a bottle
     titleText = "WELCOME TO PONG IN WONDERLAND";
-    titleTextBottom = "HIT SPACE TO CONTINUE";
+    subTitleText = "HIT SPACE TO CONTINUE";
+    titleTextBottom = " ";
+    textSize(60);
   }
   // When user hits the space bar
   else if (spacePressed === 1) {
     bottle.shrink(); // Shrink the bottle
     if (!bottle.shrunk) {
       bottle.display();
-      titleText = "WELCOME TO PONG IN WONDERLAND";
-      titleTextBottom = "HIT SPACE TO CONTINUE";
+      titleText = " ";
+      subTitleText = " ";
     }
     // When bottle is done shrinking, display step two of intro sequence
     else {
       cake.display(); // Image of cake
-      titleText = "MORE INSTRUCTIONS";
+      textSize(40);
+      titleText = "MAKE IT TO 100 POINTS TO WIN \nAVOID THE QUEEN OF HEARTS \n OR MOMENTARILY LOSE YOUR HEAD \n ";
       titleTextBottom = "HIT SPACE TO CONTINUE";
     }
 
@@ -246,7 +251,7 @@ function gameTitles() {
     if (!cake.shrunk) {
       cake.display();
       titleText = "MORE INSTRUCTIONS";
-      titleTextBottom = "HIT SPACE TO CONTINUE";
+      //titleTextBottom = "HIT SPACE TO CONTINUE";
     }
     // When cake is done shirnking, display step three of intro sequence
     else {
@@ -292,6 +297,8 @@ function keyTyped() {
 function gameActive() {
   // The background is black
   background(0);
+  drawBackground();
+
 
   // Handle user input to control paddles
   leftPaddle.handleInput();
@@ -306,6 +313,7 @@ function gameActive() {
 
   // If the ball goes off the screen, reset it's position to center
   if (ball.isOffScreen()) {
+    score();  // Check who scored and update points
     ball.reset();
   }
 
@@ -323,22 +331,38 @@ function gameActive() {
   ball.handleCollision(rightPaddle);
 
 
-  // If the enemy ball collides with a paddle while the game is in regular play
-  // behead that paddle temporarily (decrease it's height)
+  // If the enemy ball collides with a paddle while the game is in regular play,
+  // behead that paddle temporarily (decrease it's height).
+  //
+  // If the enemy ball was grown from colliding with a mushroom,
+  // revert it to it's original size following paddle collision.
   if (activeCondition === "DEFAULT") {
     if (enemyBall.handleCollision(leftPaddle)) {
       behead(leftPaddle);
+      if (enemyBall.grown) {
+        enemyBall.resetSize();
+      }
     }
     if (enemyBall.handleCollision(rightPaddle)) {
       behead(rightPaddle);
+      if (enemyBall.grown) {
+        enemyBall.resetSize();
+      }
     }
 
     // If the white rabbit collides with ball while the game is in regular play
     // increase the speed of the ball temporarily
     if (whiteRabbit.collision(ball)){
       rush();
+      // If the white rabbit was grown from colliding with a mushroom
+      // revert to original size following ball collision
+      if (whiteRabbit.grown) {
+        whiteRabbit.resetSize();
+      }
     }
   }
+
+  mushroomAttack();
 
   // Track the conditions of the game and display appropriate descriptive text
   narration();
@@ -351,12 +375,65 @@ function gameActive() {
   leftScore.display(leftPaddle); // display score of left paddle
   rightScore.display(rightPaddle); // display score of right paddle
 
-  // mushroomAttack();
 
+}
+
+function drawBackground() {
+  push();
+  rectMode(CORNER);
+  var a = 0;
+  var b = 50;
+  var c = 0;
+  var size = 50;
+  var x = 0;
+  var y = 0;
+  var numSquares = width / size;
+  var numRows = height / size;
+  var s;
+  var r;
+
+  for (r = 0; r <= numRows; r++) {
+
+    for (s = 0; s <= numSquares; s++) {
+      if (s % 2 === 1) {
+        color = a;
+      }
+      else {
+        color = b;
+      }
+
+      fill(color);
+      rect(x,y,size,size);
+      x += size;
+    }
+
+    a = b;
+    b = c;
+    c = a;
+    y += size;
+    x = 0;
+  }
+  pop();
 }
 
 /* ----------------------- SCORING ------------------------ */
 
+// score()
+//
+// Checks if ball has gone off the screen
+// Updates points of appropriate paddle
+function score() {
+    // If the ball goes off the right side
+    if (ball.x > width)  {
+      leftPaddle.points++; // left paddle scores
+      console.log("left score");
+    }
+    // If the ball goes off the left side
+    else if (ball.x + ball.size < 0){
+      rightPaddle.points++; // right paddle scores
+      console.log("right score");
+    }
+}
 
 /* ------------- MAIN EVENTS & CONDITION CHANGES -----------*/
 
@@ -406,18 +483,17 @@ function behead(paddle) {
 // mushroomAttack()
 //
 // Release mushrooms at random velocities from the location of the ball
-// If a mushroom collides with a paddle, the paddle grows
+// If a mushroom collides with an object, the object grows
 function mushroomAttack() {
   for (var i = 0; i < numMushrooms; i++) {
     mushrooms[i].update();
     mushrooms[i].display();
 
-    if (mushrooms[i].handleCollision(rightPaddle)) {
-      rightPaddle.grow();
-    }
-    else if (mushrooms[i].handleCollision(leftPaddle)) {
-      leftPaddle.grow();
-    }
+    // Check for collisions with objects other than ball
+    mushrooms[i].handleCollision(leftPaddle);
+    mushrooms[i].handleCollision(rightPaddle);
+    mushrooms[i].handleCollision(enemyBall);
+    mushrooms[i].handleCollision(whiteRabbit);
   }
 }
 
@@ -439,7 +515,7 @@ function narration() {
       }
     // Display white text on screen
       push();
-      fill(255);
+      fill(215,255,110);
       textSize(30);
       text(titleText,titleTextX,titleTextY);
       pop();

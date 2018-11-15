@@ -10,6 +10,7 @@ function ScoreBoard(x,y,font,size,red,green,blue) {
   this.y = y;
   this.font = font;
   this.size = size;
+  // color values
   this.red = red;
   this.green = green;
   this.blue = blue;
@@ -17,11 +18,11 @@ function ScoreBoard(x,y,font,size,red,green,blue) {
 
 // display()
 //
-// Draw the score board on the screen
+// Draw the score board on the screen taking associated paddle as parameter
 ScoreBoard.prototype.display = function(paddle) {
   textAlign(CENTER);
   fill(this.red,this.green,this.blue);
   textSize(this.size);
   textFont(this.font);
-  text(paddle.points,this.x,this.y);
+  text(paddle.points,this.x,this.y); // display points of paddle
 }

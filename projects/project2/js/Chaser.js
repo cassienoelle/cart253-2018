@@ -17,7 +17,12 @@ function Chaser(img,x,y,w,h,tx,ty,speed) {
   this.tx = tx;
   this.ty = ty;
   this.speed = speed;
+
   this.fast = false;
+  this.grown = false;
+
+  this.initW = w;
+  this.initH = h;
 }
 
 // update()
@@ -73,8 +78,6 @@ Chaser.prototype.reset = function() {
   this.x = 0;
 }
 
-
-
 // collision(ball)
 //
 // Check if the chaser overlaps with the ball
@@ -85,6 +88,22 @@ Chaser.prototype.collision = function(ball) {
   }
 }
 
+// grow()
+//
+// Increase the size of the ball
+Chaser.prototype.grow = function() {
+  this.w = this.w * 1.3;
+  this.h = this.h * 1.3;
+}
+
+// resetSize()
+//
+// Reset width and height to initial values
+Chaser.prototype.resetSize = function() {
+  this.w = this.initW;
+  this.h = this.initH;
+  this.grown = false;
+}
 
 // display()
 //
