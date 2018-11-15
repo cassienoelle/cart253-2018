@@ -28,31 +28,39 @@ var rightScore; // score of right paddle;
 
 // Variables to contain title objects and their associated images
 //
-var bottle;
+var introduction;
+var bottleIntro;
 var bottleImage;
 var cake;
 var cakeImage;
-var door;
+var mushroomIntro;
+var rabbit;
+var queenOfHeartsIntro;
+var doorIntro;
 var doorImage;
 var spiralImage; // Intro background
 var roseImage;
 var redRoseImage;
+
 
 // Variable to contain game font
 var musicalsFont;
 
 // Variables to contain title text and text position
 //
-// Title text at the top
+// Array to contain introductory instructions
+var introText = [];
+var currentTitle;
+var currentSubtitle;
+var introImages = [];
+var currentImage;
+// Variables to handle array index in gameTitles()
+var title;
+var sub;
+// Main title text
 var titleText;
 var titleTextX;
 var titleTextY;
-// Title text at the bottom
-var titleTextBottom;
-var titleTextBottomX;
-var titleTextBottomY;
-// Title text in the corner
-var subTitleText;
 // Variable to contain game font
 var musicalsFont;
 
@@ -113,11 +121,6 @@ function setup() {
 //
 // Sets up introductory titles and instructions
 function setupIntro() {
-  // Create title objects and position in center of the spiral (center of canvas)
-  bottle = new Title(bottleImage,width/2,height/2,250);
-  cake = new Title(cakeImage,width/2,height/2,250);
-  door = new Title(doorImage,width/2,height/2,250);
-
   // Set up title text
   fill(231,21,0);
   textAlign(CENTER);
@@ -127,6 +130,31 @@ function setupIntro() {
   titleTextY = 85;
   titleTextBottomX = width/2;
   titleTextBottomY = height-75;
+
+  // Instructions for game
+  introText[0] = " ";
+  introText[1] = "WELCOME TO PONG IN WONDERLAND";
+  introText[2] = "THE MUSHROOMS MAKE EVERYONE BIG AND TALL...";
+  introText[3] = "AND PREPARE TO RUSH IF \n THE RABBIT FINDS THE BALL...";
+  introText[4] = "AVOID THE QUEEN OF HEARTS \n OR YOU COULD LOSE YOUR HEAD...";
+  introText[5] = "GET 100 POINTS TO WIN \n AND WAKE UP IN YOUR OWN BED...";
+  introText[6] = "HIT SPACE TO CONTINUE";
+  introText[7] = "HIT SPACE AND GO DOWN THE RABBIT HOLE";
+  // Related images
+  introImages[0] = undefined;
+  introImages[1] = bottleImage;
+  introImages[2] = mushroomImage;
+  introImages[3] = whiteRabbitImage;
+  introImages[4] = heartImage;
+  introImages[5] = doorImage;
+
+  // Set handlers for image and text arrays
+  currentImage = 1;
+  currentTitle = 1;
+  currentSubtitle = 6;
+
+  // Create title objects and position in center of the spiral (center of canvas)
+  introduction = new Instruction(introImages[1],width/2,height/2,250,introText[1],introText[6]);
 
   spacePressed = 0; // Start at beginning of intro sequence
 }
@@ -189,7 +217,7 @@ function draw() {
   switch(state) {
     case "INTRO":
       //gameTitles();
-      gameTitles();
+      gameIntro();
       break;
     case "ACTIVE":
       gameActive();
@@ -206,25 +234,37 @@ function draw() {
 //
 // Intro sequence
 // Display game titles and instructions, run while game state is "INTRO"
-function gameTitles() {
+function gameIntro() {
   // Black background with a spiral image displayed
   background(0);
   image(spiralImage,width/2,height/2,width,height);
 
   // Display text
-  text(titleText,titleTextX,titleTextY);
-  text(titleTextBottom,titleTextBottomX,titleTextBottomY);
+  text(introduction.title,titleTextX,titleTextY);
   push()
   textSize(40);
-  text(subTitleText,titleTextX,titleTextY + 80);
+  text(introduction.subtitle,width/2,height - 60);
   pop();
 
+  switch (spacePressed) {
+    case 0:
+      introduction.display();
+      break;
+    case 1:
+      introduction.shrink();
+      if (!introduction.shrunk) {
+       introduction.display();
+      }
+      break;
+  }
+
+
+/*
   // Display step one of intro sequence
   if (spacePressed === 0) {
     bottle.display(); // Image of a bottle
-    titleText = "WELCOME TO PONG IN WONDERLAND";
-    subTitleText = "HIT SPACE TO CONTINUE";
-    titleTextBottom = " ";
+    title = 1;
+    sub = 6;
     textSize(60);
   }
   // When user hits the space bar
@@ -232,32 +272,31 @@ function gameTitles() {
     bottle.shrink(); // Shrink the bottle
     if (!bottle.shrunk) {
       bottle.display();
-      titleText = " ";
-      subTitleText = " ";
+      title = 0;
+      sub = 0;
     }
     // When bottle is done shrinking, display step two of intro sequence
     else {
       cake.display(); // Image of cake
+      title = 2;
+      sub = 6;
       textSize(40);
-      titleText = "MAKE IT TO 100 POINTS TO WIN \nAVOID THE QUEEN OF HEARTS \n OR MOMENTARILY LOSE YOUR HEAD \n ";
-      titleTextBottom = "HIT SPACE TO CONTINUE";
     }
 
   }
   // When user hits the space bar
   else if (spacePressed === 2) {
     cake.shrink(); // Shrink the cake
-
     if (!cake.shrunk) {
       cake.display();
-      titleText = "MORE INSTRUCTIONS";
-      //titleTextBottom = "HIT SPACE TO CONTINUE";
+      title = 0;
+      sub = 0;
     }
     // When cake is done shirnking, display step three of intro sequence
     else {
       door.display(); // Image of a door
-      titleText = "PLAY NOW";
-      titleTextBottom = "HIT SPACE TO GO DOWN THE RABBIT HOLE";
+      title = 3;
+      sub = 6;
     }
 
   }
@@ -267,14 +306,15 @@ function gameTitles() {
 
     if (!door.shrunk) {
       door.display();
-      titleText = "PLAY NOW";
-      titleTextBottom = "HIT SPACE TO GO DOWN THE RABBIT HOLE";
+      title = 0;
+      sub = 0;
     }
     // When door is done shrinking, begin game
     else {
       state = "ACTIVE";
     }
   }
+  */
 }
 
 // keyTyped()
@@ -283,9 +323,8 @@ function gameTitles() {
 // If a key is typed
 function keyTyped() {
   // if key is the space bar
-  if (key === " ") {
-    spacePressed ++; // increase spacePressed to move through intro sequence
-    console.log(spacePressed);
+  if (key === " " && state === "INTRO") {
+    spacePressed++;
   }
 }
 

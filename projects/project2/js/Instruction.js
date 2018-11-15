@@ -1,16 +1,18 @@
-// Title
+// Instruction
 //
-// A class to define how a title object behaves
+// A class to define how an instruction object behaves
 // including shrinking, growing and rotating
 
-// Title constructor
+// Instruction constructor
 //
 // Sets the properties with the provided arguments
-function Title(img,x,y,size) {
+function Instruction(img,x,y,size,title,subtitle) {
   this.img = img;
   this.x = x;
   this.y = y;
   this.size = size;
+  this.title = title;
+  this.subtitle = subtitle;
   this.shrunk = false;
   this.angle = 0;
   this.sizeChange = 1;
@@ -20,15 +22,15 @@ function Title(img,x,y,size) {
 //
 // Shrink title image until it disappears
 
-Title.prototype.shrink = function() {
+Instruction.prototype.shrink = function() {
   if (!this.shrunk) {
     translate(width/2,height/2);
     this.x = 0;
     this.y = 0;
     rotate(this.angle);
     scale(this.sizeChange);
-    this.angle += 0.03;
-    this.sizeChange -= 0.005;
+    this.angle += 0.05;
+    this.sizeChange -= 0.008;
     this.sizeChange = constrain(this.sizeChange,0,1);
     console.log(this.sizeChange);
   }
@@ -41,7 +43,7 @@ Title.prototype.shrink = function() {
 // grow()
 //
 // Grow title image until it engulfs canvas
-Title.prototype.grow = function() {
+Instruction.prototype.grow = function() {
   if (this.size < windowWidth*45) {
     this.size += this.size/35;
   }
@@ -50,7 +52,7 @@ Title.prototype.grow = function() {
 // display()
 //
 // Display title image
-Title.prototype.display = function() {
+Instruction.prototype.display = function() {
   imageMode(CENTER);
   image(this.img,this.x,this.y,this.size,this.size);
 }
