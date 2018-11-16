@@ -23,8 +23,7 @@ var gameTitle = "DEFAULT"; // Text to display depending on game conditions
 var displayTitle; // Boolean to display or remove text
 var spacePressed; // Track user input to move through intro sequence
 
-var leftScore; // score of left paddle
-var rightScore; // score of right paddle;
+var score; // Score board
 
 // Variables to contain title objects and their associated images
 //
@@ -48,17 +47,15 @@ var musicalsFont;
 
 // Variables to contain title text and text position
 //
-// Array to contain introductory instructions
+// Arrays to contain introductory instructions
 var introText = [];
 var currentTitle;
 var currentSubtitle;
 var introImages = [];
 var currentImage;
-// Variables to handle array index in gameTitles()
-var title;
-var sub;
-// Main title text
-var titleText;
+var finalInstruction;
+
+// Main title text position
 var titleTextX;
 var titleTextY;
 // Variable to contain game font
@@ -82,7 +79,7 @@ var whiteRabbit; // contains chaser object
 var whiteRabbitImage;
 
 var mushrooms = []; // array to contain mushroom objects
-var numMushrooms = 10; // number of mushrooms in the array
+var numMushrooms = 6; // number of mushrooms in the array
 var mushroomImage;
 
 // preload()
@@ -121,26 +118,24 @@ function setup() {
 //
 // Sets up introductory titles and instructions
 function setupIntro() {
-  // Set up title text
+  // Style and position textb
   fill(231,21,0);
   textAlign(CENTER);
-  textSize(40);
+  textSize(50);
   textFont(musicalsFont);
   titleTextX = width/2;
   titleTextY = 85;
-  titleTextBottomX = width/2;
-  titleTextBottomY = height-75;
 
-  // Instructions for game
+  // Populate text array with instructions for game
   introText[0] = " ";
   introText[1] = "WELCOME TO PONG IN WONDERLAND";
-  introText[2] = "THE MUSHROOMS MAKE EVERYONE BIG AND TALL...";
-  introText[3] = "AND PREPARE TO RUSH IF \n THE RABBIT FINDS THE BALL...";
-  introText[4] = "AVOID THE QUEEN OF HEARTS \n OR YOU COULD LOSE YOUR HEAD...";
-  introText[5] = "GET 100 POINTS TO WIN \n AND WAKE UP IN YOUR OWN BED...";
+  introText[2] = "THE MUSHROOMS MAKE EVERYONE \n BIG AND TALL...";
+  introText[3] = "BUT PREPARE TO RUSH IF \n THE RABBIT TOUCHES THE BALL...";
+  introText[4] = "AVOID THE RED QUEEN \n OR YOU COULD LOSE YOUR HEAD...";
+  introText[5] = "WIN 100 POINTS \n AND WAKE UP IN YOUR BED..."; // final instruction before game starts
   introText[6] = "HIT SPACE TO CONTINUE";
   introText[7] = "HIT SPACE AND GO DOWN THE RABBIT HOLE";
-  // Related images
+  // Populate image array with images related to text
   introImages[0] = undefined;
   introImages[1] = bottleImage;
   introImages[2] = mushroomImage;
@@ -152,11 +147,10 @@ function setupIntro() {
   currentImage = 1;
   currentTitle = 1;
   currentSubtitle = 6;
+  finalInstruction = 5;
 
-  // Create title objects and position in center of the spiral (center of canvas)
-  introduction = new Instruction(introImages[1],width/2,height/2,250,introText[1],introText[6]);
-
-  spacePressed = 0; // Start at beginning of intro sequence
+  // Create instruction object and position in center of the canvas
+  introduction = new Instruction(introImages[currentImage],width/2,height/2,250,introText[currentTitle],introText[currentSubtitle]);
 }
 
 // setupGame()
@@ -185,9 +179,8 @@ function setupGame() {
   // in this case a white rabbit
   whiteRabbit = new Chaser(whiteRabbitImage,width/4,height/4,80,100,random(0,1000),random(0,1000),10);
 
-  // Create the score boards to track and display points of each paddle
-  leftScore = new ScoreBoard(30, height - 15,musicalsFont,40,255,161,13);
-  rightScore = new ScoreBoard(width - 30, height - 15,musicalsFont,40,255,161,13);
+  // Create the score board to track and display points of each paddle
+  score = new ScoreBoard(leftPaddle,rightPaddle,30,height - 15,width - 30,40,musicalsFont,255,161,13);
 }
 
 // centerCanvas()
@@ -242,89 +235,64 @@ function gameIntro() {
   // Display text
   text(introduction.title,titleTextX,titleTextY);
   push()
-  textSize(40);
+  textSize(30);
   text(introduction.subtitle,width/2,height - 60);
   pop();
 
-  switch (spacePressed) {
-    case 0:
-      introduction.display();
-      break;
-    case 1:
-      introduction.shrink();
+  // Moves through intro sequence when triggered by keyboard input
+  // Text and image properties of the introduction object are updated
+  // by looping through elements of relevant arrays
+  //
+    // When SPACE is typed
+    if (spacePressed) {
+      // Shrink the current image by rotating it and reducing it's size
+      // until it disappears into the center of the spiral image
       if (!introduction.shrunk) {
-       introduction.display();
+        console.log("shrink now");
+        introduction.shrink();
+        // Remove current text
+        introduction.title = introText[0];
+        introduction.subtitle = introText[0];
+        introduction.display();
       }
-      break;
-  }
-
-
-/*
-  // Display step one of intro sequence
-  if (spacePressed === 0) {
-    bottle.display(); // Image of a bottle
-    title = 1;
-    sub = 6;
-    textSize(60);
-  }
-  // When user hits the space bar
-  else if (spacePressed === 1) {
-    bottle.shrink(); // Shrink the bottle
-    if (!bottle.shrunk) {
-      bottle.display();
-      title = 0;
-      sub = 0;
+      // Once the image is fully shrunk
+      else if (introduction.shrunk) {
+        // If that was the last instruction, start the game
+        if (currentTitle === finalInstruction) {
+          state = "ACTIVE";
+        }
+        // Otherwise move to next instruction
+        else {
+        // Access the next image and text in the arrays (update indices)
+        currentImage++;
+        currentTitle++;
+        // Reset other object parameters and halt action triggered by key input
+        introduction.reset();
+        spacePressed = false;
+        }
+      }
     }
-    // When bottle is done shrinking, display step two of intro sequence
+    // Default, no action currently triggered
     else {
-      cake.display(); // Image of cake
-      title = 2;
-      sub = 6;
-      textSize(40);
+      introduction.shrunk = false;
+      // Set image and text properties of object to updated array elements
+      introduction.img = introImages[currentImage];
+      introduction.title = introText[currentTitle];
+      introduction.subtitle = introText[currentSubtitle];
+      // Display current image and text until SPACE typed again
+      introduction.display();
     }
 
   }
-  // When user hits the space bar
-  else if (spacePressed === 2) {
-    cake.shrink(); // Shrink the cake
-    if (!cake.shrunk) {
-      cake.display();
-      title = 0;
-      sub = 0;
-    }
-    // When cake is done shirnking, display step three of intro sequence
-    else {
-      door.display(); // Image of a door
-      title = 3;
-      sub = 6;
-    }
-
-  }
-  // When user hits the space bar
-  else if (spacePressed === 3) {
-    door.shrink(); // Shrink the door
-
-    if (!door.shrunk) {
-      door.display();
-      title = 0;
-      sub = 0;
-    }
-    // When door is done shrinking, begin game
-    else {
-      state = "ACTIVE";
-    }
-  }
-  */
-}
 
 // keyTyped()
 //
 // Track user input from keyboard
 // If a key is typed
 function keyTyped() {
-  // if key is the space bar
+  // if key is the space bar and the game is in the intro sequence
   if (key === " " && state === "INTRO") {
-    spacePressed++;
+    spacePressed = true;
   }
 }
 
@@ -334,10 +302,9 @@ function keyTyped() {
 //
 // Main gameplay, run while game state is "ACTIVE"
 function gameActive() {
-  // The background is black
+  // The background is black and covered by a checkered pattern
   background(0);
   drawBackground();
-
 
   // Handle user input to control paddles
   leftPaddle.handleInput();
@@ -352,12 +319,12 @@ function gameActive() {
 
   // If the ball goes off the screen, reset it's position to center
   if (ball.isOffScreen()) {
-    score();  // Check who scored and update points
+    checkScore(); // Check to see which paddle scored and update points
     ball.reset();
   }
 
-  // If the enemy ball goes off the screen while the game is in regular play (DEFAULT)
-  // or while a paddle is without it's head after colliding with the enemy ball (SIZE),
+  // If the enemy ball goes off the screen
+  // while the game is in regular play or while a paddle has lost it's head
   // reset the position of the enemy ball to center
   if (enemyBall.isOffScreen()) {
     if (activeCondition === "DEFAULT" || activeCondition === "SIZE") {
@@ -371,10 +338,10 @@ function gameActive() {
 
 
   // If the enemy ball collides with a paddle while the game is in regular play,
-  // behead that paddle temporarily (decrease it's height).
+  // behead that paddle temporarily (decrease it's height)
   //
-  // If the enemy ball was grown from colliding with a mushroom,
-  // revert it to it's original size following paddle collision.
+  // If the enemy ball has increased in size after colliding with a mushroom,
+  // reset it to it's original size following the paddle collision
   if (activeCondition === "DEFAULT") {
     if (enemyBall.handleCollision(leftPaddle)) {
       behead(leftPaddle);
@@ -389,12 +356,12 @@ function gameActive() {
       }
     }
 
-    // If the white rabbit collides with ball while the game is in regular play
+    // If the white rabbit collides with the ball
     // increase the speed of the ball temporarily
     if (whiteRabbit.collision(ball)){
       rush();
-      // If the white rabbit was grown from colliding with a mushroom
-      // revert to original size following ball collision
+      // If the white rabbit is larger after colliding with a mushroom
+      // reset it to it's original size following the ball collision
       if (whiteRabbit.grown) {
         whiteRabbit.resetSize();
       }
@@ -411,28 +378,34 @@ function gameActive() {
   leftPaddle.display(); // display left paddle
   rightPaddle.display(); // display right paddle
   whiteRabbit.display(); // display white rabbit chaser
-  leftScore.display(leftPaddle); // display score of left paddle
-  rightScore.display(rightPaddle); // display score of right paddle
+  score.display();
 
 
 }
 
+// drawBackground()
+//
+// Draw a background of alternating black and white squares
 function drawBackground() {
   push();
   rectMode(CORNER);
+
+  // Variables to handle color alternation
   var a = 0;
   var b = 50;
   var c = 0;
+
   var size = 50;
   var x = 0;
   var y = 0;
-  var numSquares = width / size;
-  var numRows = height / size;
-  var s;
-  var r;
+  var numSquares = width / size; // total squares per row
+  var numRows = height / size; // total rows of squares
+  var s; // counter for number of squares
+  var r; // counter for number of rows
 
+  // Draw rows of squares until canvas is covered
   for (r = 0; r <= numRows; r++) {
-
+    // Fill each row with alternating colored squares
     for (s = 0; s <= numSquares; s++) {
       if (s % 2 === 1) {
         color = a;
@@ -445,10 +418,11 @@ function drawBackground() {
       rect(x,y,size,size);
       x += size;
     }
-
+    // Switch color order to create checkered pattern
     a = b;
     b = c;
     c = a;
+    // Reset x position and move down to y position of next row
     y += size;
     x = 0;
   }
@@ -461,7 +435,7 @@ function drawBackground() {
 //
 // Checks if ball has gone off the screen
 // Updates points of appropriate paddle
-function score() {
+function checkScore() {
     // If the ball goes off the right side
     if (ball.x > width)  {
       leftPaddle.points++; // left paddle scores

@@ -71,7 +71,6 @@ Paddle.prototype.grow = function() {
 // Increase points when paddle scores
 Paddle.prototype.scored = function () {
   this.points ++;
-
 }
 
 // reset()

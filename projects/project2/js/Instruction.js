@@ -16,6 +16,10 @@ function Instruction(img,x,y,size,title,subtitle) {
   this.shrunk = false;
   this.angle = 0;
   this.sizeChange = 1;
+
+  this.initX = x;
+  this.initY = y;
+  this.initSize = size;
 }
 
 // shrink()
@@ -23,6 +27,7 @@ function Instruction(img,x,y,size,title,subtitle) {
 // Shrink title image until it disappears
 
 Instruction.prototype.shrink = function() {
+  console.log("shrunk run");
   if (!this.shrunk) {
     translate(width/2,height/2);
     this.x = 0;
@@ -55,4 +60,17 @@ Instruction.prototype.grow = function() {
 Instruction.prototype.display = function() {
   imageMode(CENTER);
   image(this.img,this.x,this.y,this.size,this.size);
+}
+
+// reset()
+//
+// Reset position and size to key initial values
+Instruction.prototype.reset = function() {
+  // Reset position and size to intial values passed through parameters
+  this.x = this.initX;
+  this.y = this.initY;
+  this.size = this.initSize;
+  // Reset angle and sizeChange so shrink() can be called again
+  this.angle = 0;
+  this.sizeChange = 1;
 }
