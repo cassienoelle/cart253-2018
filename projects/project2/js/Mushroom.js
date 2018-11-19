@@ -13,6 +13,8 @@ function Mushroom(img,x,y,vx,vy,size) {
   this.vx = vx;
   this.vy = vy;
   this.size = size;
+
+  this.alpha = 255;
 }
 
 // update()
@@ -23,7 +25,6 @@ Mushroom.prototype.update = function () {
   // Update position with velocity
   this.x += this.vx;
   this.y += this.vy;
-
   // Constrain y position to be on screen
   this.y = constrain(this.y,0,height-this.size);
 
@@ -38,7 +39,7 @@ Mushroom.prototype.update = function () {
 // handleCollision(object)
 //
 // Check if the mushroom overlaps the object passed as an argument
-// and if so return true
+// and if so trigger the grow() function of that object to increase size
 Mushroom.prototype.handleCollision = function(object) {
   // Check if the object passed is a paddle
   if (object instanceof Paddle) {
@@ -54,6 +55,7 @@ Mushroom.prototype.handleCollision = function(object) {
       }
     }
   }
+  // Calculate collision for other objects
   else if (object instanceof Paddle === false) {
     if (dist(this.x,this.y,object.x,object.y) < this.size/2 + (object.w/2 || object.size/2)){
       if (!object.grown) {
@@ -64,6 +66,27 @@ Mushroom.prototype.handleCollision = function(object) {
   }
 }
 
+// isOffScreen()
+//
+// Checks if the ball has moved off the screen and, if so, returns true.
+// Otherwise it returns false.
+Mushroom.prototype.isOffScreen = function () {
+  // Check for going off screen and reset if so
+  if (this.x + this.size < 0 || this.x > width) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+// reset()
+//
+// Reset position of mushroom
+Mushroom.prototype.reset = function () {
+  this.x = ball.x;
+  this.y = ball.y;
+}
 
 // display()
 //

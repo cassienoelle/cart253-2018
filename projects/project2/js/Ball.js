@@ -97,8 +97,8 @@ Ball.prototype.faster = function() {
   if (!this.speedChanged) {
     this.vx = -this.vx;
     this.vy = -this.vy;
-    this.vx = this.vx * 1.5;
-    this.vy = this.vy * 1.5;
+    this.vx = this.vx * 2;
+    this.vy = this.vy * 2;
 
     this.speedChanged = true;
   }

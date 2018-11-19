@@ -13,18 +13,28 @@ sprinting, random movement, screen wrap.
 ******************************************************/
 
 // Track whether the game is over
-var state = "ACTIVE";
+var state = "OVER";
+
+// Background images and game fonts
+var playerLostImage;
+var playerWonImage;
+var mainFont;
+var gameOverImage;
+var gameOverText;
 
 // Player position, size, velocity
 var playerX;
 var playerY;
-var playerRadius = 25;
 var playerVX = 0;
 var playerVY = 0;
-var playerMaxSpeed = 2;
+var playerMaxSpeed = 10;
 // Player health
 var playerHealth;
 var playerMaxHealth = 255;
+// Player image
+var playerImage;
+var playerWidth = 50;
+var playerHeight = playerWidth;
 
 //////////// NEW //////////
 
@@ -36,10 +46,9 @@ var loseHealth = 0.5;
 // Prey position, size, velocity
 var preyX;
 var preyY;
-var preyRadius = 25;
 var preyVX;
 var preyVY;
-var preyMaxSpeed = 6;
+var preyMaxSpeed = 2;
 // Perlin noise time parameters for prey movement
 var preyTX;
 var preyTY;
@@ -54,22 +63,40 @@ var preyHeight = preyWidth;
 // Amount of health obtained per frame of "eating" the prey
 var eatHealth = 10;
 // Number of prey eaten during the game
-var preyEaten = 0;
+var numPreyEaten = 0;
 
+//
+var scored = false;
+var scoredImage;
+var scoredX;
+var scoredY;
+var scoredVX;
+var scoredVY;
+var scoredAlpha;
 
 // preload()
 //
-// Preload images
+// Preload images and fonts
 function preload() {
+  // load image of a mouthless face emoji
+  playerImage = loadImage("assets/images/faceemoji.png");
   // load prey image of a like
   preyImage = loadImage("assets/images/like.png");
+  // load image of a heart to display when a the player gains a point
+  scoredImage = loadImage("assets/images/heart.png");
+  // load image of a poop emoji background to display when player loses game
+  playerLostImage = loadImage("assets/images/poopemoji.png")
+  // load image of a heart eyes emoji background to display when player wins
+  playerWonImage = loadImage("assets/images/hearteyes.png");
+  // load font for game over text and instructions
+  mainFont = loadFont("assets/fonts/segoe-ui.ttf");
 }
 
 // setup()
 //
 // Sets up the basic elements of the game
 function setup() {
-  createCanvas(500,500);
+  createCanvas(800,540);
 
   noStroke();
 
@@ -82,7 +109,15 @@ function setup() {
 //
 // Sets up interface elements
 function setupInterface() {
-
+  imageMode(CENTER);
+  textFont = mainFont;
+  textAlign(CENTER,CENTER);
+  textSize(36);
+  scoredAlpha = 255;
+  scoredX = width/2;
+  scoredY = height * 0.75;
+  scoredVX = 0;
+  scoredVY = 5;
 }
 
 
@@ -115,7 +150,6 @@ function setupPlayer() {
 //
 // When the game is over, shows the game over screen.
 function draw() {
-  background(255);
 
   switch (state) {
     case "INTRO":
@@ -124,6 +158,7 @@ function draw() {
       playGame();
       break;
     case "OVER":
+      showGameOver();
       break;
     default:
       break;
@@ -148,6 +183,8 @@ function playGame() {
   updateHealth();
   checkEating();
 
+  scoreChange();
+
   drawPrey();
   drawPlayer();
 }
@@ -156,18 +193,13 @@ function playGame() {
 //
 // Displays and updates interface elements
 function drawInterface() {
-
+  background(0);
 }
 
 // handleInput()
 //
 // Checks arrow and shift keys and adjusts player velocity accordingly
 function handleInput() {
-
-  //////////// NEW ////////////
-  // Check if player is sprinting
-  sprint();
-  ////////// END NEW //////////
 
   // Check for horizontal movement
   if (keyIsDown(LEFT_ARROW)) {
@@ -192,22 +224,20 @@ function handleInput() {
   }
 
   /////////////// NEW ////////////
-  function sprint() {
-    // When shift key is down, player sprints
-    // Increase player speed and health decay rate
-    if (keyIsDown(SHIFT)) {
-      playerMaxSpeed = 6;
-      loseHealth = 1;
-    }
-    // Otherwise reset to original speed and decay rate
-    else {
-      playerMaxSpeed = 2;
-      loseHealth = 0.5;
-    }
+  // Check if player is sprinting
+  // When shift key is down, player sprints
+  // Increase player speed and health decay rate
+  if (keyIsDown(SHIFT)) {
+    playerMaxSpeed = 6;
+    loseHealth = 1;
   }
+  // Otherwise reset to original speed and decay rate
+  else {
+    playerMaxSpeed = 2;
+    loseHealth = 0.5;
+  }
+
   ///////////// END NEW ////////////
-
-
 }
 
 // movePlayer()
@@ -250,8 +280,8 @@ function updateHealth() {
 
   // Check if the player is dead
   if (playerHealth === 0) {
-    // If so, the game is over
-    gameOver = true;
+    // Game over if so
+    state = "OVER";
   }
 }
 
@@ -262,7 +292,7 @@ function checkEating() {
   // Get distance of player to prey
   var d = dist(playerX,playerY,preyX,preyY);
   // Check if it's an overlap
-  if (d < playerRadius + preyRadius) {
+  if (d < playerWidth/2 + preyWidth/2) {
     // Increase the player health
     playerHealth = constrain(playerHealth + eatHealth,0,playerMaxHealth);
     // Reduce the prey health
@@ -270,16 +300,44 @@ function checkEating() {
 
     // Check if the prey died
     if (preyHealth === 0) {
+      // Display scoreChange() visual
+      scoredX = playerX;
+      scored = true;
       // Move the "new" prey to a random position
       preyX = random(0,width);
       preyY = random(0,height);
       // Give it full health
       preyHealth = preyMaxHealth;
       // Track how many prey were eaten
-      preyEaten++;
+      numPreyEaten++;
     }
   }
 }
+
+// scoreChange()
+//
+// Display heart moving upwards when prey is eaten
+function scoreChange() {
+  if (scored) {
+    console.log("Scored!");
+    scoredY -= scoredVY;
+    scoredAlpha -= scoredVY;
+    push();
+    tint(255,scoredAlpha);
+    image(scoredImage,scoredX,scoredY,50,50);
+    pop();
+  }
+
+  if (scoredAlpha <= 0) {
+    scored = false;
+    scoredY = height * 0.75;
+    scoredAlpha = 255;
+  }
+}
+
+// playerDies()
+//
+// Display angry face moving upwards if player dies
 
 
 // movePrey()
@@ -335,22 +393,31 @@ function drawPrey() {
 
 // drawPlayer()
 //
-// Draw the player as an ellipse with alpha based on health
+// Draw the player as an image with alpha based on health
 function drawPlayer() {
-  fill(253,255,0 ,playerHealth);
-  ellipse(playerX,playerY,playerRadius*2);
+  tint(255,playerHealth);
+  image(playerImage,playerX,playerY,playerWidth,playerHeight);
 }
 
 // showGameOver()
 //
 // Display text about the game being over!
 function showGameOver() {
-  background(233,235,238);
-  textSize(32);
-  textAlign(CENTER,CENTER);
-  fill(0);
-  var gameOverText = "GAME OVER\n";
-  gameOverText += "you are\n";
-  gameOverText += "irrelevant"
+  if (numPreyEaten < 4) {
+    gameOverImage = playerLostImage;
+    fill(255);
+    gameOverText = "GAME OVER.\n";
+    gameOverText += "YOU DIED WITH " + numPreyEaten + " LIKES.\n";
+    gameOverText += "YOU ARE IRRELEVANT."
+  }
+  else {
+    gameOverImage = playerWonImage;
+    fill(255);
+    gameOverText = "GAME OVER.\n";
+    gameOverText += "YOU GOT " + numPreyEaten + " LIKES!\n";
+    gameOverText += "DM ME FOR DETAILS."
+    console.log()
+  }
+  image(gameOverImage,width/2,height/2);
   text(gameOverText,width/2,height/2);
 }

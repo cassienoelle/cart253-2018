@@ -16,7 +16,7 @@ var canvasY;
 
 // Variables to track and handle game state and conditions
 //
-var state = "INTRO"; // Main game state: INTRO, ACTIVE or OVER
+var state = "ACTIVE"; // Main game state: INTRO, ACTIVE or OVER
 var activeCondition = "DEFAULT"; // Track conditions during active game play
 var gameTitle = "DEFAULT"; // Text to display depending on game conditions
 
@@ -24,6 +24,8 @@ var displayTitle; // Boolean to display or remove text
 var spacePressed; // Track user input to move through intro sequence
 
 var score; // Score board
+var winner;
+var winningScore = 100;
 
 // Variables to contain title objects and their associated images
 //
@@ -132,7 +134,7 @@ function setupIntro() {
   introText[2] = "THE MUSHROOMS MAKE EVERYONE \n BIG AND TALL...";
   introText[3] = "BUT PREPARE TO RUSH IF \n THE RABBIT TOUCHES THE BALL...";
   introText[4] = "AVOID THE RED QUEEN \n OR YOU COULD LOSE YOUR HEAD...";
-  introText[5] = "WIN 100 POINTS \n AND WAKE UP IN YOUR BED..."; // final instruction before game starts
+  introText[5] = "WIN 100 POINTS \n TO WAKE UP SAFE IN YOUR BED..."; // final instruction before game starts
   introText[6] = "HIT SPACE TO CONTINUE";
   introText[7] = "HIT SPACE AND GO DOWN THE RABBIT HOLE";
   // Populate image array with images related to text
@@ -159,7 +161,7 @@ function setupIntro() {
 // Creates balls, paddles and other interactive objects
 function setupGame() {
   // Create the main ball
-  ball = new Ball(width/2,height/2,5,5,30,5,false);
+  ball = new Ball(width/2,height/2,6,6,30,6,false);
   // Create the enemy ball
   enemyBallImage = heartImage; // Enemy ball starts as a heart
   enemyBall = new Ball(width/4,height/4,5,5,35,5,true,enemyBallImage);
@@ -169,11 +171,6 @@ function setupGame() {
   // Create the left paddle with W and S as controls
   // Keycodes 83 and 87 are W and S respectively
   leftPaddle = new Paddle(10,height/2,paddleWidth,paddleHeight,10,83,87);
-
-  // Populate the array with mushrooms, initialize at position of ball, set random velocities
-  for (var i = 0; i <= numMushrooms; i++) {
-    mushrooms.push(new Mushroom(mushroomImage,ball.x,ball.y,random(-5,5),random(-5,5),30));
-  }
 
   // Create a chaser to move randomly around screen and interact with the ball
   // in this case a white rabbit
@@ -323,19 +320,17 @@ function gameActive() {
     ball.reset();
   }
 
-  // If the enemy ball goes off the screen
-  // while the game is in regular play or while a paddle has lost it's head
-  // reset the position of the enemy ball to center
-  if (enemyBall.isOffScreen()) {
-    if (activeCondition === "DEFAULT" || activeCondition === "SIZE") {
-      enemyBall.reset();
-    }
-  }
-
   // Bounce ball off paddles
   ball.handleCollision(leftPaddle);
   ball.handleCollision(rightPaddle);
 
+  // If the enemy ball goes off the screen while the game is in regular play,
+  // reset the position of the enemy ball to center
+  if (enemyBall.isOffScreen()) {
+    if (activeCondition === "DEFAULT") {
+      enemyBall.reset();
+    }
+  }
 
   // If the enemy ball collides with a paddle while the game is in regular play,
   // behead that paddle temporarily (decrease it's height)
@@ -356,19 +351,29 @@ function gameActive() {
       }
     }
 
-    // If the white rabbit collides with the ball
-    // increase the speed of the ball temporarily
-    if (whiteRabbit.collision(ball)){
-      rush();
-      // If the white rabbit is larger after colliding with a mushroom
-      // reset it to it's original size following the ball collision
-      if (whiteRabbit.grown) {
-        whiteRabbit.resetSize();
-      }
+  // If the white rabbit collides with the ball
+  // increase the speed of the ball temporarily
+  if (whiteRabbit.collision(ball)){
+    rush();
+    // If the white rabbit is larger after colliding with a mushroom
+    // reset it to it's original size following the ball collision
+    if (whiteRabbit.grown) {
+      whiteRabbit.resetSize();
+    }
+  }
+}
+
+  // If a certain score has been reached by either paddle
+  // release mushrooms from the location of the ball
+  if (score.event()) {
+    mushroomAttack();
+  }
+  else if (!score.event()) {
+    while (mushrooms.length > 0) {
+      mushrooms.pop();
     }
   }
 
-  mushroomAttack();
 
   // Track the conditions of the game and display appropriate descriptive text
   narration();
@@ -378,9 +383,7 @@ function gameActive() {
   leftPaddle.display(); // display left paddle
   rightPaddle.display(); // display right paddle
   whiteRabbit.display(); // display white rabbit chaser
-  score.display();
-
-
+  score.display(); // display score board
 }
 
 // drawBackground()
@@ -498,17 +501,23 @@ function behead(paddle) {
 // Release mushrooms at random velocities from the location of the ball
 // If a mushroom collides with an object, the object grows
 function mushroomAttack() {
-  for (var i = 0; i < numMushrooms; i++) {
+  if (leftPaddle.points % 5 )
+  // Populate the array with mushrooms, initialize at position of ball, set random velocities
+  for (var i = 0; i <= numMushrooms; i++) {
+    mushrooms.push(new Mushroom(mushroomImage,ball.x,ball.y,random(-5,5),random(-5,5),30));
+
     mushrooms[i].update();
     mushrooms[i].display();
 
-    // Check for collisions with objects other than ball
+    // Check for collisions with paddles, enemy ball and white rabbit
     mushrooms[i].handleCollision(leftPaddle);
     mushrooms[i].handleCollision(rightPaddle);
     mushrooms[i].handleCollision(enemyBall);
     mushrooms[i].handleCollision(whiteRabbit);
   }
 }
+
+
 
 // narration()
 //
@@ -576,7 +585,12 @@ function sizeTimer() {
 //
 // End game and display final score
 function gameOver() {
-
+  if (leftPaddle.points === winningScore) {
+    winner = "PLAYER ONE";
+  }
+  else if (rightPaddle.points === winningScore) {
+    winner = "PLAYER TWO";
+  }
 }
 
 function gameTest() {
