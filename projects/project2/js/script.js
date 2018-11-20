@@ -35,7 +35,7 @@ var spacePressed; // Track user input to move through intro sequence or replay g
 
 var score; // Score board
 var winner; // Holds winning player
-var winningScore = 5; // Set score needed to win
+var winningScore = 50; // Set score needed to win
 
 // Variables to contain the objects representing our balls, paddles
 // and other objects
@@ -662,10 +662,6 @@ function gameOver() {
     ball.reset();
     enemyBall.reset();
     whiteRabbit.reset();
-    // Clear any remaining mushrooms
-  //  while (numMushrooms > 0) {
-  //    mushrooms.pop();
-  //  }
     activeCondition = "DEFAULT";
     // Remove any titles being displayed
     displayTitle = false;
