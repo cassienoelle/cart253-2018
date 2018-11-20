@@ -50,6 +50,8 @@ Paddle.prototype.update = function() {
   this.y = constrain(this.y,0,height-this.h);
 }
 
+//////////////////////// NEW //////////////////////////
+
 // shrink()
 //
 // Reduce height of paddle by half
@@ -82,6 +84,8 @@ Paddle.prototype.reset = function() {
   this.shrunk = false;
 
 }
+
+////////////////////// END NEW ///////////////////////
 
 // display()
 //

@@ -1,13 +1,22 @@
-// Basic OO Pong
-// by Pippin Barr
+// Pong in Wonderland
+// Cassie Smith, CART 253a
+// Fall 2018
 //
-// A primitive implementation of Pong with no scoring system
-// just the ability to play the game with the keyboard.
+// starter code by Pippin Barr
+//
+// An Alice in Wonderland inspired implementation of Pong
 //
 // Arrow keys control the right hand paddle, W and S control
 // the left hand paddle.
 //
+// White rabbit moves around screen according to Perlin noise and
+// increases speed of ball when it touches ball 
+// Mushrooms increase size of objects they collide with
+// Red Queen enemy ball cuts down height of paddle upon collision
+//
 // Written with JavaScript OOP.
+
+//////////////////////// NEW //////////////////////////
 
 // Variables to contain and position the canvas
 var canvas;
@@ -73,8 +82,6 @@ var titleTextX;
 var titleTextY;
 // Main game font
 var musicalsFont;
-
-
 
 // preload()
 //
@@ -281,6 +288,8 @@ function gameIntro() {
 
   }
 
+////////////////////// END NEW //////////////////////////
+
 /*** --------------- ACTIVE GAME PLAY ---------------- ***/
 
 // gameActive()
@@ -289,7 +298,10 @@ function gameIntro() {
 function gameActive() {
   // The background is black and covered by a checkered pattern
   background(0);
+
+  ////////// NEW //////////
   drawBackground();
+  //////// END NEW ////////
 
   // Handle user input to control paddles
   leftPaddle.handleInput();
@@ -297,20 +309,26 @@ function gameActive() {
 
   // Handle movement of balls, paddles, chaser
   ball.update();
-  enemyBall.update();
   leftPaddle.update();
   rightPaddle.update();
+  ////////// NEW //////////
+  enemyBall.update();
   whiteRabbit.update();
+  //////// END NEW ////////
 
   // If the ball goes off the screen, reset it's position to center
   if (ball.isOffScreen()) {
+    ////////// NEW //////////
     checkScore(); // Check to see which paddle scored and update points
+    //////// END NEW ////////
     ball.reset();
   }
 
   // Bounce ball off paddles
   ball.handleCollision(leftPaddle);
   ball.handleCollision(rightPaddle);
+
+  /////////////////// NEW //////////////////
 
   // If the enemy ball goes off the screen while the game is in regular play,
   // reset the position of the enemy ball to center
@@ -359,13 +377,22 @@ function gameActive() {
   // Track the conditions of the game and display appropriate descriptive text
   narration();
 
-  ball.display("SHAPE"); // display ball as shape
-  enemyBall.display("IMAGE"); // display enemy ball as image
+  ///////////////// END NEW //////////////////
+
   leftPaddle.display(); // display left paddle
   rightPaddle.display(); // display right paddle
+
+  /////////////////// NEW /////////////////////
+
+  ball.display("SHAPE"); // display ball as shape
+  enemyBall.display("IMAGE"); // display enemy ball as image
   whiteRabbit.display(); // display white rabbit chaser
   score.display(); // display score board
+
+  ////////////////// END NEW ///////////////////
 }
+
+////////////////////// NEW ///////////////////////
 
 // drawBackground()
 //
@@ -640,3 +667,5 @@ function keyTyped() {
     spacePressed = true;
   }
 }
+
+////////////////////// END NEW ///////////////////////

@@ -14,12 +14,15 @@ function Ball(x,y,vx,vy,size,speed,enemy,img) {
   this.vy = vy;
   this.size = size;
   this.speed = speed;
+
+  /////////// NEW ///////////
   this.speedChanged = false;
   this.enemy = enemy;
   this.img = img;
 
   this.grown = false;
   this.initSize = size;
+  ///////// END NEW ////////////
 }
 
 // update()
@@ -55,20 +58,6 @@ Ball.prototype.isOffScreen = function () {
   }
 }
 
-// display(form)
-//
-// Draw the ball on the screen
-Ball.prototype.display = function(form) {
-  if (form === "IMAGE") {
-    image(this.img,this.x,this.y,this.size,this.size);
-  }
-  else if (form === "SHAPE") {
-    fill(255);
-    rect(this.x,this.y,this.size,this.size);
-  }
-}
-
-
 // handleCollision(paddle)
 //
 // Check if this ball overlaps the paddle passed as an argument
@@ -88,6 +77,21 @@ Ball.prototype.handleCollision = function(paddle) {
     }
   }
 
+}
+
+///////////////// NEW ///////////////////
+
+// display(form)
+//
+// Draw the ball on the screen
+Ball.prototype.display = function(form) {
+  if (form === "IMAGE") {
+    image(this.img,this.x,this.y,this.size,this.size);
+  }
+  else if (form === "SHAPE") {
+    fill(255);
+    rect(this.x,this.y,this.size,this.size);
+  }
 }
 
 // faster()
@@ -115,12 +119,13 @@ Ball.prototype.slower = function () {
   }
 }
 
-// grow()
+// resetSize()
 //
-// Increase the size of the ball
-Ball.prototype.grow = function() {
-  this.size = this.size * 2;
+// Reset width and height to initial values
+  this.size = this.initSize;
+  this.grown = false;
 }
+//////////////// END NEW ///////////////////
 
 
 // reset()
@@ -130,12 +135,4 @@ Ball.prototype.reset = function () {
   this.x = width/2;
   this.y = height/2;
   this.vx = -this.vx;
-}
-
-// resetSize()
-//
-// Reset width and height to initial values
-Ball.prototype.resetSize = function() {
-  this.size = this.initSize;
-  this.grown = false;
 }

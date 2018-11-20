@@ -1,3 +1,5 @@
+//////////////////////// NEW //////////////////////////
+
 // ScoreBoard
 //
 // A class to define how a score board behaves.
@@ -46,3 +48,6 @@ ScoreBoard.prototype.display = function() {
 ScoreBoard.prototype.reset = function(paddle) {
   paddle.points = 0;
 }
+
+
+//////////////////// END NEW //////////////////////////

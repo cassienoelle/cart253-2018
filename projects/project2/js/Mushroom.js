@@ -1,3 +1,5 @@
+//////////////////////// NEW //////////////////////////
+
 // Mushroom
 //
 // A class to define how a mushroom behaves
@@ -85,3 +87,5 @@ Mushroom.prototype.display = function() {
   imageMode(CENTER);
   image(this.img,this.x,this.y,this.size,this.size);
 }
+
+//////////////////// END NEW //////////////////////////

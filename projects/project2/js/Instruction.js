@@ -1,3 +1,5 @@
+//////////////////////// NEW //////////////////////////
+
 // Instruction
 //
 // A class to define how an instruction object behaves
@@ -69,3 +71,5 @@ Instruction.prototype.reset = function() {
   this.angle = 0;
   this.sizeChange = 1;
 }
+
+///////////////////// END NEW //////////////////////////

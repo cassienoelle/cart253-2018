@@ -1,3 +1,5 @@
+//////////////////////// NEW //////////////////////////
+
 // Chaser
 //
 // A class to define how a chaser behaves
@@ -112,3 +114,5 @@ Chaser.prototype.display = function() {
   imageMode(CENTER);
   image(this.img,this.x,this.y,this.w,this.h);
 }
+
+//////////////////////// END NEW //////////////////////////
