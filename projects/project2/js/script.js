@@ -35,7 +35,7 @@ var spacePressed; // Track user input to move through intro sequence or replay g
 
 var score; // Score board
 var winner; // Holds winning player
-var winningScore = 25; // Set score needed to win
+var winningScore = 60; // Set score needed to win
 
 // Variables to contain the objects representing our balls, paddles
 // and other objects
@@ -128,7 +128,7 @@ function setupIntro() {
 
   // Populate text array with instructions for game
   introText[0] = " ";
-  introText[1] = "WELCOME TO PONG IN WONDERLAND\nPlayer One use W and S, Player Two use ARROW KEYS";
+  introText[1] = "WELCOME TO PONG IN WONDERLAND\nPlayer 1 use W and S, Player 2 use Arrow Keys";
   introText[2] = "THE MUSHROOMS MAKE EVERYONE\nBIG AND TALL...";
   introText[3] = "BUT PREPARE TO RUSH IF\nTHE RABBIT TOUCHES THE BALL...";
   introText[4] = "AVOID THE RED QUEEN\nOR YOU COULD LOSE YOUR HEAD...";
@@ -340,7 +340,7 @@ function gameActive() {
 
   // Check if the conditions for a mushroom attack have been met
   // If enemy ball, paddle, or white rabbit collide with a mushroom,
-  // temporarily increase its size
+  // increase its size
   mushroomAttack();
 
   // If the enemy ball collides with a paddle while the game is in regular play,
@@ -521,12 +521,12 @@ function behead(paddle) {
 //
 // Check if the conditions for a mushroom attack have been met
 function mushroomAttack() {
-  // Release a mushroom attack every interval of 10 points
-  if (leftPaddle.points % 10 === 0 && leftPaddle.points > 1 || rightPaddle.points % 10 === 0 && rightPaddle.points > 1) {
+  // Release a mushroom attack every interval of 20 points
+  if (leftPaddle.points % 20 === 0 && leftPaddle.points > 1 || rightPaddle.points % 20 === 0 && rightPaddle.points > 1) {
     // If an attack was not already released this interval
     if (!attacked) {
       // Set the number of mushrooms in the mushrooms array to 10
-      numMushrooms = 10;
+      numMushrooms = 6;
       // Set attacked to true so mushrooms aren't continuously released
       attacked = true;
     }
@@ -666,6 +666,7 @@ function gameOver() {
     while (numMushrooms > 0) {
       mushrooms.pop();
     }
+    attacked = false;
     // Set game condition to default and remove any titles being displayed
     displayTitle = false;
     activeCondition = "DEFAULT";
