@@ -10,7 +10,7 @@
 // the left hand paddle.
 //
 // White rabbit moves around screen according to Perlin noise and
-// increases speed of ball when it touches ball 
+// increases speed of ball when it touches ball
 // Mushrooms increase size of objects they collide with
 // Red Queen enemy ball cuts down height of paddle upon collision
 //
@@ -81,7 +81,7 @@ var winnerText;
 var titleTextX;
 var titleTextY;
 // Main game font
-var musicalsFont;
+var jamboFont;
 
 // preload()
 //
@@ -95,7 +95,7 @@ function preload() {
   mushroomImage = loadImage("assets/images/mushroom.png"); // image of a mushroom
   gameOverImage = loadImage("assets/images/bedroom.jpg"); // image of a bedroom
 
-  musicalsFont = loadFont("assets/fonts/musicals.ttf");
+  jamboFont = loadFont("assets/fonts/DK-Jambo.otf");
 }
 
 /***** ------------------------- SETUP GAME -----------------------------*****/
@@ -122,7 +122,7 @@ function setupIntro() {
   fill(231,21,0);
   textAlign(CENTER);
   textSize(40);
-  textFont(musicalsFont);
+  textFont(jamboFont);
   titleTextX = width/2;
   titleTextY = 85;
 
@@ -173,7 +173,7 @@ function setupGame() {
   whiteRabbit = new Chaser(whiteRabbitImage,width/4,height/4,80,100,random(0,1000),random(0,1000),10);
 
   // Create the score board to track and display points of each paddle
-  score = new ScoreBoard(leftPaddle,rightPaddle,30,height - 15,width - 30,40,musicalsFont,255,161,13);
+  score = new ScoreBoard(leftPaddle,rightPaddle,30,height - 15,width - 30,40,jamboFont,255,161,13);
 }
 
 // setupGameOver()
