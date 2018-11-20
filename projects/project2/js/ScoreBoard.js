@@ -22,25 +22,6 @@ function ScoreBoard(paddleOne,paddleTwo,x,y,w,size,font,red,green,blue) {
   this.score = [0,0];
 }
 
-// event()
-//
-// Check score and return true if either score
-// reaches an interval of 20
-ScoreBoard.prototype.event = function () {
-  // Get score from each paddle
-  this.score[0] = this.paddleOne.points;
-  this.score[1] = this.paddleTwo.points;
-  // Check if score is an interval of 5
-  for (var i = 0; i < this.score.length - 1; i++) {
-    if (this.score[i] > 4 && this.score[i] % 5 === 0) {
-      console.log("Event!");
-      return true;
-    }
-    else if (this.score[i] % 3 === 0) {
-      return false;
-    }
-  }
-}
 
 // display()
 //
@@ -65,7 +46,3 @@ ScoreBoard.prototype.display = function() {
 ScoreBoard.prototype.reset = function(paddle) {
   paddle.points = 0;
 }
-
-// gameOver()
-//
-//

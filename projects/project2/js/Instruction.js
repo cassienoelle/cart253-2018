@@ -6,11 +6,12 @@
 // Instruction constructor
 //
 // Sets the properties with the provided arguments
-function Instruction(img,x,y,size,title,subtitle) {
+function Instruction(img,x,y,w,h,title,subtitle) {
   this.img = img;
   this.x = x;
   this.y = y;
-  this.size = size;
+  this.w = w;
+  this.h = h;
   this.title = title;
   this.subtitle = subtitle;
   this.shrunk = false;
@@ -19,7 +20,8 @@ function Instruction(img,x,y,size,title,subtitle) {
 
   this.initX = x;
   this.initY = y;
-  this.initSize = size;
+  this.initW = w;
+  this.initH = h;
 }
 
 // shrink()
@@ -45,21 +47,13 @@ Instruction.prototype.shrink = function() {
   }
 }
 
-// grow()
-//
-// Grow title image until it engulfs canvas
-Instruction.prototype.grow = function() {
-  if (this.size < windowWidth*45) {
-    this.size += this.size/35;
-  }
-}
 
 // display()
 //
 // Display title image
 Instruction.prototype.display = function() {
   imageMode(CENTER);
-  image(this.img,this.x,this.y,this.size,this.size);
+  image(this.img,this.x,this.y,this.w,this.h);
 }
 
 // reset()
@@ -69,7 +63,8 @@ Instruction.prototype.reset = function() {
   // Reset position and size to intial values passed through parameters
   this.x = this.initX;
   this.y = this.initY;
-  this.size = this.initSize;
+  this.w = this.initW;
+  this.h = this.initH;
   // Reset angle and sizeChange so shrink() can be called again
   this.angle = 0;
   this.sizeChange = 1;

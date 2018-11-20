@@ -9,94 +9,84 @@
 //
 // Written with JavaScript OOP.
 
-// Variable to contain the canvas
+// Variables to contain and position the canvas
 var canvas;
 var canvasX;
 var canvasY;
 
 // Variables to track and handle game state and conditions
 //
-var state = "ACTIVE"; // Main game state: INTRO, ACTIVE or OVER
+var state = "INTRO"; // Main game state: INTRO, ACTIVE or OVER
 var activeCondition = "DEFAULT"; // Track conditions during active game play
 var gameTitle = "DEFAULT"; // Text to display depending on game conditions
+var attacked = false; // Track if a mushroom attack has been initialized
 
 var displayTitle; // Boolean to display or remove text
-var spacePressed; // Track user input to move through intro sequence
+var spacePressed; // Track user input to move through intro sequence or replay game
 
 var score; // Score board
-var winner;
-var winningScore = 100;
-
-// Variables to contain title objects and their associated images
-//
-var introduction;
-var bottleIntro;
-var bottleImage;
-var cake;
-var cakeImage;
-var mushroomIntro;
-var rabbit;
-var queenOfHeartsIntro;
-var doorIntro;
-var doorImage;
-var spiralImage; // Intro background
-var roseImage;
-var redRoseImage;
-
-
-// Variable to contain game font
-var musicalsFont;
-
-// Variables to contain title text and text position
-//
-// Arrays to contain introductory instructions
-var introText = [];
-var currentTitle;
-var currentSubtitle;
-var introImages = [];
-var currentImage;
-var finalInstruction;
-
-// Main title text position
-var titleTextX;
-var titleTextY;
-// Variable to contain game font
-var musicalsFont;
+var winner; // Holds winning player
+var winningScore = 100; // Set score needed to win
 
 // Variables to contain the objects representing our balls, paddles
-// and other objects, plus their images or main parameters
+// and other objects
 //
 var ball; // main ball object
 
 var enemyBall; // enemy ball object to avoid
-var enemyBallImage; // variable to contain current image of enemy ball
-var heartImage; // one image option for enemy ball
 
 var leftPaddle; // left paddle (player)
 var rightPaddle; // right paddle (player)
 var paddleWidth = 10;
 var paddleHeight = 90;
 
-var whiteRabbit; // contains chaser object
-var whiteRabbitImage;
+var whiteRabbit; // contains white rabbit chaser object
 
 var mushrooms = []; // array to contain mushroom objects
-var numMushrooms = 6; // number of mushrooms in the array
-var mushroomImage;
+var numMushrooms; // number of mushrooms in the array
+
+// Variables to contain intro text and images
+//
+var introduction; // Instruction object to display intro text and images
+var introText = []; // Array of different intro text
+var currentTitle; // Array index of main text currently displayed
+var currentSubtitle; // Array index of secondary text currently displayed
+var introImages = []; // Array to of different intro images
+var currentImage; // Index of image currently displayed
+var finalInstruction; // Index of final text to display before game starts
+
+// Variables to hold images
+//
+var spiralImage; // intro background
+var bottleImage; // intro image
+var doorImage; // intro image
+var mushroomImage; // intro image and mushroom object image
+var whiteRabbitImage; // intro image and white rabbit chaser object image
+var heartImage; // intro image and enemy ball image
+var gameOverImage; // image to display when game is over
+
+// Game over text
+var gameOverText;
+var winnerText;
+// Main title text position
+var titleTextX;
+var titleTextY;
+// Main game font
+var musicalsFont;
+
+
 
 // preload()
 //
 // Preloads images and fonts
 function preload() {
-  spiralImage = loadImage("assets/images/spiral.png"); // spiral gif
-  roseImage = loadImage("assets/images/rose.png"); // image of a white rose
-  redRoseImage = loadImage("assets/images/redrose.png"); // image of a red rose
-  heartImage = loadImage("assets/images/heart.png"); // image of a red heart
+  spiralImage = loadImage("assets/images/spiral.png"); // image of a black and white spiral
+  heartImage = loadImage("assets/images/heart.png"); // image of a red heart with gold crown
   bottleImage = loadImage("assets/images/bottle.png"); // image of a bottle
-  cakeImage = loadImage("assets/images/cake.png"); // image of a fruitcake
   doorImage = loadImage("assets/images/door.png"); // image of a door with keyhole
-  whiteRabbitImage = loadImage("assets/images/whiterabbit.png"); // image of the White Rabbit
+  whiteRabbitImage = loadImage("assets/images/whiterabbit.png"); // image of the white rabbit
   mushroomImage = loadImage("assets/images/mushroom.png"); // image of a mushroom
+  gameOverImage = loadImage("assets/images/bedroom.jpg"); // image of a bedroom
 
   musicalsFont = loadFont("assets/fonts/musicals.ttf");
 }
@@ -114,16 +104,17 @@ function setup() {
 
   setupIntro(); // Set up intro sequence
   setupGame(); // Set up active game
+  setupGameOver(); // Set up game over screen
 }
 
 // setupIntro ()
 //
 // Sets up introductory titles and instructions
 function setupIntro() {
-  // Style and position textb
+  // Style and position text
   fill(231,21,0);
   textAlign(CENTER);
-  textSize(50);
+  textSize(40);
   textFont(musicalsFont);
   titleTextX = width/2;
   titleTextY = 85;
@@ -134,9 +125,8 @@ function setupIntro() {
   introText[2] = "THE MUSHROOMS MAKE EVERYONE \n BIG AND TALL...";
   introText[3] = "BUT PREPARE TO RUSH IF \n THE RABBIT TOUCHES THE BALL...";
   introText[4] = "AVOID THE RED QUEEN \n OR YOU COULD LOSE YOUR HEAD...";
-  introText[5] = "WIN 100 POINTS \n TO WAKE UP SAFE IN YOUR BED..."; // final instruction before game starts
-  introText[6] = "HIT SPACE TO CONTINUE";
-  introText[7] = "HIT SPACE AND GO DOWN THE RABBIT HOLE";
+  introText[5] = "WIN " + winningScore + " POINTS \n TO WAKE UP SAFE IN YOUR BED..."; // final instruction before game starts
+  introText[6] = "CONTROLS (PLAYER 1: W + S, PLAYER 2: ARROW KEYS) \n HIT SPACE TO CONTINUE";
   // Populate image array with images related to text
   introImages[0] = undefined;
   introImages[1] = bottleImage;
@@ -152,7 +142,7 @@ function setupIntro() {
   finalInstruction = 5;
 
   // Create instruction object and position in center of the canvas
-  introduction = new Instruction(introImages[currentImage],width/2,height/2,250,introText[currentTitle],introText[currentSubtitle]);
+  introduction = new Instruction(introImages[currentImage],width/2,height/2,250,250,introText[currentTitle],introText[currentSubtitle]);
 }
 
 // setupGame()
@@ -163,8 +153,7 @@ function setupGame() {
   // Create the main ball
   ball = new Ball(width/2,height/2,6,6,30,6,false);
   // Create the enemy ball
-  enemyBallImage = heartImage; // Enemy ball starts as a heart
-  enemyBall = new Ball(width/4,height/4,5,5,35,5,true,enemyBallImage);
+  enemyBall = new Ball(width/4,height/4,5,5,35,5,true,heartImage);
 
   // Create the right paddle with UP and DOWN as controls
   rightPaddle = new Paddle(width - (paddleWidth + 10),height/2,paddleWidth,paddleHeight,10,DOWN_ARROW,UP_ARROW);
@@ -178,6 +167,15 @@ function setupGame() {
 
   // Create the score board to track and display points of each paddle
   score = new ScoreBoard(leftPaddle,rightPaddle,30,height - 15,width - 30,40,musicalsFont,255,161,13);
+}
+
+// setupGameOver()
+//
+// Sets up game over visuals and text
+function setupGameOver() {
+  // Set text content for game over instruction object
+  winnerText = " ESCAPED WONDERLAND";
+  gameOverText = "HIT SPACE TO PLAY AGAIN";
 }
 
 // centerCanvas()
@@ -233,7 +231,7 @@ function gameIntro() {
   text(introduction.title,titleTextX,titleTextY);
   push()
   textSize(30);
-  text(introduction.subtitle,width/2,height - 60);
+  text(introduction.subtitle,width/2,height - 100);
   pop();
 
   // Moves through intro sequence when triggered by keyboard input
@@ -257,6 +255,7 @@ function gameIntro() {
         // If that was the last instruction, start the game
         if (currentTitle === finalInstruction) {
           state = "ACTIVE";
+          spacePressed = false;
         }
         // Otherwise move to next instruction
         else {
@@ -281,17 +280,6 @@ function gameIntro() {
     }
 
   }
-
-// keyTyped()
-//
-// Track user input from keyboard
-// If a key is typed
-function keyTyped() {
-  // if key is the space bar and the game is in the intro sequence
-  if (key === " " && state === "INTRO") {
-    spacePressed = true;
-  }
-}
 
 /*** --------------- ACTIVE GAME PLAY ---------------- ***/
 
@@ -332,11 +320,16 @@ function gameActive() {
     }
   }
 
+  // Check if the conditions for a mushroom attack have been met
+  // If enemy ball, paddle, or white rabbit collide with a mushroom,
+  // temporarily increase its size
+  mushroomAttack();
+
   // If the enemy ball collides with a paddle while the game is in regular play,
   // behead that paddle temporarily (decrease it's height)
   //
-  // If the enemy ball has increased in size after colliding with a mushroom,
-  // reset it to it's original size following the paddle collision
+  // If the enemy ball is increased in size at time of collision,
+  // reset it to it's original size
   if (activeCondition === "DEFAULT") {
     if (enemyBall.handleCollision(leftPaddle)) {
       behead(leftPaddle);
@@ -350,30 +343,18 @@ function gameActive() {
         enemyBall.resetSize();
       }
     }
+  }
 
   // If the white rabbit collides with the ball
   // increase the speed of the ball temporarily
   if (whiteRabbit.collision(ball)){
     rush();
-    // If the white rabbit is larger after colliding with a mushroom
-    // reset it to it's original size following the ball collision
+    // If the white rabbit's size is increased at time of collision
+    // reset it to it's original size
     if (whiteRabbit.grown) {
       whiteRabbit.resetSize();
     }
   }
-}
-
-  // If a certain score has been reached by either paddle
-  // release mushrooms from the location of the ball
-  if (score.event()) {
-    mushroomAttack();
-  }
-  else if (!score.event()) {
-    while (mushrooms.length > 0) {
-      mushrooms.pop();
-    }
-  }
-
 
   // Track the conditions of the game and display appropriate descriptive text
   narration();
@@ -388,9 +369,8 @@ function gameActive() {
 
 // drawBackground()
 //
-// Draw a background of alternating black and white squares
+// Draw a background of alternating black and grey squares
 function drawBackground() {
-  push();
   rectMode(CORNER);
 
   // Variables to handle color alternation
@@ -429,7 +409,6 @@ function drawBackground() {
     y += size;
     x = 0;
   }
-  pop();
 }
 
 /* ----------------------- SCORING ------------------------ */
@@ -474,6 +453,7 @@ function rush() {
   setTimeout(speedTimer,10000);
 }
 
+
 // behead()
 //
 // Cut height of paddle in half for 20 seconds
@@ -496,18 +476,52 @@ function behead(paddle) {
   }
 }
 
+
 // mushroomAttack()
+//
+// Check if the conditions for a mushroom attack have been met
+function mushroomAttack() {
+  // Release a mushroom attack every interval of 10 points
+  if (leftPaddle.points % 10 === 0 && leftPaddle.points > 1 || rightPaddle.points % 10 === 0 && rightPaddle.points > 1) {
+    // If an attack was not already released this interval
+    if (!attacked) {
+      // Set the number of mushrooms in the mushrooms array to 10
+      numMushrooms = 10;
+      // Set attacked to true so mushrooms aren't continuously released
+      attacked = true;
+    }
+  }
+  // When score increases, reset attacked to false so
+  // more mushrooms can be released at the next interval of 10
+  else {
+    attacked = false;
+  }
+
+  // Release mushrooms according to number of mushrooms in the array
+  releaseMushrooms();
+}
+
+
+// releaseMushrooms()
 //
 // Release mushrooms at random velocities from the location of the ball
 // If a mushroom collides with an object, the object grows
-function mushroomAttack() {
-  if (leftPaddle.points % 5 )
-  // Populate the array with mushrooms, initialize at position of ball, set random velocities
+function releaseMushrooms() {
   for (var i = 0; i <= numMushrooms; i++) {
+    // Populate the array with mushrooms, initialize at position of ball, set random velocities
     mushrooms.push(new Mushroom(mushroomImage,ball.x,ball.y,random(-5,5),random(-5,5),30));
 
+    // Display mushrooms and move outwards from ball until they go off screen
     mushrooms[i].update();
-    mushrooms[i].display();
+    if (!mushrooms[i].isOffScreen()){
+      mushrooms[i].display();
+    }
+    // If a mushroom goes off screen, remove it from the array and
+    // reduce the total number of mushrooms so it is not re-displayed
+    else if (mushrooms[i].isOffScreen()){
+      mushrooms.splice(i,1);
+      numMushrooms --;
+    }
 
     // Check for collisions with paddles, enemy ball and white rabbit
     mushrooms[i].handleCollision(leftPaddle);
@@ -516,7 +530,6 @@ function mushroomAttack() {
     mushrooms[i].handleCollision(whiteRabbit);
   }
 }
-
 
 
 // narration()
@@ -544,6 +557,7 @@ function narration() {
   }
 }
 
+
 // textTimer()
 //
 // Erases text when timer runs out
@@ -552,6 +566,7 @@ function textTimer() {
   displayTitle = false;
   gameTitle = "DEFAULT";
 }
+
 
 // speedTimer()
 //
@@ -564,6 +579,7 @@ function speedTimer() {
   whiteRabbit.fast = false;
   activeCondition = "DEFAULT";
 }
+
 
 // sizeTimer()
 //
@@ -585,13 +601,42 @@ function sizeTimer() {
 //
 // End game and display final score
 function gameOver() {
+  // Set background to white
+  background(255);
+
+  // Determine winner (paddle that reached winning score first)
   if (leftPaddle.points === winningScore) {
     winner = "PLAYER ONE";
   }
   else if (rightPaddle.points === winningScore) {
     winner = "PLAYER TWO";
   }
+
+  // Display image of bedroom
+  image(gameOverImage,width/2,height/2,width,height);
+
+  // Display text announcing winner and giving instructions to play again
+  text(winner + winnerText,titleTextX,titleTextY);
+  text(gameOverText,width/2,height - 60);
+
+  // When user presses space, reset score and restart game
+  if (spacePressed) {
+    score.reset(leftPaddle);
+    score.reset(rightPaddle);
+    state = "ACTIVE";
+    spacePressed = false;
+  }
 }
 
-function gameTest() {
+/*** ------------------------------------------------ ***/
+
+// keyTyped()
+//
+// Track user input from keyboard
+// If a key is typed
+function keyTyped() {
+  // if key is the space bar and the game is in the intro sequence or game is over
+  if (key === " " && state === "INTRO" || state === "OVER") {
+    spacePressed = true;
+  }
 }
