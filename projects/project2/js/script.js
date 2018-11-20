@@ -35,7 +35,7 @@ var spacePressed; // Track user input to move through intro sequence or replay g
 
 var score; // Score board
 var winner; // Holds winning player
-var winningScore = 60; // Set score needed to win
+var winningScore = 50; // Set score needed to win
 
 // Variables to contain the objects representing our balls, paddles
 // and other objects
@@ -521,8 +521,8 @@ function behead(paddle) {
 //
 // Check if the conditions for a mushroom attack have been met
 function mushroomAttack() {
-  // Release a mushroom attack every interval of 20 points
-  if (leftPaddle.points % 20 === 0 && leftPaddle.points > 1 || rightPaddle.points % 20 === 0 && rightPaddle.points > 1) {
+  // Release a mushroom attack every interval of 15 points
+  if (leftPaddle.points % 15 === 0 && leftPaddle.points > 1 || rightPaddle.points % 15 === 0 && rightPaddle.points > 1) {
     // If an attack was not already released this interval
     if (!attacked) {
       // Set the number of mushrooms in the mushrooms array to 10
@@ -651,25 +651,26 @@ function gameOver() {
   text(winner + winnerText,titleTextX,titleTextY);
   text(gameOverText,width/2,height - 60);
 
-  // When user presses space, reset objects and restart game
+  // Reset score and paddle size
+  score.reset(leftPaddle);
+  score.reset(rightPaddle);
+  leftPaddle.reset();
+  rightPaddle.reset();
+  // Reset position of ball, enemy ball and white rabbit
+  ball.reset();
+  enemyBall.reset();
+  whiteRabbit.reset();
+  // Clear any remaining mushrooms
+  while (numMushrooms > 0) {
+    mushrooms.pop();
+  }
+  attacked = false;
+  activeCondition = "DEFAULT";
+
+  // When user presses space, restart game
   if (spacePressed) {
-    // Reset score and paddle size
-    score.reset(leftPaddle);
-    score.reset(rightPaddle);
-    leftPaddle.reset();
-    rightPaddle.reset();
-    // Reset position of ball, enemy ball and white rabbit
-    ball.reset();
-    enemyBall.reset();
-    whiteRabbit.reset();
-    // Clear any remaining mushrooms
-    while (numMushrooms > 0) {
-      mushrooms.pop();
-    }
-    attacked = false;
-    // Set game condition to default and remove any titles being displayed
+    // Remove any titles being displayed
     displayTitle = false;
-    activeCondition = "DEFAULT";
     // Restart game
     state = "ACTIVE";
     spacePressed = false;
