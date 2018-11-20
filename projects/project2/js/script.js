@@ -128,11 +128,11 @@ function setupIntro() {
 
   // Populate text array with instructions for game
   introText[0] = " ";
-  introText[1] = "WELCOME TO PONG IN WONDERLAND \n Player One use W and S, Player Two use ARROW KEYS";
-  introText[2] = "THE MUSHROOMS MAKE EVERYONE \n BIG AND TALL...";
-  introText[3] = "BUT PREPARE TO RUSH IF \n THE RABBIT TOUCHES THE BALL...";
-  introText[4] = "AVOID THE RED QUEEN \n OR YOU COULD LOSE YOUR HEAD...";
-  introText[5] = "WIN " + winningScore + " POINTS \n TO WAKE UP SAFE IN YOUR BED..."; // final instruction before game starts
+  introText[1] = "WELCOME TO PONG IN WONDERLAND\nPlayer One use W and S, Player Two use ARROW KEYS";
+  introText[2] = "THE MUSHROOMS MAKE EVERYONE\nBIG AND TALL...";
+  introText[3] = "BUT PREPARE TO RUSH IF\nTHE RABBIT TOUCHES THE BALL...";
+  introText[4] = "AVOID THE RED QUEEN\nOR YOU COULD LOSE YOUR HEAD...";
+  introText[5] = "WIN " + winningScore + " POINTS\nTO WAKE UP SAFE IN YOUR BED..."; // final instruction before game starts
   introText[6] = "HIT SPACE TO CONTINUE";
   // Populate image array with images related to text
   introImages[0] = undefined;
@@ -651,10 +651,20 @@ function gameOver() {
   text(winner + winnerText,titleTextX,titleTextY);
   text(gameOverText,width/2,height - 60);
 
-  // When user presses space, reset score and restart game
+  // When user presses space, reset objects and restart game
   if (spacePressed) {
+    // Reset score
     score.reset(leftPaddle);
     score.reset(rightPaddle);
+    // Reset position of ball, enemy ball and white rabbit
+    ball.reset();
+    enemyBall.reset();
+    whiteRabbit.reset();
+    // Clear any remaining mushrooms
+    while (numMushrooms > 0) {
+      mushrooms.pop();
+    }
+    // Restart game
     state = "ACTIVE";
     spacePressed = false;
   }
