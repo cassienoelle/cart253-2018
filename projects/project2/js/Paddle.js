@@ -66,6 +66,7 @@ Paddle.prototype.shrink = function() {
 // Double height of paddle
 Paddle.prototype.grow = function() {
   this.h  = this.h * 2;
+  this.grown = true;
 }
 
 // scored()
@@ -82,7 +83,7 @@ Paddle.prototype.reset = function() {
   this.h = this.initH;
   this.w = this.initW;
   this.shrunk = false;
-
+  this.grown = false;
 }
 
 ////////////////////// END NEW ///////////////////////

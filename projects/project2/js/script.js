@@ -653,9 +653,11 @@ function gameOver() {
 
   // When user presses space, reset objects and restart game
   if (spacePressed) {
-    // Reset score
+    // Reset score and paddle size
     score.reset(leftPaddle);
     score.reset(rightPaddle);
+    leftPaddle.reset();
+    rightPaddle.reset();
     // Reset position of ball, enemy ball and white rabbit
     ball.reset();
     enemyBall.reset();
@@ -664,6 +666,9 @@ function gameOver() {
     while (numMushrooms > 0) {
       mushrooms.pop();
     }
+    // Set game condition to default and remove any titles being displayed
+    displayTitle = false;
+    activeCondition = "DEFAULT";
     // Restart game
     state = "ACTIVE";
     spacePressed = false;
