@@ -122,6 +122,7 @@ Ball.prototype.slower = function () {
 // resetSize()
 //
 // Reset width and height to initial values
+Ball.prototype.resetSize = function () {
   this.size = this.initSize;
   this.grown = false;
 }
