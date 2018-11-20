@@ -119,6 +119,13 @@ Ball.prototype.slower = function () {
   }
 }
 
+// grow()
+//
+// Increase the size of the ball
+Ball.prototype.grow = function() {
+  this.size = this.size * 2;
+}
+
 // resetSize()
 //
 // Reset width and height to initial values
