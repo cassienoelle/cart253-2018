@@ -658,10 +658,14 @@ function gameOver() {
     score.reset(rightPaddle);
     leftPaddle.reset();
     rightPaddle.reset();
-    // Reset position of ball, enemy ball and white rabbit
+    // Reset ball, enemy ball and white rabbit
     ball.reset();
     enemyBall.reset();
+    enemyBall.resetSize();
     whiteRabbit.reset();
+    whiteRabbit.resetSize();
+    // Reset mushrooms to empty array
+    mushrooms = [];
     activeCondition = "DEFAULT";
     // Remove any titles being displayed
     displayTitle = false;
