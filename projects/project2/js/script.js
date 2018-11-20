@@ -35,7 +35,7 @@ var spacePressed; // Track user input to move through intro sequence or replay g
 
 var score; // Score board
 var winner; // Holds winning player
-var winningScore = 100; // Set score needed to win
+var winningScore = 25; // Set score needed to win
 
 // Variables to contain the objects representing our balls, paddles
 // and other objects
@@ -389,6 +389,19 @@ function gameActive() {
   whiteRabbit.display(); // display white rabbit chaser
   score.display(); // display score board
 
+
+  // Check if either paddle has reached the winning score
+  // Assign winner and initialize game over
+  if (leftPaddle.points === winningScore) {
+    winner = "PLAYER ONE";
+    state = "OVER";
+  }
+  else if (rightPaddle.points === winningScore) {
+    winner = "PLAYER TWO";
+    state = "OVER";
+  }
+
+
   ////////////////// END NEW ///////////////////
 }
 
@@ -630,14 +643,6 @@ function sizeTimer() {
 function gameOver() {
   // Set background to white
   background(255);
-
-  // Determine winner (paddle that reached winning score first)
-  if (leftPaddle.points === winningScore) {
-    winner = "PLAYER ONE";
-  }
-  else if (rightPaddle.points === winningScore) {
-    winner = "PLAYER TWO";
-  }
 
   // Display image of bedroom
   image(gameOverImage,width/2,height/2,width,height);
