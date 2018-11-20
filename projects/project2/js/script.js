@@ -128,12 +128,12 @@ function setupIntro() {
 
   // Populate text array with instructions for game
   introText[0] = " ";
-  introText[1] = "WELCOME TO PONG IN WONDERLAND";
+  introText[1] = "WELCOME TO PONG IN WONDERLAND \n Player One use W and S, Player Two use ARROW KEYS";
   introText[2] = "THE MUSHROOMS MAKE EVERYONE \n BIG AND TALL...";
   introText[3] = "BUT PREPARE TO RUSH IF \n THE RABBIT TOUCHES THE BALL...";
   introText[4] = "AVOID THE RED QUEEN \n OR YOU COULD LOSE YOUR HEAD...";
   introText[5] = "WIN " + winningScore + " POINTS \n TO WAKE UP SAFE IN YOUR BED..."; // final instruction before game starts
-  introText[6] = "CONTROLS (PLAYER 1: W and S, PLAYER 2: ARROW KEYS) \n HIT SPACE TO CONTINUE";
+  introText[6] = "HIT SPACE TO CONTINUE";
   // Populate image array with images related to text
   introImages[0] = undefined;
   introImages[1] = bottleImage;
