@@ -1,18 +1,28 @@
 /*****************
 
-Title of Project
-Author Name
+Exercise 8
+Cassie Smith CART 253a
+Fall 2018
 
-This is a template. You must fill in the title,
-author, and this description to match your project!
+Introduction to Spoon Theory game.
+Explains spoon theory to player with some
+visual interactivity.
 
 ******************/
 
+// Variable to hold image of spoon
+var spoonImage;
+
+// Variable to hold main font
+var titleFont;
+
 // preload()
 //
-// Description of preload
+// Preloads images and fonts
 
 function preload() {
+  spoonImage = loadImage("assets/images/spoon.png"); // image of a spoon
+
 }
 
 
