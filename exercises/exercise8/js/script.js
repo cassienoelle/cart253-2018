@@ -13,16 +13,17 @@ visual interactivity.
 // Variable to hold image of spoon
 var spoonImage;
 
-// Variable to hold main font
+// Variables to hold fonts
 var titleFont;
+var cubicFont;
 
 // preload()
 //
 // Preloads images and fonts
 
 function preload() {
-  spoonImage = loadImage("assets/images/spoon.png"); // image of a spoon
-
+  spoonImage = loadImage("assets/images/spoon.png"); // Image of a spoon
+  cubicFont = loadFont("assets/fonts/cubic.ttf"); // Cubic font
 }
 
 
@@ -41,29 +42,4 @@ function setup() {
 
 function draw() {
   background(255);
-  drawBackground();
-}
-
-function drawBackground() {
-  rectMode(CORNER);
-  var color = 255;
-  var size = 50;
-  var x = 0;
-  var y = 0;
-  var numSquares = width / size;
-  var numLines = height / size;
-
-  for (i = 0; i <= numSquares; i++) {
-    fill(color);
-    rect(x,y,size,size);
-    i++;
-    x += size;
-
-    if (i % 2 === 1) {
-      color = 0;
-    }
-    else {
-      color = 255;
-    }
-  }
 }
