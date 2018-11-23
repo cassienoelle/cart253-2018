@@ -44,9 +44,12 @@ function Door(x,y,w,speed) {
 // Draws the door on the canvas
 Door.prototype.display = function() {
   // Draw what's behind the door
+  // For now a black space represented as a rectangle
+  rectMode(CENTER);
   fill(0);
-  rect(this.x,this.y,this.w,this.h);
-  // Draw the outer door as a quadrilateral until it is open
+  rect(this.x + this.w/2,this.y + this.h/2,this.w,this.h);
+  // Draw the outer door as a white quadrilateral
+  // until it has been opened
   if (this.x2 > this.x1) {
     push();
     fill(255);
@@ -57,7 +60,7 @@ Door.prototype.display = function() {
 
 // open()
 //
-// Moves the right-hand vertices of the door
+// Moves the right-hand vertices of the outer door
 // according to relative velocities
 // Simulates the appearance of opening inwards
 Door.prototype.open = function() {
@@ -82,25 +85,52 @@ Door.prototype.open = function() {
 
 // enter()
 //
-// Increases size of door until it fills screen to simulate entering
+// Centers door on canvas and
+// increases it's size until it fills screen
 Door.prototype.enter = function() {
-  // Move upper left corner towards upper left corner of
-  // canvas at half speed
-  if (this.x > 0) {
-    this.x -= this.speed/2;
-    console.log("x: " + this.x);
+  // Only works if the door has been opened
+  if (this.opened) {
+    // Move the open door towards the center of the canvas
+    if (this.x + this.w/2 > width/2) {
+      this.x -= 0.5;
+    }
+    else if (this.x + this.w/2 < width/2) {
+      this.x += 0.5;
     }
 
-  if (this.y > 0) {
-    this.y -= this.speed/2;
-    console.log("y: " + this.y);
-  }
+    if (this.y + this.h/2 > height/2) {
+      this.y -= 0.5;
+    }
+    else if (this.y + this.h/2 < height/2) {
+      this.y += 0.5;
+    }
 
-  // Increase width at a faster speed
-  if (this.w < width) {
-    this.w += this.speed * 6;
-    console.log("width: " + this.w);
+    console.log(this.y + "   " + this.x);
+
+    // At the same time increase the width
+    if (this.w < width) {
+      this.w = this.w * 1.5;
+      console.log("width: " + this.w);
+    }
+    // Maintain height in relation to width
+    this.h = this.w * 1.5;
   }
-  // Maintain height in relation to width
-  this.h = this.w * 1.5;
+  // if door is closed, log a message to the console
+  else {
+    console.log("Sorry, that door is closed");
+  }
+}
+
+// isChosen
+//
+// Checks if mouse has clicked on door
+// and if so returns true
+Door.prototype.isChosen = function() {
+  // Checks if mouse overlaps on x axis
+  if (mouseX > this.x && mouseX < this.x + this.w) {
+    // Checks if mouse overlaps on y axis
+    if (mouseY > this.y && mouseY < this.y + this.h) {
+      return true;
+    }
+  }
 }

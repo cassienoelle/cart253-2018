@@ -21,6 +21,8 @@ var canvasRatio;
 // Variables to hold door objects
 var doorOne;
 var doorTwo;
+// Tracks which door has been chosen
+var chosenDoor;
 
 // preload()
 //
@@ -52,8 +54,8 @@ function setup() {
 
   // Create two doors, centered horizontally
   // on each half of the canvas
-  doorOne = new Door(i * 2,height/16,width/4,1);
-  doorTwo = new Door(i * 10,height/16,width/4,1);
+  doorOne = new Door(i * 2,height/16,width/4,2);
+  doorTwo = new Door(i * 10,height/16,width/4,2);
 }
 
 
@@ -64,9 +66,40 @@ function setup() {
 function draw() {
   background(255); // The background is white
 
-  doorOne.display();
-  doorTwo.display();
+  switch (chosenDoor) {
+    case 1:
+      // If door one is chosen, open it and enter
+      doorOne.open();
+      doorOne.enter();
+      doorOne.display();
+      break;
+    case 2:
+      // If door two is chosen, open it and enter
+      doorTwo.open();
+      doorTwo.enter();
+      doorTwo.display();
+      break;
+    default:
+      // If neither door is chosen
+      // display both closed doors 
+      doorOne.display();
+      doorTwo.display();
+      break;
+  }
 
+}
+
+// mouseClicked()
+//
+// Tracks whether mouse as been clicked
+function mouseClicked() {
+  // Check if door one has been clicked
+  if (doorOne.isChosen()) {
+    chosenDoor = 1;
+  }
+  else if (doorTwo.isChosen()) {
+    chosenDoor = 2;
+  }
 }
 
 /////// Code taken from Pippin's lecture ///////
