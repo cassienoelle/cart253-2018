@@ -18,17 +18,27 @@ var canvasRatio;
 
 //////////////////// End ////////////////////////
 
+// Background color
+var c = 255;
+
 // Variables to hold door objects
 var doorOne;
 var doorTwo;
 // Tracks which door has been chosen
 var chosenDoor;
 
+// Main font
+var mainFont;
+// Narrative text
+var narration;
+var narrationX;
+var narrationY;
+
 // preload()
 //
 // Preloads images and fonts
 function preload() {
-
+  mainFont = loadFont("assets/fonts/cubic.ttf");
 }
 
 // setup()
@@ -51,11 +61,18 @@ function setup() {
 
   // Divide the canvas into intervals of 16
   var i = width/16;
-
   // Create two doors, centered horizontally
   // on each half of the canvas
   doorOne = new Door(i * 2,height/16,width/4,2);
   doorTwo = new Door(i * 10,height/16,width/4,2);
+
+  // Set narrative text and style
+  narration = "choose a door";
+  narrationX = width/2;
+  narrationY = height - ((doorOne.y + doorOne.h)/2);
+  textSize(40);
+  textFont(mainFont);
+  textAlign(CENTER);
 }
 
 
@@ -64,7 +81,7 @@ function setup() {
 // Draws shapes and text on canvas
 
 function draw() {
-  background(255); // The background is white
+  background(c); // The background is white
 
   switch (chosenDoor) {
     case 1:
@@ -81,9 +98,10 @@ function draw() {
       break;
     default:
       // If neither door is chosen
-      // display both closed doors 
+      // display both closed doors
       doorOne.display();
       doorTwo.display();
+      text(narration,narrationX,narrationY);
       break;
   }
 

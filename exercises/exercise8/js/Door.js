@@ -64,6 +64,7 @@ Door.prototype.display = function() {
 // according to relative velocities
 // Simulates the appearance of opening inwards
 Door.prototype.open = function() {
+  // Open the door
   if (this.x2 > this.x1 && this.x3 > this.x4) {
     // Move vertices leftwards along x axis
     this.x2 -= this.vx;
@@ -75,8 +76,8 @@ Door.prototype.open = function() {
     // Constrain so they don't move too far towards center
     this.y2 = constrain(this.y2,this.y1,this.y1 + this.w/3);
     this.y3 = constrain(this.y3,this.y4 - this.w/3,this.y4);
-
   }
+  // Return true once opened
   else {
     this.opened = true;
   }
@@ -85,40 +86,43 @@ Door.prototype.open = function() {
 
 // enter()
 //
-// Centers door on canvas and
-// increases it's size until it fills screen
+// Increases size of open door until it fills screen
 Door.prototype.enter = function() {
+  // Track which side the door starts on
+  var side;
+  // Increase the frame rate
+  frameRate(360);
   // Only works if the door has been opened
-  if (this.opened) {
-    // Move the open door towards the center of the canvas
-    if (this.x + this.w/2 > width/2) {
-      this.x -= 0.5;
+  // Run only until background color is black
+  if (this.opened && c > 0) {
+    // Move the open door towards the center along x axis
+    if (this.x + this.w/2 > width/2 && side != "right") {
+      side = "left";
+      this.x --;
     }
-    else if (this.x + this.w/2 < width/2) {
-      this.x += 0.5;
+    else if (this.x + this.w/2 < width/2 && side != "left") {
+      side = "right";
+      this.x ++;
     }
-
-    if (this.y + this.h/2 > height/2) {
-      this.y -= 0.5;
-    }
-    else if (this.y + this.h/2 < height/2) {
-      this.y += 0.5;
-    }
-
-    console.log(this.y + "   " + this.x);
-
-    // At the same time increase the width
+   // Increase width of door
     if (this.w < width) {
-      this.w = this.w * 1.5;
+      this.w++;
       console.log("width: " + this.w);
     }
     // Maintain height in relation to width
     this.h = this.w * 1.5;
+
+    // Slowly darken background color
+    if (c > 0) {
+      c --;
+    }
   }
+
   // if door is closed, log a message to the console
   else {
     console.log("Sorry, that door is closed");
   }
+  console.log(this.x);
 }
 
 // isChosen
