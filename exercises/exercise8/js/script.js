@@ -5,7 +5,7 @@ Cassie Smith CART 253a
 Fall 2018
 
 Prototype for an interactive story /
-Choose your own adventure game 
+Choose your own adventure game
 
 ******************/
 
@@ -17,6 +17,10 @@ var canvas;
 var canvasRatio;
 
 //////////////////// End ////////////////////////
+
+// Variables to hold door objects
+var doorOne;
+var doorTwo;
 
 // preload()
 //
@@ -43,6 +47,13 @@ function setup() {
 
   //////////////////// End ////////////////////////
 
+  // Divide the canvas into intervals of 16
+  var i = width/16;
+
+  // Create two doors, centered horizontally
+  // on each half of the canvas
+  doorOne = new Door(i * 2,height/16,width/4,1);
+  doorTwo = new Door(i * 10,height/16,width/4,1);
 }
 
 
@@ -52,6 +63,9 @@ function setup() {
 
 function draw() {
   background(255); // The background is white
+
+  doorOne.display();
+  doorTwo.display();
 
 }
 
