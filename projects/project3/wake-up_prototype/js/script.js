@@ -8,11 +8,19 @@ author, and this description to match your project!
 
 ******************/
 
+// Variable to hold alarm sound
+var alarmSound;
+
+
 // preload()
 //
 // Description of preload
 
 function preload() {
+  // Define sound file formats
+  //soundFormats("mp3", "wav");
+  // Load alarm sound
+  alarmSound = loadSound("assets/sounds/alarm.mp3");
 }
 
 
@@ -21,7 +29,11 @@ function preload() {
 // Description of setup
 
 function setup() {
-
+  createCanvas(500,500);
+  // Set volume of alarm sound to 1/10th of maximum
+  alarmSound.setVolume(0.1);
+  alarmSound.playMode("restart");
+  //alarmSound.play();
 }
 
 
@@ -30,5 +42,5 @@ function setup() {
 // Description of draw()
 
 function draw() {
-
+  background(0);
 }
