@@ -39,7 +39,8 @@ function setup() {
   //alarmSound.play();
 
   // Create new player and position at center of canvas
-  player = new Player(width/2,height/2,5,5,50,5);
+  // Set controls to arrow keys
+  player = new Player(width/2,height/2,0,0,50,1,DOWN_ARROW,UP_ARROW,LEFT_ARROW,RIGHT_ARROW);
 
 }
 

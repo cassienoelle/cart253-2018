@@ -6,7 +6,7 @@
 // Player constructor
 //
 // Sets the properties with the provided arguments
-function Player(x,y,vx,vy,size,speed) {
+function Player(x,y,vx,vy,size,speed,downKey,upKey,leftKey,rightKey) {
   this.x = x;
   this.y = y;
   this.vx = vx;
@@ -53,8 +53,8 @@ Player.prototype.update = function() {
   this.y += this.vy;
   this.x += this.vx;
 
-  this.y = constrain(this.y,0,height-this.h/2);
-  this.x = constrain(this.x,0,width-this.w/2);
+  this.y = constrain(this.y,0 + this.h/2,height-this.h/2);
+  this.x = constrain(this.x,0 + this.w/2,width-this.w/2);
 }
 
 // display()
