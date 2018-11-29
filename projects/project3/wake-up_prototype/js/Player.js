@@ -6,11 +6,11 @@
 // Player constructor
 //
 // Sets the properties with the provided arguments
-function Player(x,y,vx,vy,size,speed,downKey,upKey,leftKey,rightKey) {
+function Player(x,y,size,speed,downKey,upKey,leftKey,rightKey) {
   this.x = x;
   this.y = y;
-  this.vx = vx;
-  this.vy = vy;
+  this.vx = 0;
+  this.vy = 0;
   this.w = size;
   this.h = size;
   this.speed = speed;
@@ -47,7 +47,7 @@ Player.prototype.handleInput = function() {
 
 // update()
 //
-// Update the x and y position based on current velocity
+// Update the x and y position based on velocity
 // Constrain position to remain on canvas
 Player.prototype.update = function() {
   this.y += this.vy;

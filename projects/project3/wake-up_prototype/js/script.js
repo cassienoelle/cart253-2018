@@ -13,6 +13,8 @@ var alarmSound;
 
 // Variable to hold object representing the user
 var player;
+// Variable to hold the object representing the alarm
+var alarm;
 
 
 // preload()
@@ -33,14 +35,16 @@ function preload() {
 
 function setup() {
   createCanvas(500,500);
-  // Set volume of alarm sound to 1/10th of maximum
-  alarmSound.setVolume(0.1);
-  alarmSound.playMode("restart");
-  //alarmSound.play();
-
   // Create new player and position at center of canvas
   // Set controls to arrow keys
-  player = new Player(width/2,height/2,0,0,50,1,DOWN_ARROW,UP_ARROW,LEFT_ARROW,RIGHT_ARROW);
+  player = new Player(width/2,height/2,50,1,DOWN_ARROW,UP_ARROW,LEFT_ARROW,RIGHT_ARROW);
+
+  // Create new alarm and position in top left corner
+  alarm = new Alarm(50,50,50,1,alarmSound,0.1,1);
+
+  alarm.sound.setVolume(alarm.currentVolume);
+  alarm.sound.playMode("untilDone");
+  alarm.sound.play();
 
 }
 
@@ -55,4 +59,10 @@ function draw() {
   player.handleInput();
   player.update();
   player.display();
+
+  alarm.updateVolume(alarm.distanceFrom(player), alarm.maxDistance);
+  console.log(alarm.distanceFrom(player));
+
+  alarm.update();
+  alarm.display();
 }
