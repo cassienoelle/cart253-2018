@@ -11,6 +11,9 @@ author, and this description to match your project!
 // Variable to hold alarm sound
 var alarmSound;
 
+// Variable to hold object representing the user
+var player;
+
 
 // preload()
 //
@@ -34,6 +37,10 @@ function setup() {
   alarmSound.setVolume(0.1);
   alarmSound.playMode("restart");
   //alarmSound.play();
+
+  // Create new player and position at center of canvas
+  player = new Player(width/2,height/2,5,5,50,5);
+
 }
 
 
@@ -43,4 +50,8 @@ function setup() {
 
 function draw() {
   background(0);
+
+  player.handleInput();
+  player.update();
+  player.display();
 }
