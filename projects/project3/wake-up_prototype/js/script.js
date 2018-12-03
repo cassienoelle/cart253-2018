@@ -44,8 +44,6 @@ function setup() {
 
   // Create new alarm and position in top left corner
   alarm = new Alarm(50,50,50,1,alarmSound,0.01,1.0);
-
-
 }
 
 
@@ -71,9 +69,10 @@ function draw() {
 
   // Play alarm sound while alarm is on
   if (playAlarm) {
-    alarm.sound.play();
+    //alarm.sound.play();
   }
 
+  drawSprites();
 }
 
 // wakeUp()
