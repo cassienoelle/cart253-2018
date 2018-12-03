@@ -40,11 +40,11 @@ Alarm.prototype.distanceFrom = function(player) {
   return this.distance;
 }
 
-// updateVolume()
+// updateSound()
 //
 // Increase or decrease the volume of the alarm sound
 // According to another scaled value (assume that scale begins at zero)
-Alarm.prototype.updateVolume = function(value,maxValue) {
+Alarm.prototype.updateSound = function(value,maxValue) {
   // Calculate current volume according to the value passed
   // (translate to same point along scale)
   this.currentVolume = (value/maxValue) * this.maxVolume;
@@ -52,9 +52,11 @@ Alarm.prototype.updateVolume = function(value,maxValue) {
   this.currentVolume = constrain(this.currentVolume,this.minVolume,this.maxVolume);
   // Set sound volume to current volume
   this.sound.setVolume(this.currentVolume);
+
+  // Set play mode and loop sound
+  this.sound.playMode("untilDone");
+  this.sound.loop = true;
 }
-
-
 
 // update()
 //

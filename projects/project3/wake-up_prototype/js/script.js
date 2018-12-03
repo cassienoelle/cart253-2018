@@ -58,13 +58,9 @@ function draw() {
   player.update();
   player.display();
 
-  alarm.updateVolume(alarm.distanceFrom(player), alarm.maxDistance);
-
+  alarm.updateSound(alarm.distanceFrom(player), alarm.maxDistance);
   alarm.update();
   alarm.display();
-
-  alarm.sound.playMode("untilDone");
-  alarm.sound.loop = true;
   alarm.sound.play();
 
 }
