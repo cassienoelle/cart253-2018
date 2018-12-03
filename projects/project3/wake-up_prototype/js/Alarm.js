@@ -47,10 +47,9 @@ Alarm.prototype.distanceFrom = function(player) {
 Alarm.prototype.updateVolume = function(value,maxValue) {
   // Calculate current volume according to the value passed
   // (translate to same point along scale)
-  currentVolume = (value/maxValue) * this.maxVolume;
+  this.currentVolume = (value/maxValue) * this.maxVolume;
   // Constrain volume to minimum and maximum volumes
-  currentVolume = constrain(currentVolume,this.minVolume,this.maxVolume);
-  console.log("current volume: " + currentVolume);
+  this.currentVolume = constrain(this.currentVolume,this.minVolume,this.maxVolume);
   // Set sound volume to current volume
   this.sound.setVolume(this.currentVolume);
 }

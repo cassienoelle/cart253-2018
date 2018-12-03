@@ -15,6 +15,7 @@ var alarmSound;
 var player;
 // Variable to hold the object representing the alarm
 var alarm;
+var x;
 
 
 // preload()
@@ -25,7 +26,7 @@ function preload() {
   // Define sound file formats
   //soundFormats("mp3", "wav");
   // Load alarm sound
-  alarmSound = loadSound("assets/sounds/alarm.mp3");
+  alarmSound = loadSound("assets/sounds/alarm.wav");
 }
 
 
@@ -40,11 +41,8 @@ function setup() {
   player = new Player(width/2,height/2,50,1,DOWN_ARROW,UP_ARROW,LEFT_ARROW,RIGHT_ARROW);
 
   // Create new alarm and position in top left corner
-  alarm = new Alarm(50,50,50,1,alarmSound,0.1,1);
+  alarm = new Alarm(50,50,50,1,alarmSound,0.1,1.0);
 
-  alarm.sound.setVolume(alarm.currentVolume);
-  alarm.sound.playMode("untilDone");
-  alarm.sound.play();
 
 }
 
@@ -61,8 +59,12 @@ function draw() {
   player.display();
 
   alarm.updateVolume(alarm.distanceFrom(player), alarm.maxDistance);
-  console.log(alarm.distanceFrom(player));
 
   alarm.update();
   alarm.display();
+
+  alarm.sound.playMode("untilDone");
+  alarm.sound.loop = true;
+  alarm.sound.play();
+
 }
