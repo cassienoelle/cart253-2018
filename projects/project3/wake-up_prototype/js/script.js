@@ -8,20 +8,10 @@ author, and this description to match your project!
 
 ******************/
 
-// Variable representing the canvas and included sections
+// Variables to hold the canvas and set canvas width and height
 var canvas;
-var infoSection;
-var gameSection;
-
-// Variables for positioning sections and setting w/h
-var infoW;
-var infoH;
-var infoX;
-var infoY;
-var gameW;
-var gameH;
-var gameX;
-var gameY;
+var canvasW;
+var canvasH;
 
 // Variable to hold alarm and bird sounds
 var alarmSound;
@@ -59,19 +49,12 @@ function preload() {
 // Description of setup
 
 function setup() {
-  // Create canvas
-  canvas = createCanvas(windowWidth,windowHeight);
-  // Create info and game sections as separate blocks
-  infoW = width * 0.30;
-  infoH = height;
-  infoX = infoW/2;
-  infoY = infoH/2;
-  gameW = width * 0.70;
-  gameH = height;
-  gameX = width - gameW/2;
-  gameY = gameH/2;
-  infoSection = new Block(infoX,infoY,infoW,infoH,255,0,0,255);
-  gameSection = new Block(gameX,gameY,gameW,gameH,0,0,255,255);
+  // Set canvas width to same as #game div
+  canvasW = windowWidth * 0.75;
+  canvasH = windowHeight;
+  // Create canvas as child of #game div
+  canvas = createCanvas(canvasW,canvasH);
+  canvas.parent("game");
 
   // Create new player and position at center of canvas
   // Set controls to arrow keys
@@ -81,7 +64,7 @@ function setup() {
   alarm = new Alarm(50,50,50,1,alarmSound,0.01,1.0);
 
   // Create new cover at the position, width and height of canvas
-  cover = new Block(gameX,gameY,gameW,gameH,0,0,0,255);
+  cover = new Block(width/2,height/2,width,height,0,0,0,255);
 
   //Meter(x,y,size,r,g,b,title,font)
   // Create meters to track energy,money,stress
@@ -96,14 +79,12 @@ function setup() {
 
 function draw() {
   background(0);
-  infoSection.display();
-  gameSection.display();
 
   player.handleInput();
   player.update();
   player.display();
 
-  alarm.updateSound(alarm.distanceFrom(player), alarm.maxDistance);
+  alarm.updateSound(alarm.distanceFrom(player),alarm.maxDistance);
   alarm.update();
   alarm.display();
 
@@ -150,5 +131,7 @@ function wakeUp() {
 //
 // Resize canvas whenever window is resized
 function windowResized() {
-  resizeCanvas(windowWidth,windowHeight);
+  canvasW = windowWidth * 0.75;
+  canvasH = windowHeight;
+  resizeCanvas(canvasW,canvasH);
 }

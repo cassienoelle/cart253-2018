@@ -23,15 +23,13 @@ canvas {
 }
 
 #info {
-  width: 30%;
+  width: 25%;
   height: 100%;
   float: left;
-  border: 1px solid black;
 }
 
 #game {
-  width:70%;
+  width:75%;
   height: 100%;
   float: right;
-  border: 1px solid red;
 }

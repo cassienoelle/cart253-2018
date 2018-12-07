@@ -6,7 +6,8 @@
 // Player constructor
 //
 // Sets the properties with the provided arguments
-function Player(x,y,size,speed,downKey,upKey,leftKey,rightKey) {
+function Player(p,x,y,size,speed,downKey,upKey,leftKey,rightKey) {
+  this.p = p;
   this.x = x;
   this.y = y;
   this.vx = 0;
