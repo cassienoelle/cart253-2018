@@ -84,7 +84,7 @@ Alarm.prototype.updateSound = function(value,maxValue) {
 //
 // Update the x and y position based on velocity
 // Move alarm randomly around canvas
-// Constrain position to remain on canvas
+// Constrain position to remain within game area
 Alarm.prototype.update = function() {
   // Every six seconds, change velocity
   if (frameCount % (60 * 20) === 0 || frameCount === 1) {
@@ -98,7 +98,7 @@ Alarm.prototype.update = function() {
 
   // Constrain to stay on screen
   this.y = constrain(this.y,0 + this.h/2,height-this.h/2);
-  this.x = constrain(this.x,0 + this.w/2,width-this.w/2);
+  this.x = constrain(this.x,0 + this.w/2,gameArea.w-this.w/2);
 
   // Bounce off edge of canvas
   // Along x-axis

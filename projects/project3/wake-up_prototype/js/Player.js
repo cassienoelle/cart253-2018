@@ -6,8 +6,7 @@
 // Player constructor
 //
 // Sets the properties with the provided arguments
-function Player(p,x,y,size,speed,downKey,upKey,leftKey,rightKey) {
-  this.p = p;
+function Player(x,y,size,speed,downKey,upKey,leftKey,rightKey) {
   this.x = x;
   this.y = y;
   this.vx = 0;
@@ -49,13 +48,13 @@ Player.prototype.handleInput = function() {
 // update()
 //
 // Update the x and y position based on velocity
-// Constrain position to remain on canvas
+// Constrain position to remain in game area
 Player.prototype.update = function() {
   this.y += this.vy;
   this.x += this.vx;
 
   this.y = constrain(this.y,0 + this.h/2,height-this.h/2);
-  this.x = constrain(this.x,0 + this.w/2,width-this.w/2);
+  this.x = constrain(this.x,0 + this.w/2,gameArea.w-this.w/2);
 }
 
 // display()

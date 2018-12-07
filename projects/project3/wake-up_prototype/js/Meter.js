@@ -27,18 +27,28 @@ Meter.prototype.display = function () {
 
   // Draw frame, 2px on either side of meter
   push();
-  fill(255);
+  fill(0);
   rect(this.x - 2,this.y - 2,this.maxW + 4,this.h + 4);
   pop();
   push();
-  fill(0);
+  fill(255);
   rect(this.x,this.y,this.maxW,this.h);
 
-  // Draw main rectangle (progress-meter style)
+  // Draw main rectangle (health-meter style)
   push();
   fill(this.r,this.g,this.b);
   rect(this.x,this.y,this.w,this.h);
   pop();
+
+  // Draw title text above rectangles
+  push();
+  fill(0);
+  textFont(this.font);
+  textSize(this.h);
+  text(this.title,this.x,this.y - this.h/2);
+  pop();
+
+
 }
 
 // update()
