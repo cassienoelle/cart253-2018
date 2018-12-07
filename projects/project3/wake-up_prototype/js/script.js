@@ -132,6 +132,9 @@ function setupHealthMeters() {
   moneyMeter.y = moneyMeter.h * 3 + stressMeter.y;
   // Set stress meter to one quarter to start
   stressMeter.w = stressMeter.w * 0.25;
+  // Set energy meter to three quarters to start
+  energyMeter.w = energyMeter.w * 0.75;
+  // Money meter starts at 100% as in original declaration 
 }
 
 // setupInstructions()
