@@ -18,6 +18,8 @@ var player;
 var alarm;
 // Boolean to track whether alarm is on or off
 var playAlarm = true;
+// Variable to hold cover object
+var cover;
 
 
 // preload()
@@ -44,6 +46,10 @@ function setup() {
 
   // Create new alarm and position in top left corner
   alarm = new Alarm(50,50,50,1,alarmSound,0.01,1.0);
+
+  // Create new cover at the position, width and height of canvas
+  cover = new Cover(width/2,height/2,width,height,0,0,0,255);
+
 }
 
 
@@ -72,7 +78,9 @@ function draw() {
     //alarm.sound.play();
   }
 
-  drawSprites();
+  cover.display();
+  cover.fade();
+
 }
 
 // wakeUp()
@@ -81,6 +89,6 @@ function draw() {
 function wakeUp() {
   playAlarm = false;
   birdsSound.playMode("untilDone");
-  birdsSound.play();
+  //birdsSound.play();
 
 }
