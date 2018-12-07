@@ -3,10 +3,10 @@
 // A class to define how a cover behaves
 // Including changing transparency
 
-// Cover constructor
+// Block constructor
 //
 // Sets the properties with the provided arguments
-function Cover(x,y,w,h,r,g,b,a) {
+function Block(x,y,w,h,r,g,b,a) {
   this.x = x;
   this.y = y;
   this.w = w;
@@ -21,7 +21,7 @@ function Cover(x,y,w,h,r,g,b,a) {
 // fade()
 //
 // Changes transparency to fade in and out
-Cover.prototype.fade = function() {
+Block.prototype.fade = function() {
   if (this.control === 0 && frameCount % (60 * 5) === 0) {
     this.control = 1;
   }
@@ -43,7 +43,7 @@ Cover.prototype.fade = function() {
 // display()
 //
 // Draws cover as a rectangle on screen
-Cover.prototype.display = function() {
+Block.prototype.display = function() {
   rectMode(CENTER);
   noStroke();
   fill(this.r,this.g,this.b,this.a);

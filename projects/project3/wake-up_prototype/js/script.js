@@ -8,6 +8,21 @@ author, and this description to match your project!
 
 ******************/
 
+// Variable representing the canvas and included sections
+var canvas;
+var infoSection;
+var gameSection;
+
+// Variables for positioning sections and setting w/h
+var infoW;
+var infoH;
+var infoX;
+var infoY;
+var gameW;
+var gameH;
+var gameX;
+var gameY;
+
 // Variable to hold alarm and bird sounds
 var alarmSound;
 var birdsSound;
@@ -44,7 +59,20 @@ function preload() {
 // Description of setup
 
 function setup() {
-  createCanvas(1000,1000);
+  // Create canvas
+  canvas = createCanvas(windowWidth,windowHeight);
+  // Create info and game sections as separate blocks
+  infoW = width * 0.30;
+  infoH = height;
+  infoX = infoW/2;
+  infoY = infoH/2;
+  gameW = width * 0.70;
+  gameH = height;
+  gameX = width - gameW/2;
+  gameY = gameH/2;
+  infoSection = new Block(infoX,infoY,infoW,infoH,255,0,0,255);
+  gameSection = new Block(gameX,gameY,gameW,gameH,0,0,255,255);
+
   // Create new player and position at center of canvas
   // Set controls to arrow keys
   player = new Player(width/2,height/2,50,1,DOWN_ARROW,UP_ARROW,LEFT_ARROW,RIGHT_ARROW);
@@ -53,7 +81,7 @@ function setup() {
   alarm = new Alarm(50,50,50,1,alarmSound,0.01,1.0);
 
   // Create new cover at the position, width and height of canvas
-  cover = new Cover(width/2,height/2,width,height,0,0,0,255);
+  cover = new Block(gameX,gameY,gameW,gameH,0,0,0,255);
 
   //Meter(x,y,size,r,g,b,title,font)
   // Create meters to track energy,money,stress
@@ -68,6 +96,8 @@ function setup() {
 
 function draw() {
   background(0);
+  infoSection.display();
+  gameSection.display();
 
   player.handleInput();
   player.update();
@@ -114,5 +144,11 @@ function wakeUp() {
   playAlarm = false;
   birdsSound.playMode("untilDone");
   //birdsSound.play();
+}
 
+// windowResized()
+//
+// Resize canvas whenever window is resized
+function windowResized() {
+  resizeCanvas(windowWidth,windowHeight);
 }
