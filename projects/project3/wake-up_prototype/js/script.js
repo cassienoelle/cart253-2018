@@ -21,6 +21,11 @@ var playAlarm = true;
 // Variable to hold cover object
 var cover;
 
+// Variables to track energy,money,stress
+var energyMeter;
+var moneyMeter;
+var stressMeter;
+
 
 // preload()
 //
@@ -50,6 +55,10 @@ function setup() {
   // Create new cover at the position, width and height of canvas
   cover = new Cover(width/2,height/2,width,height,0,0,0,255);
 
+  //Meter(x,y,size,r,g,b,title,font)
+  // Create meters to track energy,money,stress
+  energyMeter = new Meter(width/2,height/2,100,255,61,50,"Energy");
+
 }
 
 
@@ -78,10 +87,25 @@ function draw() {
     //alarm.sound.play();
   }
 
-  cover.display();
-  cover.fade();
+  energyMeter.display();
+
+
+  //cover.display();
+  //cover.fade();
 
 }
+
+//------------ TEST METERS ----------//
+function mouseClicked() {
+  energyMeter.update(-10);
+  return false;
+}
+
+function keyPressed() {
+  energyMeter.update(5);
+  return false;
+}
+//------------------------------------//
 
 // wakeUp()
 //

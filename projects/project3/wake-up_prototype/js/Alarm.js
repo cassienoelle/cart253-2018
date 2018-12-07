@@ -86,8 +86,8 @@ Alarm.prototype.updateSound = function(value,maxValue) {
 // Move alarm randomly around canvas
 // Constrain position to remain on canvas
 Alarm.prototype.update = function() {
-  // Every three seconds, change velocity
-  if (frameCount % 180 === 1) {
+  // Every six seconds, change velocity
+  if (frameCount % (60 * 20) === 0 || frameCount === 1) {
     this.vx = random(-this.speed,this.speed);
     this.vy = random(-this.speed,this.speed);
   }
@@ -99,6 +99,16 @@ Alarm.prototype.update = function() {
   // Constrain to stay on screen
   this.y = constrain(this.y,0 + this.h/2,height-this.h/2);
   this.x = constrain(this.x,0 + this.w/2,width-this.w/2);
+
+  // Bounce off edge of canvas
+  // Along x-axis
+  if (this.x - this.w/2 === 0 || this.x + this.w/2 === width) {
+    this.vx = -this.vx;
+  }
+  // Along y-axis
+  if (this.y - this.h/2 === 0 || this.y + this.h/2 === height) {
+    this.vy = -this.vy;
+  }
 }
 
 // display()
