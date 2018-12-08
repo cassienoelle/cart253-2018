@@ -44,7 +44,7 @@ Meter.prototype.display = function () {
   push();
   fill(0);
   textFont(this.font);
-  textSize(this.h);
+  textSize(this.h *0.75);
   text(this.title,this.x,this.y - this.h/2);
   pop();
 

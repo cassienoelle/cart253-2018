@@ -64,7 +64,7 @@ Player.prototype.display = function() {
   // Set reference point to center of rectangle
   rectMode(CENTER);
   // The rectangle is white
-  fill(255);
+  fill(0);
   // Draw the rectangle
   rect(this.x,this.y,this.w,this.h);
 }

@@ -7,7 +7,6 @@ This is a template. You must fill in the title,
 author, and this description to match your project!
 
 ******************/
-
 // Variables to hold the canvas and set canvas width and height
 var canvas;
 var canvasW;
@@ -23,6 +22,9 @@ var infoWidth;
 var infoHeight;
 var infoX;
 var infoY;
+
+// Variables to track game state
+var level = "SHOWER";
 
 // Variable to hold alarm and bird sounds
 var alarmSound;
@@ -52,6 +54,11 @@ var instructions = [];
 var instructionsDiv;
 var instructionsText;
 
+// Array to hold bubbles
+var bubbles = [];
+var newBubble = false;
+var duckImage;
+
 
 // preload()
 //
@@ -66,6 +73,8 @@ function preload() {
   meterFont = loadFont("assets/fonts/LemonMilk.otf");
   // Load font for game instructions
   instructionsFont = loadFont("assets/fonts/abeatbyKaiRegular.otf");
+  // Load image of a duck
+  duckImage = loadImage("assets/images/duck.png");
 }
 
 
@@ -132,7 +141,7 @@ function setupHealthMeters() {
   metersX = gameWidth + 25;
   // Set width (and therefore height) relative
   // to info area for responsive display
-  metersWidth = infoArea.w * 0.87;
+  metersWidth = infoArea.w * 0.75;
   // Create new meter objects
   energyMeter = new Meter(metersX,undefined,metersWidth,255,61,50,"Energy",meterFont);
   stressMeter = new Meter(metersX,undefined,metersWidth,20,162,204,"Stress",meterFont);
@@ -153,7 +162,7 @@ function setupHealthMeters() {
 //
 // Sets up text instructions / game descriptions within info area
 function setupInstructions() {
-  instructions[0] = "This is placeholder text to see what instructions look like."
+  instructions[0] = "Time to wake up! Turn off your alarm.  Follow the sound to find it in the dark. Use the arrow keys to move around."
 
   instructionsDiv = createDiv();
   instructionsDiv.id("infotext");
@@ -163,7 +172,7 @@ function setupInstructions() {
 
   instructionsText = createSpan(instructions[0]);
   instructionsText.parent(instructionsDiv);
-  instructionsText.style("font-family", "abeatbyKaiRegular");
+  instructionsText.style("font-family", "Arial");
   instructionsText.style("font-size", 1.5 + "em");
 
 
@@ -183,19 +192,19 @@ function draw() {
   player.update();
   player.display();
 
-  alarm.updateSound(alarm.distanceFrom(player),alarm.maxDistance);
-  alarm.update();
-  alarm.display();
+  switch (level) {
+    case "ALARM":
+      findAlarm();
+      break;
+    case "SHOWER":
+      getReady();
+      break;
+    default:
+      break;
 
-  // If player collides with alarm, turn off alarm and wake up!
-  if (alarm.collision(player)) {
-    wakeUp();
   }
 
-  // Play alarm sound while alarm is on
-  if (playAlarm) {
-    //alarm.sound.play();
-  }
+
 
   energyMeter.display();
   stressMeter.display();
@@ -219,6 +228,51 @@ function keyPressed() {
   return false;
 }
 */
+
+// getReady()
+//
+//
+function getReady() {
+  gameArea.r = 255;
+  gameArea.g = 255;
+  gameArea.b = 255;
+
+  if (frameCount % 60 === 0) {
+    bubbles.push(new Bubble(random(0,gameWidth),0,random(0,1000),random(0,1000),random(30,80),random(0.5,1.5),duckImage,false));
+  }
+  else if (frameCount % 330 === 0) {
+    bubbles.push(new Bubble(random(0,gameWidth),0,random(0,1000),random(0,1000),random(30,80),random(0.5,1.5),duckImage,true));
+  }
+
+  for (var i = 0; i < bubbles.length; i++) {
+    bubbles[i].update();
+    bubbles[i].display();
+  }
+
+}
+
+
+
+
+
+// findAlarm()
+//
+//
+function findAlarm() {
+  alarm.updateSound(alarm.distanceFrom(player),alarm.maxDistance);
+  alarm.update();
+  alarm.display();
+
+  // If player collides with alarm, turn off alarm and wake up!
+  if (alarm.collision(player)) {
+    wakeUp();
+  }
+
+  // Play alarm sound while alarm is on
+  if (playAlarm) {
+    //alarm.sound.play();
+  }
+}
 
 // wakeUp()
 //
