@@ -237,10 +237,10 @@ function getReady() {
   gameArea.g = 255;
   gameArea.b = 255;
 
-  if (frameCount % 60 === 0) {
+  if (frameCount % 60 === 0 || frameCount % 210 === 0) {
     bubbles.push(new Bubble(random(0,gameWidth),0,random(0,1000),random(0,1000),random(30,80),random(0.5,1.5),duckImage,false));
   }
-  else if (frameCount % 330 === 0) {
+  else if (frameCount % 390 === 0) {
     bubbles.push(new Bubble(random(0,gameWidth),0,random(0,1000),random(0,1000),random(30,80),random(0.5,1.5),duckImage,true));
   }
 
