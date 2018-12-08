@@ -10,7 +10,7 @@ function Meter(x,y,size,r,g,b,title,font) {
   this.y = y;
   this.w = size;
   this.maxW = size;
-  this.h = size / 6;
+  this.h = size / 8;
   this.r = r;
   this.g = g;
   this.b = b;

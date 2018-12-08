@@ -16,6 +16,8 @@ function Block(x,y,w,h,r,g,b,a) {
   this.b = b;
   this.a = a;
   this.control = 0;
+
+  this.left = this.x - this.w/2;
 }
 
 // fade()

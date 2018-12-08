@@ -12,6 +12,7 @@ author, and this description to match your project!
 var canvas;
 var canvasW;
 var canvasH;
+// Variables to define separate areas of the canvas
 var gameArea;
 var gameWidth;
 var gameHeight;
@@ -39,10 +40,18 @@ var cover;
 // Variables to hold fonts
 var meterFont;
 
-// Variables to track energy,money,stress
+// Variables to track energy,money,stress (health meters)
 var energyMeter;
 var moneyMeter;
 var stressMeter;
+var metersX;
+var metersWidth;
+
+// Array to hold instructional and descriptive text
+var instructions = [];
+var instructionsDiv;
+var instructionsText;
+
 
 // preload()
 //
@@ -55,6 +64,8 @@ function preload() {
   birdsSound = loadSound("assets/sounds/birds.wav");
   // Load font for meter titles
   meterFont = loadFont("assets/fonts/LemonMilk.otf");
+  // Load font for game instructions
+  instructionsFont = loadFont("assets/fonts/abeatbyKaiRegular.otf");
 }
 
 
@@ -68,8 +79,7 @@ function setup() {
 
   setupGameArea();
   setupInfoArea();
-  setupHealthMeters();
-
+  setupInstructions();
 }
 
 // setupGameArea()
@@ -109,6 +119,8 @@ function setupInfoArea() {
   // Create info area as new block on right hand side of canvas
   infoArea = new Block(infoX,infoY,infoWidth,infoHeight,255,255,255,255);
 
+  // Create health meters within info area to track energy, money, stress
+  setupHealthMeters();
 }
 
 // setupHealthMeters()
@@ -117,10 +129,10 @@ function setupInfoArea() {
 // Defines properties to maintain responsive layout
 function setupHealthMeters() {
   // Set all meters to an x-position within the info area
-  var metersX = gameWidth + 25;
+  metersX = gameWidth + 25;
   // Set width (and therefore height) relative
   // to info area for responsive display
-  var metersWidth = infoWidth * 0.75;
+  metersWidth = infoArea.w * 0.87;
   // Create new meter objects
   energyMeter = new Meter(metersX,undefined,metersWidth,255,61,50,"Energy",meterFont);
   stressMeter = new Meter(metersX,undefined,metersWidth,20,162,204,"Stress",meterFont);
@@ -134,13 +146,27 @@ function setupHealthMeters() {
   stressMeter.w = stressMeter.w * 0.25;
   // Set energy meter to three quarters to start
   energyMeter.w = energyMeter.w * 0.75;
-  // Money meter starts at 100% as in original declaration 
+  // Money meter starts at 100% as in original declaration
 }
 
 // setupInstructions()
 //
-// Sets up text instructions / game descriptions in info area
+// Sets up text instructions / game descriptions within info area
 function setupInstructions() {
+  instructions[0] = "This is placeholder text to see what instructions look like."
+
+  instructionsDiv = createDiv();
+  instructionsDiv.id("infotext");
+  instructionsDiv.style("width", metersWidth + "px");
+  instructionsDiv.style("padding", metersX - infoArea.left + "px");
+  instructionsDiv.position(infoArea.left, moneyMeter.y + moneyMeter.h * 2);
+
+  instructionsText = createSpan(instructions[0]);
+  instructionsText.parent(instructionsDiv);
+  instructionsText.style("font-family", "abeatbyKaiRegular");
+  instructionsText.style("font-size", 1.5 + "em");
+
+
 
 }
 
@@ -174,7 +200,6 @@ function draw() {
   energyMeter.display();
   stressMeter.display();
   moneyMeter.display();
-
 
 
   //cover.display();
