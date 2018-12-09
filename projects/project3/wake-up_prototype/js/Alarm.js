@@ -17,7 +17,6 @@ function Alarm(x,y,size,speed,sound,minVolume,maxVolume,img,img2) {
   this.w = size;
   this.h = size;
   this.imgs = [img,img2];
-  this.i = 0;
   // Properties to set and calculate distance
   // from another object
   this.distance;
@@ -133,14 +132,9 @@ Alarm.prototype.display = function() {
   imageMode(CENTER);
   // Switch between images for basic animation
   if (frameCount % 5 === 0) {
-    if (this.i === 0) {
-      this.i = 1;
-    }
-    else if (this.i === 1) {
-      this.i = 0;
-    }
+    reverse(this.imgs);
   }
   // Draw image on canvas
-  image(this.imgs[this.i],this.x,this.y,this.w,this.h);
+  image(this.imgs[0],this.x,this.y,this.w,this.h);
 
 }

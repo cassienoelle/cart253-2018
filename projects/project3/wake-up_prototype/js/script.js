@@ -59,9 +59,14 @@ var instructionsText;
 
 // Array to hold bubbles
 var bubbles = [];
+var bubbleSound;
 var duckImage;
+
 var soap;
 var soapImage;
+var splashSound;
+var splashPlayed = false;
+var soapSounds = [];
 
 var showerBackground;
 var showerStreams = [];
@@ -80,6 +85,14 @@ function preload() {
   birdsSound = loadSound("assets/sounds/birds.wav");
   // Load shower sound
   showerSound = loadSound("assets/sounds/shower.wav");
+  // Load quack sound
+  bubbleSound = loadSound("assets/sounds/quack.wav");
+  // Load splash sound
+  splashSound = loadSound("assets/sounds/splash.wav");
+  // Load soap sounds
+  soapSounds[0] = loadSound("assets/sounds/oops.wav");
+  soapSounds[1] = loadSound("assets/sounds/aah.wav");
+  splashSound = loadSound("assets/sounds/splash.wav");
   // Load font for meter titles
   meterFont = loadFont("assets/fonts/LemonMilk.otf");
   // Load font for game instructions
@@ -107,7 +120,7 @@ function setup() {
   setupGameArea();
   setupInfoArea();
 
-  soap = new Soap(gameWidth/2,height/4,100,soapImage);
+  soap = new Soap(gameWidth/2,height/4,100,soapImage,soapSounds[0],soapSounds[1],splashSound);
 }
 
 // setupGameArea()
@@ -217,7 +230,8 @@ function draw() {
       infoArea.display();
       showerOn();
       releaseBubbles();
-      soap.bounce(player);
+      soap.handleCollision(player);
+      soap.checkIfDropped();
       soap.display();
       break;
     default:
@@ -253,8 +267,8 @@ function releaseBubbles() {
   if (frameCount % 60 === 0 || frameCount % 210 === 0) {
     bubbles.push(new Bubble(random(0,gameWidth),-80,random(0,1000),random(0,1000),random(30,80),random(0.5,1.5),duckImage,false));
   }
-  else if (frameCount % 390 === 0) {
-    bubbles.push(new Bubble(random(0,gameWidth),-80,random(0,1000),random(0,1000),random(30,80),random(0.5,1.5),duckImage,true));
+  else if (frameCount % 270 === 0) {
+    bubbles.push(new Bubble(random(0,gameWidth),-80,random(0,1000),random(0,1000),random(30,80),random(0.5,1.5),duckImage,true,bubbleSound));
   }
 
   for (var i = 0; i < bubbles.length; i++) {

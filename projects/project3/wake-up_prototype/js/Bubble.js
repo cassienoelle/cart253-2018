@@ -6,7 +6,7 @@
 // Bubble constructor
 //
 // Sets the properties with the provided arguments
-function Bubble(x,y,tx,ty,size,speed,img,duck) {
+function Bubble(x,y,tx,ty,size,speed,img,duck,sound) {
   this.x = x;
   this.y = y;
   this.w = size;
@@ -22,6 +22,7 @@ function Bubble(x,y,tx,ty,size,speed,img,duck) {
   this.a = random(25,125);
   this.duck = duck;
   this.popped = false;
+  this.sound = sound;
 
 }
 
@@ -53,12 +54,20 @@ Bubble.prototype.update = function() {
     // so it looks like the duck fell out of the bubble
     if (this.a <= 0) {
       this.vx = 0;
-      this.vy = 20;
-      this.y += this.vy;
+      if (this.y < height - this.initH/2) {
+        this.vy = 20;
+        this.y += this.vy;
+      }
+      else {
+        this.vy = 0;
+      }
+
+
     }
   }
 
 }
+
 
 // isOffScreen()
 //
@@ -82,26 +91,45 @@ Bubble.prototype.handleCollision = function(player) {
       // Pop the bubble if it has a duck in it
       if (this.duck) {
         this.popped = true;
+        this.sound.playMode("untilDone");
+        this.sound.play();
       }
     }
   }
 }
 
+
 // display();
 //
 // Draw the bubble as an ellipse on canvas
 Bubble.prototype.display = function () {
-  if (!this.popped) {
-    stroke(104,241,255);
+  imageMode(CENTER);
+  // If the bubble has a duck inside
+  if (this.duck) {
+    if (this.float) {
+      push();
+      translate(this.x,this.y);
+      rotate(this.angle);
+      image(this.img,0,0,this.initW,this.initH);
+      pop();
+    }
+    else
+    {
+      image(this.img,this.x,this.y,this.initW,this.initH);
+    }
   }
-  else {
+
+  // Remove stroke if bubble is popped
+  if (this.popped) {
     noStroke()
   }
-  fill(37,217,255,this.a);
-  if (this.duck) {
-    imageMode(CENTER);
-    image(this.img,this.x,this.y,this.initW,this.initH);
+  else
+  {
+  stroke(104,241,255);
   }
-  ellipse(this.x,this.y,this.w,this.h);
 
+  // Draw the bubble as a semi-transparent
+  // blue ellipse on the screen
+  fill(37,217,255,this.a);
+  ellipse(this.x,this.y,this.w,this.h);
 }
