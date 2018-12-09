@@ -56,8 +56,9 @@ var instructionsText;
 
 // Array to hold bubbles
 var bubbles = [];
-var newBubble = false;
 var duckImage;
+
+var showerStreams = [];
 
 
 // preload()
@@ -89,6 +90,7 @@ function setup() {
   setupGameArea();
   setupInfoArea();
   setupInstructions();
+
 }
 
 // setupGameArea()
@@ -197,6 +199,7 @@ function draw() {
       findAlarm();
       break;
     case "SHOWER":
+      showerOn();
       getReady();
       break;
     default:
@@ -216,13 +219,10 @@ function draw() {
 
 }
 
+
+
 //------------ TEST METERS ----------//
 /*
-function mouseClicked() {
-  energyMeter.update(-10);
-  return false;
-}
-
 function keyPressed() {
   energyMeter.update(5);
   return false;
@@ -238,21 +238,36 @@ function getReady() {
   gameArea.b = 255;
 
   if (frameCount % 60 === 0 || frameCount % 210 === 0) {
-    bubbles.push(new Bubble(random(0,gameWidth),0,random(0,1000),random(0,1000),random(30,80),random(0.5,1.5),duckImage,false));
+    bubbles.push(new Bubble(random(0,gameWidth),-80,random(0,1000),random(0,1000),random(30,80),random(0.5,1.5),duckImage,false));
   }
   else if (frameCount % 390 === 0) {
-    bubbles.push(new Bubble(random(0,gameWidth),0,random(0,1000),random(0,1000),random(30,80),random(0.5,1.5),duckImage,true));
+    bubbles.push(new Bubble(random(0,gameWidth),-80,random(0,1000),random(0,1000),random(30,80),random(0.5,1.5),duckImage,true));
   }
 
   for (var i = 0; i < bubbles.length; i++) {
     bubbles[i].update();
     bubbles[i].display();
+    bubbles[i].handleCollision(player);
   }
 
 }
 
+// showerOn()
+//
+//
+function showerOn() {
+  showerStreams.push(new Shower(random(0,gameWidth),0,random(1,2),50,103,241,255,random(25,60)));
+  for (var i = 0; i < showerStreams.length; i++) {
+    showerStreams[i].update();
+    showerStreams[i].display();
+  }
+}
 
 
+function mouseClicked() {
+  energyMeter.update(-10);
+  return false;
+}
 
 
 // findAlarm()
