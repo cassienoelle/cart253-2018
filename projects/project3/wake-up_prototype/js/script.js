@@ -24,7 +24,7 @@ var infoX;
 var infoY;
 
 // Variables to track game state
-var level = "SHOWER";
+var level = "ALARM";
 
 // Variable to hold alarm and bird sounds
 var alarmSound;
@@ -34,6 +34,9 @@ var birdsSound;
 var player;
 // Variable to hold the object representing the alarm
 var alarm;
+// Variables to hold images for alarm animation
+var alarmImage;
+var alarmImage2;
 // Boolean to track whether alarm is on or off
 var playAlarm = true;
 // Variable to hold cover object
@@ -58,8 +61,10 @@ var instructionsText;
 var bubbles = [];
 var duckImage;
 
+var showerBackground;
 var showerStreams = [];
 
+var clock;
 
 // preload()
 //
@@ -76,6 +81,11 @@ function preload() {
   instructionsFont = loadFont("assets/fonts/abeatbyKaiRegular.otf");
   // Load image of a duck
   duckImage = loadImage("assets/images/duck.png");
+  // Load image of bathroom tile
+  showerBackground = loadImage("assets/images/tile.jpg");
+  // Load images of an alarm clock
+  alarmImage = loadImage("assets/images/alarm1.png");
+  alarmImage2 = loadImage("assets/images/alarm2.png");
 }
 
 
@@ -89,8 +99,6 @@ function setup() {
 
   setupGameArea();
   setupInfoArea();
-  setupInstructions();
-
 }
 
 // setupGameArea()
@@ -109,7 +117,7 @@ function setupGameArea() {
   // Set controls to arrow keys
   player = new Player(gameX,gameY,50,1,DOWN_ARROW,UP_ARROW,LEFT_ARROW,RIGHT_ARROW);
   // Create new alarm and position in top left corner
-  alarm = new Alarm(50,50,50,1,alarmSound,0.01,1.0);
+  alarm = new Alarm(37.5,37.5,75,2,alarmSound,0.01,1.0,alarmImage,alarmImage2);
 
   // Create another block object to cover and
   // visually obscure everything in the game area
@@ -132,6 +140,9 @@ function setupInfoArea() {
 
   // Create health meters within info area to track energy, money, stress
   setupHealthMeters();
+  setupInstructions();
+
+  clock = new Timer(metersX,height-80,meterFont,60,30);
 }
 
 // setupHealthMeters()
@@ -176,9 +187,6 @@ function setupInstructions() {
   instructionsText.parent(instructionsDiv);
   instructionsText.style("font-family", "Arial");
   instructionsText.style("font-size", 1.5 + "em");
-
-
-
 }
 
 // draw()
@@ -187,35 +195,32 @@ function setupInstructions() {
 
 function draw() {
   background(255);
-  gameArea.display();
-  infoArea.display();
-
-  player.handleInput();
-  player.update();
-  player.display();
 
   switch (level) {
     case "ALARM":
+      gameArea.display();
+      infoArea.display();
       findAlarm();
       break;
     case "SHOWER":
+      gameArea.display();
+      infoArea.display();
       showerOn();
-      getReady();
+      releaseBubbles();
       break;
     default:
       break;
 
+
   }
-
-
 
   energyMeter.display();
   stressMeter.display();
   moneyMeter.display();
 
+  clock.countDown();
+  clock.display();
 
-  //cover.display();
-  //cover.fade();
 
 }
 
@@ -229,10 +234,10 @@ function keyPressed() {
 }
 */
 
-// getReady()
+// releaseBubbles()
 //
 //
-function getReady() {
+function releaseBubbles() {
   gameArea.r = 255;
   gameArea.g = 255;
   gameArea.b = 255;
@@ -264,17 +269,18 @@ function showerOn() {
 }
 
 
-function mouseClicked() {
-  energyMeter.update(-10);
-  return false;
+function mousePressed() {
+  clock.running = true;
+  clock.startTime = millis();
 }
+
 
 
 // findAlarm()
 //
 //
 function findAlarm() {
-  alarm.updateSound(alarm.distanceFrom(player),alarm.maxDistance);
+  alarm.updateSound(alarm.distanceFrom(player),alarm.minDistance,alarm.maxDistance);
   alarm.update();
   alarm.display();
 
@@ -285,8 +291,16 @@ function findAlarm() {
 
   // Play alarm sound while alarm is on
   if (playAlarm) {
-    //alarm.sound.play();
+    alarm.sound.play();
   }
+
+  player.handleInput();
+  player.update();
+  player.display();
+
+  //cover.fade();
+  //cover.display();
+
 }
 
 // wakeUp()

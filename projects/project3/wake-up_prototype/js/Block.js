@@ -24,24 +24,39 @@ function Block(x,y,w,h,r,g,b,a) {
 //
 // Changes transparency to fade in and out
 Block.prototype.fade = function() {
-  if (this.control === 0 && frameCount % (60 * 5) === 0) {
-    this.control = 1;
+console.log(this.control);
+  switch(this.control) {
+    case 0:
+      // initiate fade every 7 seconds
+      if (frameCount % (60 * 7) === 0) {
+        console.log("yes");
+        this.control = 1; // initiate
+      }
+      break;
+    case 1:
+      // reduce alpha value to 200 to make partially transparent
+      if (this.a > 200) {
+        this.a --;
+      }
+      else {
+        this.control = 2;
+      }
+      break;
+    case 2:
+      // Then increase back up to 255
+      if (this.a < 255) {
+        this.a ++;
+      }
+      // Reset
+      else {
+        this.control = 0;
+        break;
+      }
+    default:
+      break;
   }
 
-  if (this.a > 200 && this.control === 1) {
-    this.a --;
-    if (this.a === 200) {
-      this.control = 2;
-    }
-  }
-  else if (this.a < 255 && this.control === 2) {
-    this.a ++;
-    if (this.a === 255) {
-      this.control = 0;
-    }
-  }
 }
-
 // display()
 //
 // Draws cover as a rectangle on screen

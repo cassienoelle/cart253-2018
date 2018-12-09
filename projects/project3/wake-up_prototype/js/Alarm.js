@@ -7,7 +7,7 @@
 // Alarm constructor
 //
 // Sets the properties with the provided arguments
-function Alarm(x,y,size,speed,sound,minVolume,maxVolume) {
+function Alarm(x,y,size,speed,sound,minVolume,maxVolume,img,img2) {
   // Properties to track size and speed
   this.x = x;
   this.y = y;
@@ -16,6 +16,8 @@ function Alarm(x,y,size,speed,sound,minVolume,maxVolume) {
   this.speed = speed;
   this.w = size;
   this.h = size;
+  this.imgs = [img,img2];
+  this.i = 0;
   // Properties to set and calculate distance
   // from another object
   this.distance;
@@ -26,7 +28,6 @@ function Alarm(x,y,size,speed,sound,minVolume,maxVolume) {
   this.minVolume = minVolume;
   this.maxVolume = maxVolume;
   this.currentVolume;
-
 }
 
 // distanceFrom(player)
@@ -39,9 +40,9 @@ Alarm.prototype.distanceFrom = function(player) {
   this.distance = dist(this.x,this.y,player.x,player.y);
   // Calculate maximum possible distance between the two
   // objects on the canvas and set as variable
-  this.maxDistance = dist(0,0,width,height);
+  this.maxDistance = dist(0 + this.w/2,0 + this.h/2,gameWidth - player.w/2,height-player.h/2);
   // Set minimum distance
-  this.minDistance = 1;
+  this.minDistance = 0;
   // Return the distance
   return this.distance;
 }
@@ -52,9 +53,9 @@ Alarm.prototype.distanceFrom = function(player) {
 // turn off alarm if so
 Alarm.prototype.collision = function(player) {
   // Check if the alarm overlaps player on x axis
-  if (this.x + this.w > player.x && this.x < player.x + player.w) {
+  if (this.x + this.w/2 > player.x && this.x < player.x + player.w/2) {
     // Check if they overlap on the y axis
-    if (this.y + this.h > player.y && this.y < player.y + player.h) {
+    if (this.y + this.h/2 > player.y && this.y < player.y + player.h/2) {
       // Return true
       return true;
     }
@@ -65,15 +66,16 @@ Alarm.prototype.collision = function(player) {
 // updateSound()
 //
 // Increase or decrease the volume of the alarm sound
-// According to another scaled value (assume that scale begins at zero)
-Alarm.prototype.updateSound = function(value,maxValue) {
-  // Calculate current volume according to the value passed
-  // (translate to point along scale)
-  this.currentVolume = (value/maxValue) * this.maxVolume;
-  // Constrain volume to minimum and maximum volumes
-  this.currentVolume = constrain(this.currentVolume,this.minVolume,this.maxVolume);
+// mapped to values passed as arguments
+Alarm.prototype.updateSound = function(value,minValue,maxValue) {
+  // map current volume according to the values passed
+  var n = map(value,minValue,maxValue,this.minVolume,this.maxVolume,true);
+  // invert scale
+  this.currentVolume = this.maxVolume - n;
   // Set sound volume to current volume
   this.sound.setVolume(this.currentVolume);
+  //console.log("maxDistance: " + this.maxDistance + " / distance: " + this.distance);
+  //console.log("n: " + n + " / volume: " + this.currentVolume);
 
   // Set play mode and loop sound
   this.sound.playMode("untilDone");
@@ -87,7 +89,7 @@ Alarm.prototype.updateSound = function(value,maxValue) {
 // Constrain position to remain within game area
 Alarm.prototype.update = function() {
   // Every six seconds, change velocity
-  if (frameCount % (60 * 20) === 0 || frameCount === 1) {
+  if (frameCount % (60 * 6) === 0 || frameCount === 1) {
     this.vx = random(-this.speed,this.speed);
     this.vy = random(-this.speed,this.speed);
   }
@@ -102,23 +104,32 @@ Alarm.prototype.update = function() {
 
   // Bounce off edge of canvas
   // Along x-axis
-  if (this.x - this.w/2 === 0 || this.x + this.w/2 === width) {
+  if (this.x - this.w/2 === 0 || this.x + this.w/2 === gameWidth) {
     this.vx = -this.vx;
   }
   // Along y-axis
   if (this.y - this.h/2 === 0 || this.y + this.h/2 === height) {
     this.vy = -this.vy;
   }
+
 }
 
 // display()
 //
-// Draw the alarm as a rectangle on the screen
+// Draw the alarm as an image on the screen
 Alarm.prototype.display = function() {
-  // Set reference point of rectangle to center
-  rectMode(CENTER);
-  // Set color to red
-  fill(255,0,0);
-  // Draw the rectangle
-  rect(this.x,this.y,this.w,this.h);
+  // Set reference point to center
+  imageMode(CENTER);
+  // Switch between images for basic animation
+  if (frameCount % 5 === 0) {
+    if (this.i === 0) {
+      this.i = 1;
+    }
+    else if (this.i === 1) {
+      this.i = 0;
+    }
+  }
+  // Draw image on canvas
+  image(this.imgs[this.i],this.x,this.y,this.w,this.h);
+
 }
