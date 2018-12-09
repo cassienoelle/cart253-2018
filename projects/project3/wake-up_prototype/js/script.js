@@ -24,7 +24,7 @@ var infoX;
 var infoY;
 
 // Variables to track game state
-var level = "ALARM";
+var level = "SHOWER";
 
 // Variable to hold alarm and bird sounds
 var alarmSound;
@@ -60,6 +60,7 @@ var instructionsText;
 // Array to hold bubbles
 var bubbles = [];
 var duckImage;
+var soapImage;
 
 var showerBackground;
 var showerStreams = [];
@@ -86,6 +87,8 @@ function preload() {
   // Load images of an alarm clock
   alarmImage = loadImage("assets/images/alarm1.png");
   alarmImage2 = loadImage("assets/images/alarm2.png");
+  // Load image of soap
+  soapImage = loadImage("assets/images/soap.png");
 }
 
 
@@ -115,14 +118,13 @@ function setupGameArea() {
 
   // Create new player and position at center of game area
   // Set controls to arrow keys
-  player = new Player(gameX,gameY,50,1,DOWN_ARROW,UP_ARROW,LEFT_ARROW,RIGHT_ARROW);
+  player = new Player(gameX,gameY,20,0.5,DOWN_ARROW,UP_ARROW,LEFT_ARROW,RIGHT_ARROW);
   // Create new alarm and position in top left corner
-  alarm = new Alarm(37.5,37.5,75,2,alarmSound,0.01,1.0,alarmImage,alarmImage2);
+  alarm = new Alarm(30,30,60,2,alarmSound,0.01,1.0,alarmImage,alarmImage2);
 
   // Create another block object to cover and
   // visually obscure everything in the game area
   cover = new Block(gameX,gameY,gameWidth,gameHeight,0,0,0,255);
-
 }
 
 // setupInfoField()
@@ -175,7 +177,9 @@ function setupHealthMeters() {
 //
 // Sets up text instructions / game descriptions within info area
 function setupInstructions() {
-  instructions[0] = "Time to wake up! Turn off your alarm.  Follow the sound to find it in the dark. Use the arrow keys to move around."
+  instructions[0] = "Time to wake up! TURN OFF YOUR ALARM. " +
+    "Follow the sound to find it in the dark." +
+    "When the sound gets louder, you're getting closer.";
 
   instructionsDiv = createDiv();
   instructionsDiv.id("infotext");
@@ -210,8 +214,6 @@ function draw() {
       break;
     default:
       break;
-
-
   }
 
   energyMeter.display();
@@ -220,8 +222,6 @@ function draw() {
 
   clock.countDown();
   clock.display();
-
-
 }
 
 
@@ -255,6 +255,11 @@ function releaseBubbles() {
     bubbles[i].handleCollision(player);
   }
 
+  player.w = player.h * 4;
+  player.handleInput();
+  player.update();
+  player.display()
+
 }
 
 // showerOn()
@@ -267,7 +272,6 @@ function showerOn() {
     showerStreams[i].display();
   }
 }
-
 
 function mousePressed() {
   clock.running = true;
@@ -283,12 +287,15 @@ function findAlarm() {
   alarm.updateSound(alarm.distanceFrom(player),alarm.minDistance,alarm.maxDistance);
   alarm.update();
   alarm.display();
-
-  // If player collides with alarm, turn off alarm and wake up!
+  // Every five seconds, randomly change the location of the alarm
+  // to increase difficulty
+  if (frameCount % (60 * 5) === 0) {
+    alarm.displace();
+  }
+  // If player collides with the alarm, turn it off and wake up!
   if (alarm.collision(player)) {
     wakeUp();
   }
-
   // Play alarm sound while alarm is on
   if (playAlarm) {
     alarm.sound.play();
@@ -298,9 +305,11 @@ function findAlarm() {
   player.update();
   player.display();
 
-  //cover.fade();
-  //cover.display();
-
+  // Cover the game area with black so the player
+  // can't see the alarm or their avatar
+  // Periodically reduce cover opacity like blinking sleepily
+  cover.fade();
+  cover.display();
 }
 
 // wakeUp()

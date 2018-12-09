@@ -88,8 +88,10 @@ Alarm.prototype.updateSound = function(value,minValue,maxValue) {
 // Move alarm randomly around canvas
 // Constrain position to remain within game area
 Alarm.prototype.update = function() {
-  // Every six seconds, change velocity
-  if (frameCount % (60 * 6) === 0 || frameCount === 1) {
+  // Every five seconds, change velocity
+  // Also change velocity when cover fades and alarm becomes
+  // temporarily visible (to increase difficulty)
+  if (frameCount % (60 * 5) === 0 || frameCount === 1) {
     this.vx = random(-this.speed,this.speed);
     this.vy = random(-this.speed,this.speed);
   }
@@ -113,6 +115,15 @@ Alarm.prototype.update = function() {
   }
 
 }
+
+// displace()
+//
+// Randomly change position of the alarm within game area
+Alarm.prototype.displace = function () {
+  this.x = random(0 + this.w/2, gameWidth - this.w/2);
+  this.y = random(0 + this.h/2, height - this.h/2);
+}
+
 
 // display()
 //

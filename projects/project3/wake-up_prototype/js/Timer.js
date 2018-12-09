@@ -23,7 +23,6 @@ function Timer(x,y,font,size,duration) {
 //
 Timer.prototype.countDown = function() {
   if (this.running) {
-    console.log("running");
     this.timeRemaining = Math.ceil(this.duration - (millis()-this.startTime) / 1000);
     this.timeRemaining = constrain(this.timeRemaining,0,this.duration);
     if (this.timeRemaining <= 0) {

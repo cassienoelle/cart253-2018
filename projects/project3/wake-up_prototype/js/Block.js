@@ -1,6 +1,6 @@
-// Cover
+// Block
 //
-// A class to define how a cover behaves
+// A class to define how a soap behaves
 // Including changing transparency
 
 // Block constructor
@@ -24,17 +24,15 @@ function Block(x,y,w,h,r,g,b,a) {
 //
 // Changes transparency to fade in and out
 Block.prototype.fade = function() {
-console.log(this.control);
   switch(this.control) {
     case 0:
-      // initiate fade every 7 seconds
-      if (frameCount % (60 * 7) === 0) {
-        console.log("yes");
+      // initiate fade every 10 seconds
+      if (frameCount % 600 === 0) {
         this.control = 1; // initiate
       }
       break;
     case 1:
-      // reduce alpha value to 200 to make partially transparent
+      // reduce alpha value to 215 to make partially transparent
       if (this.a > 200) {
         this.a --;
       }
