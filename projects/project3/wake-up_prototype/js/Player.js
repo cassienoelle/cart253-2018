@@ -20,6 +20,11 @@ function Player(x,y,size,speed,downKey,upKey,leftKey,rightKey) {
   this.upKey = upKey;
   this.leftKey = leftKey;
   this.rightKey = rightKey;
+
+  this.bottom = this.y + this.h/2;
+  this.top = this.y - this.h/2;
+  this.left = this.x - this.w/2;
+  this.right = this.x + this.w/2;
 }
 
 // handleInput()

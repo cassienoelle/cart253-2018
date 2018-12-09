@@ -60,6 +60,7 @@ var instructionsText;
 // Array to hold bubbles
 var bubbles = [];
 var duckImage;
+var soap;
 var soapImage;
 
 var showerBackground;
@@ -102,6 +103,8 @@ function setup() {
 
   setupGameArea();
   setupInfoArea();
+
+  soap = new Soap(gameWidth/2,height/4,100,soapImage);
 }
 
 // setupGameArea()
@@ -211,6 +214,8 @@ function draw() {
       infoArea.display();
       showerOn();
       releaseBubbles();
+      soap.bounce(player);
+      soap.display();
       break;
     default:
       break;
@@ -255,7 +260,6 @@ function releaseBubbles() {
     bubbles[i].handleCollision(player);
   }
 
-  player.w = player.h * 4;
   player.handleInput();
   player.update();
   player.display()
