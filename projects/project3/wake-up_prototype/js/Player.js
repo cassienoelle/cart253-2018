@@ -11,7 +11,7 @@ function Player(x,y,size,speed,downKey,upKey,leftKey,rightKey) {
   this.y = y;
   this.vx = 0;
   this.vy = 0;
-  this.w = size;
+  this.w = size * 4;
   this.h = size;
   this.speed = speed;
 

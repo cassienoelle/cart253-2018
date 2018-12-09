@@ -28,12 +28,12 @@ function Soap(x,y,size,img) {
 //
 Soap.prototype.bounce = function(player) {
   push();
-  rectMode(CORNER);
   //collideRectRect(x, y, width, height, x2, y2, width2, height2 )
   if (collideRectRect(this.x-this.w/2,this.y-this.h/2,this.w,this.h,player.x-player.w/2,player.y-player.h/2,player.w,player.h)) {
-    this.vx = -this.vx;
-    this.vy = -this.vy;
+    this.vx  = -this.vx + player.vx;
+    this.vy = -this.vy + player.vy;
   }
+  pop();
 
   this.angle = atan(this.vy/this.vx);
   this.x += this.vx;

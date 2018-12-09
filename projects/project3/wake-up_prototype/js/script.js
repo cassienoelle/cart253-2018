@@ -65,6 +65,7 @@ var soapImage;
 
 var showerBackground;
 var showerStreams = [];
+var showerSound;
 
 var clock;
 
@@ -77,6 +78,8 @@ function preload() {
   alarmSound = loadSound("assets/sounds/alarm.wav");
   // Load bird sounds
   birdsSound = loadSound("assets/sounds/birds.wav");
+  // Load shower sound
+  showerSound = loadSound("assets/sounds/shower.wav");
   // Load font for meter titles
   meterFont = loadFont("assets/fonts/LemonMilk.otf");
   // Load font for game instructions
@@ -121,7 +124,7 @@ function setupGameArea() {
 
   // Create new player and position at center of game area
   // Set controls to arrow keys
-  player = new Player(gameX,gameY,20,0.5,DOWN_ARROW,UP_ARROW,LEFT_ARROW,RIGHT_ARROW);
+  player = new Player(gameX,gameHeight - 100,20,0.5,DOWN_ARROW,UP_ARROW,LEFT_ARROW,RIGHT_ARROW);
   // Create new alarm and position in top left corner
   alarm = new Alarm(30,30,60,2,alarmSound,0.01,1.0,alarmImage,alarmImage2);
 
@@ -275,6 +278,9 @@ function showerOn() {
     showerStreams[i].update();
     showerStreams[i].display();
   }
+  showerSound.playMode("untilDone");
+  showerSound.loop = true;
+  //showerSound.play();
 }
 
 function mousePressed() {
