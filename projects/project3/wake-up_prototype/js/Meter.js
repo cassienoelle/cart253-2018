@@ -1,6 +1,7 @@
 // Meter
 //
 // A class to define how a meter behaves
+// **** Didn't end up using this class ******
 
 // Meter constructor
 //

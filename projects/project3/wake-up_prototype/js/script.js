@@ -1,10 +1,21 @@
 /*****************
 
-Title of Project
-Author Name
+Cassie Smith, CART 253a
+Fall 2018
 
-This is a template. You must fill in the title,
-author, and this description to match your project!
+A Fantastical Adventure
+AKA two mini games about really boring shit
+you do every day
+
+1. Turn off your alarm.
+Find it in the dark by following sound.
+
+2. Take a shower and don't drop the soap!
+There are a lot of ducks in this one but it's slightly unclear why.
+
+In the end you're probably late for work, tbh.
+Good news: you can do it all again right away if you want to.
+In fact you probably have to.
 
 ******************/
 /* ------------------- BASE GAME VARIABLES -------------------*/
