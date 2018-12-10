@@ -28,22 +28,16 @@ var infoX;
 var infoY;
 
 // Variables to track game state
-var level = "ALARM";
+var level = "INTRO";
 // Variable to pause and play game
 var playGame = false;
+var gameOver = false;
 // Variables to define DOM elements(div and span) for laying out instructions
 var instructionsDiv;
 var instructionsText;
 
 // Variable to hold timer
 var clock;
-
-// Variables to track energy,money,stress (health meters)
-var energyMeter;
-var moneyMeter;
-var stressMeter;
-var metersX;
-var metersWidth;
 
 // Variables to hold fonts
 var titleFont;
@@ -86,6 +80,10 @@ var cover;
 var alarmInstructions = "Wake up! " +
   "Follow the sound of your alarm in the dark to turn it off. " +
   "Louder = closer. Hit space to begin and don't be late for work!";
+var tooLateText = "Womp womp...you didn't get up in time. Now you're" +
+  " late for work. Hit space to rush out the door.";
+var wakeUpText = "You successfully dragged your ass out of bed. " +
+  " Have a glorious day! Hit space to frolic down the street.";
 
 /* -------------------- VARIABLES FOR SHOWER LEVEL -------------------*/
 
@@ -115,7 +113,7 @@ var showerSound;
 // Variables to hold instructional text for shower level
 var showerInstructions = "Rub-a-dub-dub! Collect as many ducks as you can " +
   "and don't drop the soap! Hit SPACE to play. (CONTROLS: ASWD, ARROW KEYS)";
-var showerOverText = "You got " + currentDucks + " ducks. You're late for work" +
+var showerOverText = " ducks. You're late for work" +
   "and your hair's still wet. Leave the ducks alone and hit SPACE to get outta here!";
 
 /* -------------------- PRELOAD & SETUP -------------------*/
@@ -202,7 +200,7 @@ function setupGameArea() {
   gameX = gameWidth/2;
   gameY = gameHeight/2;
   // Create game area as a new block object
-  gameArea = new Block(gameX,gameY,gameWidth,gameHeight,0,0,0,255);
+  gameArea = new Block(gameX,gameY,gameWidth,gameHeight,255,255,255,255);
 
   // Create another block object to cover everything in the game area
   // Used in alarm level
@@ -237,7 +235,7 @@ function setupInstructions() {
   // Create and style a div to contain instructions
   instructionsDiv = createDiv();
   instructionsDiv.id("infotext");
-  instructionsDiv.style("width", metersWidth + "px");
+  instructionsDiv.style("width", infoArea.w * 0.75 + "px");
   instructionsDiv.style("padding", 25 + "px");
   instructionsDiv.position(infoArea.left, 25);
   // Create a span as a child element to hold text itself
@@ -272,7 +270,7 @@ function setupGame() {
 // and displays everything.
 function draw() {
   background(c);
-
+  console.log(playGame);
   // Run code according to active game level
   switch (level) {
     case "INTRO":
@@ -308,6 +306,9 @@ function drawIntro() {
       doorOne.display();
       if (doorOne.opened && c === 0) {
         level = "ALARM";
+        doorOne.reset();
+        chosenDoor = 0;
+        c = 255;
       }
       break;
     case 2:
@@ -317,6 +318,9 @@ function drawIntro() {
       doorTwo.display();
       if (doorTwo.opened && c === 0) {
         level = "SHOWER";
+        doorTwo.reset()
+        chosenDoor = 0;
+        c = 255;
       }
       break;
     default:
@@ -370,10 +374,6 @@ function drawMainInterface() {
 
     case "SHOWER":
       instructionsText.html(showerInstructions);
-      // Game area is white
-      gameArea.r = 255;
-      gameArea.g = 255;
-      gameArea.b = 255;
 
       player.w = 105;
       player.h = 150;
@@ -390,46 +390,58 @@ function drawMainInterface() {
 //
 // Handles alarm mini-game
 function findAlarm() {
-  // Map the volume of the alarm sound inverse to distance of alarm from player
-  alarm.updateSound(alarm.distanceFrom(player),alarm.minDistance,alarm.maxDistance);
-  alarm.update();
-  alarm.displace();
-  alarm.display();
-  if (playAlarm) {
-    alarm.sound.play();
+  if (playGame) {
+    // Map the volume of the alarm sound inverse to distance of alarm from player
+    alarm.updateSound(alarm.distanceFrom(player),alarm.minDistance,alarm.maxDistance);
+    alarm.update();
+    alarm.displace();
+    alarm.display();
+    if (playAlarm) {
+      alarm.sound.play();
+    }
+
+    // If player collides with the alarm, turn it off and wake up!
+    if (alarm.collision(player)) {
+      wakeUp();
+    }
+
+    // Update player position according to keyboard controls and display player
+    player.handleInput();
+    player.update();
+    player.display();
+
+    // Cover the game area with black so the player can't see
+    // Periodically reduce cover opacity like blinking sleepily
+    cover.fade();
   }
 
-  // If player collides with the alarm, turn it off and wake up!
-  if (alarm.collision(player)) {
-    wakeUp();
-  }
-
-  // Update player position according to keyboard controls and display player
-  player.handleInput();
-  player.update();
-  player.display();
-
-  // Cover the game area with black so the player can't see
-  // Periodically reduce cover opacity like blinking sleepily
-  cover.fade();
   cover.display();
-
   // If timer runs out, game over
-  if (clock.finished) {
-
+  if (clock.finished && playGame) {
+    tooLate();
   }
+}
+
+// tooLate()
+//
+//
+function tooLate() {
+  instructionsText.html(tooLateText);
+  playGame = false;
+  gameOver = true;
 }
 
 // wakeUp()
 //
-// Turn off alarm sound and turn on lights so objects are visible
+// Turn off the alarm sound and play the sound of chirping birds
 function wakeUp() {
-  // Turn off the alarm sound and play the sound of chirping birds
+  instructionsText.html(wakeUpText);
   playAlarm = false;
   birdsSound.playMode("untilDone");
   birdsSound.play();
+  playGame = false;
+  gameOver = true;
 }
-
 
 /* ------------ SHOWER LEVEL  ------------*/
 
@@ -523,23 +535,50 @@ function showerOn() {
 //
 // Shower level over
 function showerOver() {
-  instructionsText.html(showerOverText);
+  instructionsText.html("You got " + currentDucks + showerOverText);
   playGame = false;
+  gameOver = true;
+  showerSound.stop();
 }
 
 
 /* ----------------------------------------*/
+
+// resetLevels()
+//
+//
+function resetLevels() {
+  playGame = false;
+  gameOver = false;
+  currentDucks = 0;
+  chosenDoor = 0;
+  clock.finished = false;
+  clock.duration = 30;
+  cover.a = 255;
+  soap.reset();
+  player.reset();
+  playerLeftControl.reset();
+  bubbles.splice(0,bubbles.length);
+}
+
 
 // keyPressed()
 //
 // Tracks whether a key has been pressed
 function keyPressed() {
   if (key === " ") {
-    playGame = true;
-    if (level === "ALARM") {
-      console.log("yes");
-      clock.startTime = millis();
-      clock.running = true;
+    if (!playGame && !gameOver) {
+      playGame = true;
+      if (level === "ALARM") {
+        console.log("yes");
+        clock.startTime = millis();
+        clock.running = true;
+      }
+    }
+    if (gameOver) {
+      resetLevels();
+      console.log("intro!");
+      level = "INTRO";
     }
   }
 }
@@ -555,7 +594,12 @@ function mouseClicked() {
   else if (doorTwo.isChosen()) {
     chosenDoor = 2;
   }
+  else {
+    chosenDoor = 0;
+  }
+  return false;
 }
+
 
 // windowResized()
 //

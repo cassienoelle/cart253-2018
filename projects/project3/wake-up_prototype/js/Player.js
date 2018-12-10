@@ -17,6 +17,9 @@ function Player(x,y,w,h,img,speed,downKey,upKey,leftKey,rightKey) {
   this.img = img;
   this.speed = speed;
 
+  this.initX = x;
+  this.initY = y;
+
   // Keys controlling directional movement
   this.downKey = downKey;
   this.upKey = upKey;
@@ -57,6 +60,14 @@ Player.prototype.update = function() {
 
   this.y = constrain(this.y,0 + this.h/2,height-this.h/2);
   this.x = constrain(this.x,0 + this.w/2,gameArea.w-this.w/2);
+}
+
+// reset()
+//
+// Reset position to initial x and y values
+Player.prototype.reset = function() {
+  this.x = this.initX;
+  this.y = this.initY;
 }
 
 // display()

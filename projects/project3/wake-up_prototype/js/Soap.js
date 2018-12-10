@@ -12,6 +12,9 @@ function Soap(x,y,size,img,soundOne,soundTwo,splash) {
   this.y = y;
   this.w = size;
   this.h = this.w * 0.64;
+  this.initX = x;
+  this.initY = y;
+  this.initW = size;
   // Set speed, velocity and angle for rotation
   this.vx = 2;
   this.vy = -7;
@@ -82,6 +85,21 @@ Soap.prototype.checkIfDropped = function() {
       this.dropped = true;
     }
   }
+}
+
+// reset()
+//
+// Reset initial properties
+Soap.prototype.reset = function() {
+  this.x = this.initX;
+  this.y = this.initY;
+  this.w = this.initW;
+  this.h = this.w * 0.64;
+  this.vx = 2;
+  this.vy = -7;
+  this.angle = 0;
+  this.speed = 1;
+  this.dropped = false;
 }
 
 // display()

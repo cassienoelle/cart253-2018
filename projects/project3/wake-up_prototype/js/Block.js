@@ -28,8 +28,8 @@ function Block(x,y,w,h,r,g,b,a) {
 Block.prototype.fade = function() {
   switch(this.control) {
     case 0:
-      // initiate fade every 10 seconds
-      if (frameCount % 600 === 0) {
+      // initiate fade every 7 seconds
+      if (frameCount % 420 === 0) {
         this.control = 1;
       }
       break;

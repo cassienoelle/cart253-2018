@@ -12,6 +12,13 @@ function Door(x,y,w,speed) {
   this.y = y;
   this.w = w;
   this.h = this.w * 1.5;
+
+  // init values for reset
+  this.initX = x;
+  this.initY = y;
+  this.initW = w;
+  this.initH = this.initW * 1.5;
+
   // Vertices of quadrilateral that represents a door
   //
   // top left
@@ -33,6 +40,31 @@ function Door(x,y,w,speed) {
   // Tracks if door has been opened
   this.opened = false;
 
+}
+
+// reset()
+//
+// Reset vertices so door is "closed" again and set opened to false
+Door.prototype.reset = function () {
+  this.x = this.initX;
+  this.y = this.initY;
+  this.w = this.initW;
+  this.h = this.initH;
+
+  // top left
+  this.x1 = this.x;
+  this.y1 = this.y;
+  // top right
+  this.x2 = this.x + this.w;
+  this.y2 = this.y;
+  // bottom right
+  this.x3 = this.x + this.w;
+  this.y3 = this.y + this.h;
+  // bottom left
+  this.x4 = this.x;
+  this.y4 = this.y + this.h;
+
+  this.opened = false;
 }
 
 // display()
@@ -116,9 +148,8 @@ Door.prototype.enter = function() {
 
   // if door is closed, log a message to the console
   else {
-    console.log("Sorry, that door is closed");
+    //console.log("Sorry, that door is closed");
   }
-  console.log(this.x);
 }
 
 // isChosen
