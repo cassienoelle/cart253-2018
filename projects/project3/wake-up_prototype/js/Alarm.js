@@ -116,8 +116,11 @@ Alarm.prototype.update = function() {
 //
 // Randomly change position of the alarm within game area
 Alarm.prototype.displace = function() {
-  this.x = random(0 + this.w/2, gameWidth - this.w/2);
-  this.y = random(0 + this.h/2, height - this.h/2);
+  // Change position every five seconds (increases difficulty)
+  if (frameCount % (60 * 5) === 0) {
+    this.x = random(0 + this.w/2, gameWidth - this.w/2);
+    this.y = random(0 + this.h/2, height - this.h/2);
+  }
 }
 
 

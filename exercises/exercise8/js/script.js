@@ -29,7 +29,10 @@ var chosenDoor;
 
 // Main font
 var mainFont;
+var meterFont;
+var instructionsFont;
 // Narrative text
+var narrationTitle;
 var narration;
 var narrationX;
 var narrationY;
@@ -39,6 +42,10 @@ var narrationY;
 // Preloads images and fonts
 function preload() {
   mainFont = loadFont("assets/fonts/cubic.ttf");
+  // Load font for meter titles
+  meterFont = loadFont("assets/fonts/LemonMilk.otf");
+  // Load font for game instructions
+  instructionsFont = loadFont("assets/fonts/abeatbyKaiRegular.otf");
 }
 
 // setup()
@@ -67,11 +74,13 @@ function setup() {
   doorTwo = new Door(i * 10,height/16,width/4,2);
 
   // Set narrative text and style
-  narration = "choose a door";
+  narrationTitle = "choose a door";
+  narration = "See what exciting  \n adventure awaits you! \n" +
+    "Today is the first day of \n the rest of your life...";
   narrationX = width/2;
   narrationY = height - ((doorOne.y + doorOne.h)/2);
   textSize(40);
-  textFont(mainFont);
+  textFont(meterFont);
   textAlign(CENTER);
 }
 
@@ -101,7 +110,13 @@ function draw() {
       // display both closed doors
       doorOne.display();
       doorTwo.display();
-      text(narration,narrationX,narrationY);
+
+      text(narrationTitle,narrationX,narrationY);
+      push();
+      textSize(30);
+      textFont(instructionsFont);
+      text(narration,narrationX,narrationY + 40);
+      pop();
       break;
   }
 

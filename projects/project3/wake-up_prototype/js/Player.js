@@ -6,14 +6,15 @@
 // Player constructor
 //
 // Sets the properties with the provided arguments
-function Player(x,y,size,speed,downKey,upKey,leftKey,rightKey) {
+function Player(x,y,w,h,img,speed,downKey,upKey,leftKey,rightKey) {
   // Properties to define position, size, velocity,speed
   this.x = x;
   this.y = y;
   this.vx = 0;
   this.vy = 0;
-  this.w = size * 4;
-  this.h = size;
+  this.w = w;
+  this.h = h;
+  this.img = img;
   this.speed = speed;
 
   // Keys controlling directional movement
@@ -60,12 +61,10 @@ Player.prototype.update = function() {
 
 // display()
 //
-// Draw the player as a rectangle on the screen
+// Draw the player as an image on the screen
 Player.prototype.display = function() {
   // Set reference point to center
-  rectMode(CENTER);
-  // The rectangle is white
-  fill(255,0,0);
-  // Draw the rectangle
-  rect(this.x,this.y,this.w,this.h);
+  imageMode(CENTER);
+  // Draw the image
+  image(this.img,this.x,this.y,this.w,this.h);
 }

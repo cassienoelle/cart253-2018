@@ -32,6 +32,7 @@ function Bubble(x,y,tx,ty,size,speed,img,duck,sound) {
   // Booleans to track if the bubble has a duck or has been popped
   this.duck = duck;
   this.popped = false;
+  this.played = false;
 }
 
 // update();
@@ -93,18 +94,21 @@ Bubble.prototype.isOffScreen = function() {
 // Check if the bubble and player overlap and
 // if the bubble has a duck, pop it and play sound
 Bubble.prototype.handleCollision = function(player) {
-  // Check if the alarm overlaps player on x axis
-  if (this.x + this.w > player.x && this.x < player.x + player.w) {
-    // Check if they overlap on the y axis
-    if (this.y + this.h > player.y && this.y < player.y + player.h) {
-      // Pop the bubble if it has a duck in it
-      if (this.duck) {
-        this.popped = true;
+  push();
+  rectMode(CORNER);
+  if (collideRectRect(this.x-this.w/2,this.y-this.h/2,this.w,this.h,player.x-player.w/2,player.y-player.h/2,player.w,player.h)) {
+    // Pop the bubble if it has a duck in it
+    if (this.duck) {
+      this.popped = true;
+      if (!this.played) {
         this.sound.playMode("untilDone");
         this.sound.play();
+        currentDucks ++;
+        this.played = true;
       }
     }
   }
+  pop();
 }
 
 

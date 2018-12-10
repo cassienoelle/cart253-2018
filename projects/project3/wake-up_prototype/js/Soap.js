@@ -70,7 +70,7 @@ Soap.prototype.handleCollision = function(player) {
 // checkIfDropped()
 //
 // Checks if soap has fallen off bottom of canvas and
-// returns true if so
+// plays splash sound if so
 Soap.prototype.checkIfDropped = function() {
   // If y position is greater than height of canvas
   if (this.y - this.h/2 > height) {
@@ -90,10 +90,12 @@ Soap.prototype.checkIfDropped = function() {
 Soap.prototype.display = function() {
   // Set reference point to center of image
   imageMode(CENTER);
+  push();
   // Translate rotation point to center of image
   translate(this.x,this.y);
   // Rotate according to angle
   rotate(this.angle);
   // Draw image on screen
   image(this.img,0,0,this.w,this.h);
+  pop();
 }

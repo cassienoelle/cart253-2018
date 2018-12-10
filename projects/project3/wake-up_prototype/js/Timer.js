@@ -45,6 +45,7 @@ Timer.prototype.countDown = function() {
 //
 // Draw the timer as text on screen
 Timer.prototype.display = function() {
+  console.log("display!");
   textSize(this.size);
   textFont(this.font);
   fill(255,0,0);
