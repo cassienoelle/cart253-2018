@@ -1,29 +1,37 @@
 // Bubble
 //
 // A class to define how a bubble behaves
+// Including floating downwards and popping,
+// May contain ducks and play sound
 
 
 // Bubble constructor
 //
 // Sets the properties with the provided arguments
 function Bubble(x,y,tx,ty,size,speed,img,duck,sound) {
+  // Properties to define position and size
   this.x = x;
   this.y = y;
   this.w = size;
   this.h = size;
+  // Maintain reference to initial width and height
   this.initW = size;
   this.initH = size;
+  // Properties to control movement, including Perlin noise
   this.vx = 0;
   this.vy = 0;
   this.tx = tx;
   this.ty = ty;
   this.speed = speed;
-  this.img = img;
+  // Set random transparency
   this.a = random(25,125);
+  // Image of a duck for bubbles containing a duck
+  this.img = img;
+  // Sound for when a bubble is popped
+  this.sound = sound;
+  // Booleans to track if the bubble has a duck or has been popped
   this.duck = duck;
   this.popped = false;
-  this.sound = sound;
-
 }
 
 // update();
@@ -32,8 +40,9 @@ function Bubble(x,y,tx,ty,size,speed,img,duck,sound) {
 Bubble.prototype.update = function() {
   // Regular movement if bubble is not popped
   if (!this.popped) {
-    // Move bubble according to Perlin noise for x-velocity
-    this.vx = map(noise(this.tx),0,1,-1,1);;
+    // Move bubble according to Perlin noise along x-axis
+    this.vx = map(noise(this.tx),0,1,-1,1);
+    // random y velocity moving downwards
     this.vy = random(0.5,this.speed);
 
     // Update position with velocity
@@ -45,12 +54,13 @@ Bubble.prototype.update = function() {
     this.tx += 0.01;
     this.ty += 0.01;
   }
-  // If bubble is popped make it ... look like it popped
+  // If bubble is popped expand it quickly and decrease alpha
+  // until it is no longer visible (make it look like it popped)
   else if (this.popped) {
       this.w += 10;
       this.h += 10;
       this.a -= 10;
-    // When transparency hits zero, move it quickly downwards
+    // When opacity hits zero, move it quickly downwards
     // so it looks like the duck fell out of the bubble
     if (this.a <= 0) {
       this.vx = 0;
@@ -58,11 +68,10 @@ Bubble.prototype.update = function() {
         this.vy = 20;
         this.y += this.vy;
       }
+      // Stop it at the bottom of the canvas
       else {
         this.vy = 0;
       }
-
-
     }
   }
 
@@ -81,8 +90,8 @@ Bubble.prototype.isOffScreen = function() {
 
 // handleCollision(player)
 //
-// Check if alarm and player overlap and
-// turn off alarm if so
+// Check if the bubble and player overlap and
+// if the bubble has a duck, pop it and play sound
 Bubble.prototype.handleCollision = function(player) {
   // Check if the alarm overlaps player on x axis
   if (this.x + this.w > player.x && this.x < player.x + player.w) {
@@ -103,20 +112,11 @@ Bubble.prototype.handleCollision = function(player) {
 //
 // Draw the bubble as an ellipse on canvas
 Bubble.prototype.display = function () {
+  // Reference point center
   imageMode(CENTER);
-  // If the bubble has a duck inside
+  // If the bubble has a duck inside draw the duck image
   if (this.duck) {
-    if (this.float) {
-      push();
-      translate(this.x,this.y);
-      rotate(this.angle);
-      image(this.img,0,0,this.initW,this.initH);
-      pop();
-    }
-    else
-    {
-      image(this.img,this.x,this.y,this.initW,this.initH);
-    }
+    image(this.img,this.x,this.y,this.initW,this.initH);
   }
 
   // Remove stroke if bubble is popped

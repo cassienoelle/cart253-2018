@@ -24,9 +24,15 @@ var infoX;
 var infoY;
 
 // Variables to track game state
-var level = "SHOWER";
+var levels = ["INTRO","ALARM","SHOWER","GAMEOVER"];
 
-// Variable to hold alarm and bird sounds
+// Array to hold instructional and descriptive text
+// and <div> to
+var instructions = [];
+var instructionsDiv;
+var instructionsText;
+
+// Variables to hold alarm and bird sounds
 var alarmSound;
 var birdsSound;
 
@@ -34,14 +40,12 @@ var birdsSound;
 var player;
 // Variable to hold the object representing the alarm
 var alarm;
-// Variables to hold images for alarm animation
-var alarmImage;
-var alarmImage2;
+// Array to hold images for alarm animation
+var alarmImages = [];
 // Boolean to track whether alarm is on or off
 var playAlarm = true;
 // Variable to hold cover object
 var cover;
-
 // Variables to hold fonts
 var meterFont;
 
@@ -51,11 +55,6 @@ var moneyMeter;
 var stressMeter;
 var metersX;
 var metersWidth;
-
-// Array to hold instructional and descriptive text
-var instructions = [];
-var instructionsDiv;
-var instructionsText;
 
 // Array to hold bubbles
 var bubbles = [];
@@ -102,8 +101,8 @@ function preload() {
   // Load image of bathroom tile
   showerBackground = loadImage("assets/images/tile.jpg");
   // Load images of an alarm clock
-  alarmImage = loadImage("assets/images/alarm1.png");
-  alarmImage2 = loadImage("assets/images/alarm2.png");
+  alarmImages[0] = loadImage("assets/images/alarm1.png");
+  alarmImages[1] = loadImage("assets/images/alarm2.png");
   // Load image of soap
   soapImage = loadImage("assets/images/soap.png");
 }

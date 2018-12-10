@@ -1,12 +1,13 @@
 // Block
 //
-// A class to define how a soap behaves
+// A class to define how a block behaves
 // Including changing transparency
 
 // Block constructor
 //
 // Sets the properties with the provided arguments
 function Block(x,y,w,h,r,g,b,a) {
+  // Properties to define position, size and color
   this.x = x;
   this.y = y;
   this.w = w;
@@ -15,8 +16,9 @@ function Block(x,y,w,h,r,g,b,a) {
   this.g = g;
   this.b = b;
   this.a = a;
+  // Control to initiate transparency changes
   this.control = 0;
-
+  // Property representing the position of left edge
   this.left = this.x - this.w/2;
 }
 
@@ -28,11 +30,11 @@ Block.prototype.fade = function() {
     case 0:
       // initiate fade every 10 seconds
       if (frameCount % 600 === 0) {
-        this.control = 1; // initiate
+        this.control = 1;
       }
       break;
     case 1:
-      // reduce alpha value to 215 to make partially transparent
+      // reduce alpha value to 200 to make partially transparent
       if (this.a > 200) {
         this.a --;
       }
@@ -45,7 +47,7 @@ Block.prototype.fade = function() {
       if (this.a < 255) {
         this.a ++;
       }
-      // Reset
+      // Reset until triggered again
       else {
         this.control = 0;
         break;
@@ -57,8 +59,9 @@ Block.prototype.fade = function() {
 }
 // display()
 //
-// Draws cover as a rectangle on screen
+// Draw block as a rectangle on screen
 Block.prototype.display = function() {
+  // Reference point center
   rectMode(CENTER);
   noStroke();
   fill(this.r,this.g,this.b,this.a);

@@ -7,6 +7,7 @@
 //
 // Sets the properties with the provided arguments
 function Player(x,y,size,speed,downKey,upKey,leftKey,rightKey) {
+  // Properties to define position, size, velocity,speed
   this.x = x;
   this.y = y;
   this.vx = 0;
@@ -20,11 +21,6 @@ function Player(x,y,size,speed,downKey,upKey,leftKey,rightKey) {
   this.upKey = upKey;
   this.leftKey = leftKey;
   this.rightKey = rightKey;
-
-  this.bottom = this.y + this.h/2;
-  this.top = this.y - this.h/2;
-  this.left = this.x - this.w/2;
-  this.right = this.x + this.w/2;
 }
 
 // handleInput()
@@ -66,7 +62,7 @@ Player.prototype.update = function() {
 //
 // Draw the player as a rectangle on the screen
 Player.prototype.display = function() {
-  // Set reference point to center of rectangle
+  // Set reference point to center
   rectMode(CENTER);
   // The rectangle is white
   fill(255,0,0);

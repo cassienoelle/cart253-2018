@@ -2,12 +2,13 @@
 //
 // A class to define how an alarm behaves
 // Including moving around screen randomly,
-// playing sound, altering sound volume
+// playing sound, mapping sound volume,
+// displaying as animation
 
 // Alarm constructor
 //
 // Sets the properties with the provided arguments
-function Alarm(x,y,size,speed,sound,minVolume,maxVolume,img,img2) {
+function Alarm(x,y,size,speed,sound,minVolume,maxVolume,img,imgTwo) {
   // Properties to track size and speed
   this.x = x;
   this.y = y;
@@ -16,7 +17,8 @@ function Alarm(x,y,size,speed,sound,minVolume,maxVolume,img,img2) {
   this.speed = speed;
   this.w = size;
   this.h = size;
-  this.imgs = [img,img2];
+  // Images to represent alarm
+  this.imgs = [img,imgTwo];
   // Properties to set and calculate distance
   // from another object
   this.distance;
@@ -73,9 +75,6 @@ Alarm.prototype.updateSound = function(value,minValue,maxValue) {
   this.currentVolume = this.maxVolume - n;
   // Set sound volume to current volume
   this.sound.setVolume(this.currentVolume);
-  //console.log("maxDistance: " + this.maxDistance + " / distance: " + this.distance);
-  //console.log("n: " + n + " / volume: " + this.currentVolume);
-
   // Set play mode and loop sound
   this.sound.playMode("untilDone");
   this.sound.loop = true;
@@ -88,8 +87,6 @@ Alarm.prototype.updateSound = function(value,minValue,maxValue) {
 // Constrain position to remain within game area
 Alarm.prototype.update = function() {
   // Every five seconds, change velocity
-  // Also change velocity when cover fades and alarm becomes
-  // temporarily visible (to increase difficulty)
   if (frameCount % (60 * 5) === 0 || frameCount === 1) {
     this.vx = random(-this.speed,this.speed);
     this.vy = random(-this.speed,this.speed);
@@ -118,7 +115,7 @@ Alarm.prototype.update = function() {
 // displace()
 //
 // Randomly change position of the alarm within game area
-Alarm.prototype.displace = function () {
+Alarm.prototype.displace = function() {
   this.x = random(0 + this.w/2, gameWidth - this.w/2);
   this.y = random(0 + this.h/2, height - this.h/2);
 }
@@ -130,11 +127,11 @@ Alarm.prototype.displace = function () {
 Alarm.prototype.display = function() {
   // Set reference point to center
   imageMode(CENTER);
-  // Switch between images for basic animation
+  // Switch between images to create basic animation
   if (frameCount % 5 === 0) {
     reverse(this.imgs);
   }
-  // Draw image on canvas
+  // Draw images on canvas
   image(this.imgs[0],this.x,this.y,this.w,this.h);
 
 }
